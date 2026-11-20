@@ -210,12 +210,32 @@ function playScene() {
     });
   }
   function clearPrompt() {
+    freeze.getAnimations().forEach(animation => animation.cancel());
     freeze.hidden = true;
     typing.hidden = true;
     scene.querySelector('.note').textContent = '';
     question.textContent = '';
     choices.replaceChildren();
     controls.replaceChildren();
+  }
+  function flashFreeze() {
+    const chat = thread.getBoundingClientRect();
+    const label = freeze.getBoundingClientRect();
+    const scale = Math.min(2.4, chat.width * 0.85 / label.width);
+    const x = chat.left + (chat.width - label.width * scale) / 2 - label.left;
+    const y = chat.bottom - Math.min(chat.height / 2, 100) - label.height * scale / 2 - label.top;
+    const stamp = {
+      transform: `translate(${x}px, ${y}px) scale(${scale})`,
+      backgroundColor: '#eef7f0', boxShadow: '0 0 0 4px #eef7f0'
+    };
+    const timing = {duration: 680, easing: 'cubic-bezier(.3, 0, .2, 1)'};
+    thread.animate([
+      {boxShadow: '0 0 0 3px #b4d6bb'}, {boxShadow: '0 0 0 0 transparent'}
+    ], timing);
+    freeze.animate([
+      stamp, {...stamp, offset: 0.16},
+      {transform: 'none', backgroundColor: 'transparent', boxShadow: '0 0 0 0 transparent'}
+    ], timing);
   }
   function intro() {
     ++sequence;
@@ -315,19 +335,19 @@ function playScene() {
       if (ticket !== sequence) return;
     }
     setControls();
-    if (motion && !skip && active?.question) {
-      thread.animate([{boxShadow:'0 0 0 3px #b4d6bb'},{boxShadow:'0 0 0 0 transparent'}], {duration:650, easing:'ease-out'});
-      freeze.animate([{opacity:.3},{opacity:1}], {duration:240});
-    }
     if (interactive) {
       const target = active ? (active.question ? question : freeze) : heading;
       target.tabIndex = -1;
       if (followNew) {
         target.focus({preventScroll:true});
-        if (next.id === 'end' || items.length === common) target.scrollIntoView({block:'nearest', behavior:'instant'});
+        if (next.id === 'end' || items.length === common ||
+            (active?.question && freeze.getBoundingClientRect().bottom > window.innerHeight)) {
+          target.scrollIntoView({block:'nearest', behavior:'instant'});
+        }
       }
       status.textContent = active?.question ? 'Стоп-кадр. ' + active.question : heading.textContent;
     }
+    if (motion && active?.question) flashFreeze();
     scene.removeAttribute('aria-busy');
     busy = false;
   }
