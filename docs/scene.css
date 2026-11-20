@@ -137,3 +137,6 @@
 .choice-mark { border-block:1px solid #d6e2da; background:#edf3ee; padding:7px 10px; }
 .choice-mark p:first-child { font-weight:600; }
 .choice-comment { margin-top:3px; }
+
+.item .msg.system-event { margin:2px auto; padding:4px 10px; width:fit-content; max-width:100%; border:0; border-radius:12px; background:#e5eee8; color:#435b4d; text-align:center; font-size:.82rem; }
+.system-event strong { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); }

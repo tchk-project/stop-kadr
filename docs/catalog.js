@@ -42,6 +42,10 @@ function addAvatar(bubble) {
     bubble.append(group);
   }
   const name = bubble.querySelector('strong').textContent.split(' · ')[0];
+  if (name === 'Система') {
+    bubble.classList.add('system-event');
+    return;
+  }
   if (name === 'Ремарка') {
     bubble.classList.add('stage-note');
     return;
@@ -128,8 +132,9 @@ function loadEpisode(pages, item) {
   story.actions.forEach(([title, words, note, context], i) => {
     // Narrative actions are stage directions and do not appear as speech from the participant.
     const who = typeof words === 'string' && words.startsWith('Ты ') ? 'Ремарка' : 'Ты';
+    const lines = Array.isArray(words) ? words : [[who, words, context]];
     pages.set(responses[i].id, {
-      title, question:'', note, lines:[bubbleFromPair([who, words, context])], links:[], review:true
+      title, question:'', note, lines:lines.map(bubbleFromPair), links:[], review:true
     });
   });
 }
@@ -141,7 +146,7 @@ function showCatalogue(panel) {
   const catalog = [{id:'dubl', title:'Дубль для своих', place:'Школьная музыкальная группа'}, ...scenarios];
   const intro = personalRole ? 'Тебя касается то, что происходит. Выбери ситуацию и попробуй разные ответы.' :
     'Ты видишь, что происходит рядом. Выбери ситуацию и реши, как отреагировать.';
-  section.append(element('p','small','11 ситуаций'), element('h1','','Как поступить?'), element('p','catalog-intro',intro));
+  section.append(element('p','small',catalog.length+' ситуаций'), element('h1','','Как поступить?'), element('p','catalog-intro',intro));
   const cards = element('div','case-grid');
   catalog.forEach(item => {
     const card = element('a','case-card');

@@ -280,7 +280,7 @@ function playScene() {
       const onStep = item.step === next.id;
       const name = item.content.querySelector('strong')?.textContent.split(' · ')[0];
       if (!skip && onStep && name) {
-        const incoming = name !== 'Ты' && name !== 'Ремарка';
+        const incoming = name !== 'Ты' && name !== 'Ремарка' && name !== 'Система';
         typing.hidden = !incoming;
         if (incoming) {
           const action = item.content.classList.contains('live-voice') ? ' говорит'
