@@ -51,6 +51,7 @@ function playScene() {
     <h1 tabindex="-1"></h1>
     <div class="thread" id="messages" role="region" aria-label="История переписки"></div>
     <div class="typing" hidden><span class="typing-name"></span><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span></div>
+    <div class="screen-flash" aria-hidden="true"></div>
     <p class="freeze" hidden>Стоп-кадр</p>
     <p class="note"></p><h2 tabindex="-1"></h2>
     <nav class="choices" aria-label="Продолжить беседу"></nav>
@@ -65,6 +66,7 @@ function playScene() {
   const heading = scene.querySelector('h1');
   const thread = scene.querySelector('.thread');
   const typing = scene.querySelector('.typing');
+  const flash = scene.querySelector('.screen-flash');
   const freeze = scene.querySelector('.freeze');
   const question = scene.querySelector('h2');
   const choices = scene.querySelector('.choices');
@@ -210,6 +212,7 @@ function playScene() {
     });
   }
   function clearPrompt() {
+    flash.getAnimations().forEach(animation => animation.cancel());
     freeze.getAnimations().forEach(animation => animation.cancel());
     freeze.hidden = true;
     typing.hidden = true;
@@ -228,14 +231,13 @@ function playScene() {
       transform: `translate(${x}px, ${y}px) scale(${scale})`,
       backgroundColor: '#eef7f0', boxShadow: '0 0 0 4px #eef7f0'
     };
-    const timing = {duration: 680, easing: 'cubic-bezier(.3, 0, .2, 1)'};
-    thread.animate([
-      {boxShadow: '0 0 0 3px #b4d6bb'}, {boxShadow: '0 0 0 0 transparent'}
-    ], timing);
+    flash.animate([
+      {opacity: 1}, {opacity: 1, offset: 0.12, easing: 'ease-out'}, {opacity: 0}
+    ], {duration: 270});
     freeze.animate([
       stamp, {...stamp, offset: 0.16},
       {transform: 'none', backgroundColor: 'transparent', boxShadow: '0 0 0 0 transparent'}
-    ], timing);
+    ], {duration: 680, easing: 'cubic-bezier(.3, 0, .2, 1)'});
   }
   function intro() {
     ++sequence;
@@ -347,7 +349,7 @@ function playScene() {
       }
       status.textContent = active?.question ? 'Стоп-кадр. ' + active.question : heading.textContent;
     }
-    if (motion && active?.question) flashFreeze();
+    if (interactive && active?.question && motionAllowed()) flashFreeze();
     scene.removeAttribute('aria-busy');
     busy = false;
   }
