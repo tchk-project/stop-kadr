@@ -1,8 +1,9 @@
 'use strict';
 
-const personalRole = location.pathname.endsWith('/self.html');
-const role = personalRole ? 'self' : 'witness';
-const currentFile = personalRole ? './self.html' : './index.html';
+const selectedRole = document.querySelector('.roles a[aria-current="page"]');
+const role = selectedRole.dataset.role;
+const personalRole = role === 'self';
+const currentFile = selectedRole.getAttribute('href');
 const selection = new URLSearchParams(location.search).get('case');
 const episode = scenarios.find(item => item.id === selection);
 const originalSelected = selection === 'dubl' || (!selection && location.hash.length > 1);
@@ -150,12 +151,13 @@ function loadEpisode(pages, item) {
 
 function showCatalogue(panel) {
   panel.querySelectorAll('.page').forEach(el => el.remove());
-  document.title = 'Стоп-кадр · '+(personalRole ? 'Давят на меня' : 'Я очевидец');
+  document.title = 'Стоп-кадр · '+selectedRole.textContent;
   const section = element('section','catalogue');
   const catalog = [{id:'dubl', title:'Дубль для своих', place:'Школьная музыкальная группа'}, ...scenarios];
-  const intro = personalRole ? 'Ты внутри ситуации. Попробуй разные ответы и присмотрись, кто замечает твою просьбу и как тебя могут поддержать.' :
+  const heading = personalRole ? 'Что делать, если на меня давят?' : 'Как поступить?';
+  const intro = personalRole ? 'Выбери ситуацию и попробуй разные ответы. Что ты чувствуешь? Какой поддержки тебе хочется и у кого её можно попросить?' :
     'Ты видишь ситуацию со стороны. Какие детали подскажут, каково другому человеку? Как узнать, какая помощь ему нужна?';
-  section.append(element('p','small',catalog.length+' ситуаций'), element('h1','','Как поступить?'), element('p','catalog-intro',intro));
+  section.append(element('p','small',catalog.length+' ситуаций'), element('h1','',heading), element('p','catalog-intro',intro));
   const cards = element('div','case-grid');
   catalog.forEach(item => {
     const card = element('a','case-card');
