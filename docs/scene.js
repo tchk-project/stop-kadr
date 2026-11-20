@@ -56,7 +56,7 @@ function playScene() {
     <p class="freeze" hidden>Стоп-кадр</p>
     <p class="note"></p><h2 tabindex="-1"></h2>
     <nav class="choices" aria-label="Продолжить беседу"></nav>
-    <nav class="tools" aria-label="Управление сценой"></nav>
+    <nav class="tools" aria-label="Управление сценой"><div class="playback-controls"></div></nav>
     <div class="sr" role="status"></div>`;
   panel.querySelectorAll('.page').forEach(el => el.remove());
   panel.append(scene);
@@ -72,7 +72,8 @@ function playScene() {
   const note = scene.querySelector('.note');
   const question = scene.querySelector('h2');
   const choices = scene.querySelector('.choices');
-  const controls = scene.querySelector('.tools');
+  const controls = scene.querySelector('.playback-controls');
+  controls.after(button('finish', 'Завершить', finishScene));
   const status = scene.querySelector('[role=status]');
   function pauseMedia(except) {
     scene.querySelectorAll('audio, video').forEach(player => {
@@ -94,29 +95,16 @@ function playScene() {
     fullImage.alt = preview.alt;
     photo.showModal();
   });
-  const dialog = document.createElement('dialog');
-  dialog.className = 'end-dialog';
-  dialog.setAttribute('aria-labelledby', 'end-title');
-  dialog.innerHTML = '<h2 id="end-title">Завершить сцену?</h2><p>Можно остаться в переписке или закончить здесь.</p><div class="buttons"></div>';
-  scene.append(dialog);
-  dialog.querySelector('.buttons').append(
-    button('dismiss','Отмена', () => dialog.close()),
-    button('confirm-end','Завершить сцену', () => {
-      const played = {id:state.id, fork:state.fork, keys:[...thread.children].map(row => row.dataset.key)};
-      dialog.close();
-      visit({id:'end', fork:state.fork}, played);
-    }, 'finish')
-  );
 
   function locationState() {
     const hash = location.hash.slice(1);
-    const id = pages.has(hash) || hash === 'end' ? hash : 'start';
+    const id = pages.has(hash) ? hash : 'start';
     const saved = history.state?.sceneFork;
     return {id, fork:forks.includes(id) ? id : forks.includes(saved) ? saved : forks.at(-1)};
   }
 
   function pathFor({id, fork}) {
-    if (id === 'start' || id === 'end') return [id];
+    if (id === 'start') return [id];
     const parent = pages.get(id)?.parent;
     if (parent) return [...pathFor({id:parent, fork}), id];
     if (forks.includes(id)) return ['start', id];
@@ -124,7 +112,6 @@ function playScene() {
   }
 
   function messages(location) {
-    if (location.id === 'end') return [];
     const result = [];
     const path = pathFor(location);
     path.forEach((id, i) => {
@@ -167,29 +154,15 @@ function playScene() {
     controls.replaceChildren();
     const {id} = state;
     const data = pages.get(id);
-    const atEnd = id === 'end';
-    heading.textContent = atEnd ? 'Сцена завершена' : pages.get('start').title;
-    freeze.hidden = atEnd;
-    freeze.textContent = data?.question ? 'Стоп-кадр' : 'Разбор';
-    thread.hidden = atEnd;
-    thread.style.display = atEnd ? 'none' : '';
-    note.textContent = atEnd || forks.includes(id) ? '' : data.note;
-    scene.querySelector('h2').textContent = atEnd ? '' : data.question;
-    if (!data?.question) {
-      const played = atEnd ? history.state?.played : {
-        id:state.id, fork:state.fork, keys:[...thread.children].map(row => row.dataset.key)
-      };
-      if (played && pages.has(played.id) && played.keys.some(key => review.cueFor(key))) {
-        choices.append(button('inspect', 'Разобрать детали', () => {
-          pauseMedia();
-          const seen = new Set(played.keys);
-          review.open(messages(played).filter(item => seen.has(item.key)), pages.get('start').title);
-        }));
-      }
-    }
-    if (atEnd) {
-      choices.append(catalogueLink(), button('forward','Пройти ещё раз', () => go('start')));
-      return;
+    freeze.hidden = false;
+    freeze.textContent = data.question ? 'Стоп-кадр' : 'Разбор';
+    note.textContent = forks.includes(id) ? '' : data.note;
+    question.textContent = data.question;
+    if (!data.question && [...thread.children].some(row => review.cueFor(row.dataset.key))) {
+      choices.append(button('inspect', 'Разобрать детали', () => {
+        pauseMedia();
+        review.open(messages(state), heading.textContent);
+      }));
     }
     for (const {id:target,label} of data.links) {
       if (target === 'start') continue;
@@ -202,19 +175,16 @@ function playScene() {
       controls.append(button('rewind','На шаг назад', () => go(previous)));
     }
     if (data.review || parents[id]) controls.append(button('rewind','Перемотать в начало', () => go('start')));
-    controls.append(button('finish','Завершить', askToEnd));
   }
   function go(id) {
-    visit({id, fork:forks.includes(id) ? id : state.fork});
-  }
-  function visit(next, played) {
-    if (busy && next.id !== 'end') return;
-    history.pushState({sceneFork:next.fork, played}, '', '#'+next.id);
+    if (busy) return;
+    const next = {id, fork:forks.includes(id) ? id : state.fork};
+    history.pushState({sceneFork:next.fork}, '', '#'+id);
     render(next, true);
   }
-  function askToEnd() {
+  function finishScene() {
     pauseMedia();
-    dialog.showModal();
+    location.assign(currentFile);
   }
   let followNew = false;
   function stopFollowing() { followNew = false; }
@@ -267,25 +237,6 @@ function playScene() {
       {transform: 'none', backgroundColor: 'transparent', boxShadow: '0 0 0 0 transparent'}
     ], {duration: 680, easing: 'cubic-bezier(.3, 0, .2, 1)'});
   }
-  function intro() {
-    review.close();
-    ++sequence;
-    finishWaiting();
-    busy = false;
-    pauseMedia();
-    state = locationState();
-    if (dialog.open) dialog.close();
-    if (photo.open) photo.close();
-    clearPrompt();
-    heading.textContent = pages.get('start').title;
-    thread.replaceChildren();
-    thread.style.display = 'none';
-    choices.append(button('forward', 'Старт', () => {
-      history.replaceState({sceneFork:state.fork, started:true}, '', '#start');
-      render({id:'start', fork:state.fork}, true);
-    }, 'play'));
-  }
-
   async function render(next, interactive) {
     review.close();
     const ticket = ++sequence;
@@ -295,7 +246,6 @@ function playScene() {
     followNew = interactive;
     busy = true;
     clearPrompt();
-    if (dialog.open) dialog.close();
     if (photo.open) photo.close();
     thread.getAnimations({subtree:true}).forEach(animation => animation.cancel());
     const items = messages(next);
@@ -303,7 +253,7 @@ function playScene() {
     let common = 0;
     while (common < current.length && common < items.length && current[common].dataset.key === items[common].key) common++;
     const removed = current.slice(common).reverse();
-    const motion = interactive && motionAllowed() && next.id !== 'end';
+    const motion = interactive && motionAllowed();
     scene.setAttribute('aria-busy','true');
     if (removed.length && motion) {
       // Remove the newest bubble first. As each collapses, the older history comes into view.
@@ -321,13 +271,8 @@ function playScene() {
     } else removed.forEach(row => row.remove());
     state = next;
     const active = pages.get(next.id);
-    heading.textContent = active ? pages.get('start').title : 'Сцена завершена';
-    thread.hidden = next.id === 'end';
-    thread.style.display = thread.hidden ? 'none' : '';
-    if (next.id !== 'end') {
-      controls.append(button('dismiss', 'Показать сразу', finishWaiting, 'play'),
-        button('finish', 'Завершить', askToEnd));
-    }
+    heading.textContent = pages.get('start').title;
+    controls.append(button('dismiss', 'Показать сразу', finishWaiting, 'play'));
     for (const [i, item] of items.slice(common).entries()) {
       const onStep = item.step === next.id;
       const name = item.content.querySelector('strong')?.textContent.split(' · ')[0];
@@ -344,8 +289,6 @@ function playScene() {
         const longPause = incoming && (i + pathFor(next).length) % 3 === 0;
         await delay(longPause ? 2150 : 420 + Math.min(420, item.content.textContent.length * 4));
         if (ticket !== sequence) return;
-        if (dialog.open) await new Promise(resolve => dialog.addEventListener('close', resolve, {once:true}));
-        if (ticket !== sequence) return;
       }
       typing.hidden = true;
       const row = makeRow(item);
@@ -356,32 +299,33 @@ function playScene() {
       if (motion && onStep && !skip) row.animate([{opacity:0, transform:'translateY(6px)'},{opacity:1, transform:'none'}],
         {duration:160, easing:'ease-out'});
     }
-    if (!skip && active) {
+    if (!skip) {
       await delay(400);
-      if (ticket !== sequence) return;
-      if (dialog.open) await new Promise(resolve => dialog.addEventListener('close', resolve, {once:true}));
       if (ticket !== sequence) return;
     }
     setControls();
     if (interactive) {
-      const target = active ? (active.question ? question : note) : heading;
+      const target = active.question ? question : note;
       target.tabIndex = -1;
       if (followNew) {
         target.focus({preventScroll:true});
-        if (next.id === 'end' || items.length === common || target.getBoundingClientRect().bottom > window.innerHeight) {
+        if (items.length === common || target.getBoundingClientRect().bottom > window.innerHeight) {
           target.scrollIntoView({block:'nearest', behavior:'instant'});
         }
       }
-      status.textContent = active?.question ? 'Стоп-кадр. ' + active.question : heading.textContent;
+      status.textContent = active.question ? 'Стоп-кадр. ' + active.question : heading.textContent;
     }
-    if (interactive && active?.question && motionAllowed()) flashFreeze();
+    if (interactive && active.question && motionAllowed()) flashFreeze();
     scene.removeAttribute('aria-busy');
     busy = false;
   }
   function fromAddress(interactive) {
+    if (location.hash === '#end') {
+      location.replace(currentFile);
+      return;
+    }
     const next = locationState();
-    if (next.id === 'start' && !history.state?.sceneFork) intro();
-    else render(next, interactive);
+    render(next, interactive || next.id === 'start');
   }
   window.addEventListener('popstate', () => fromAddress(true));
   fromAddress(false);

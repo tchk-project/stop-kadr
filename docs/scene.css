@@ -22,7 +22,7 @@
 .choice-mark {
   color: #485d55; font-size: .85rem; text-align: center; padding: 3px 8px;
 }
-.scene button, .end-dialog button {
+.scene button {
   font: inherit; cursor: pointer; min-height: 44px;
 }
 .action {
@@ -38,7 +38,6 @@
 .finish { color: #6e4143; border: 1px solid transparent; background: transparent; }
 .finish:hover { background: #fbefee; }
 .dismiss { background: #fff; border: 1px solid #a9b9b1; color: #29463d; }
-.confirm-end { background: #793e44; border: 1px solid #793e44; color: #fff; }
 .action:focus-visible, .scene summary:focus-visible, .open-image:focus-visible {
   outline: 3px solid #885921; outline-offset: 3px;
 }
@@ -47,16 +46,10 @@
   border-top: 1px solid #d9e3dd; padding-top: 14px; margin-top: 18px;
 }
 .tools .finish { margin-inline-start: auto; }
+.playback-controls { display: contents; }
 .scene h2:empty, .choices:empty, .note:empty { display: none; }
 .scene h1:focus { outline: none; }
 .scene .note { margin: 14px 0; }
-.end-dialog {
-  width: min(25rem, calc(100% - 32px)); border-radius: 16px;
-  border: 1px solid #c9d6cf; padding: 22px; color: #172a28;
-}
-.end-dialog::backdrop { background: rgb(13 32 28 / 50%); }
-.end-dialog h2 { margin: 0 0 10px; font-size: 1.3rem; }
-.end-dialog .buttons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
 .sr { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 @media (max-width: 420px) {
   body { padding: 8px 6px 20px; }
