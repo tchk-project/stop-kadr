@@ -49,7 +49,6 @@ function playScene() {
   scene.innerHTML = `
     <p class="small">Учебная сцена · школьная музыкальная группа</p>
     <h1 tabindex="-1"></h1>
-    <button type="button" class="history-toggle" aria-controls="messages" aria-expanded="false" hidden>Показать предыдущие сообщения</button>
     <div class="thread" id="messages" role="region" aria-label="История переписки"></div>
     <div class="typing" hidden><span class="typing-name"></span><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span></div>
     <p class="freeze" hidden>Стоп-кадр</p>
@@ -60,18 +59,37 @@ function playScene() {
   panel.querySelectorAll('.page').forEach(el => el.remove());
   panel.append(scene);
   if (episode) {
-    scene.querySelector('.small').textContent = episode.place + ' · ' + (personalRole ? 'Давят на меня' : 'Я очевидец');
+    scene.querySelector('.small').textContent = episode.place + ' · ' + (personalRole ? (episode.personalName ? 'ты — ' + episode.personalName : 'Давят на меня') : 'Я очевидец');
     document.title = episode.title + ' · Стоп-кадр';
   }
   const heading = scene.querySelector('h1');
   const thread = scene.querySelector('.thread');
-  const historyToggle = scene.querySelector('.history-toggle');
   const typing = scene.querySelector('.typing');
   const freeze = scene.querySelector('.freeze');
   const question = scene.querySelector('h2');
   const choices = scene.querySelector('.choices');
   const controls = scene.querySelector('.tools');
   const status = scene.querySelector('[role=status]');
+  function pauseMedia(except) {
+    thread.querySelectorAll('audio, video').forEach(player => {
+      if (player !== except && !player.paused) player.pause();
+    });
+  }
+  thread.addEventListener('play', event => pauseMedia(event.target), true);
+  window.addEventListener('pagehide', () => pauseMedia());
+  const photo = document.createElement('dialog');
+  photo.className = 'photo-dialog';
+  photo.setAttribute('aria-label', 'Скриншот переписки');
+  const fullImage = document.createElement('img');
+  photo.append(fullImage, button('dismiss', 'Закрыть скриншот', () => photo.close()));
+  scene.append(photo);
+  thread.addEventListener('click', event => {
+    const preview = event.target.closest('.open-image')?.querySelector('img');
+    if (!preview) return;
+    fullImage.src = preview.src;
+    fullImage.alt = preview.alt;
+    photo.showModal();
+  });
   const dialog = document.createElement('dialog');
   dialog.className = 'end-dialog';
   dialog.setAttribute('aria-labelledby', 'end-title');
@@ -105,14 +123,14 @@ function playScene() {
       const data = pages.get(id);
       if (i && (forks.includes(id) || !data.lines.length)) {
         const decision = pages.get(path[i-1]).links.find(link => link.id === id);
-        const marker = document.createElement('p');
+        const marker = document.createElement('div');
         marker.className = 'choice-mark';
-        marker.textContent = 'Твой выбор · ' + decision.label;
+        marker.append(element('p', '', 'Твой выбор · ' + decision.label));
+        if (forks.includes(id) && data.note) marker.append(element('p', 'choice-comment', data.note));
         result.push({step:id, key:id+'-choice', content:marker});
       }
       data.lines.forEach((line, index) => {
         const content = line.cloneNode(true);
-        if (id === 'direct') content.querySelector('strong').textContent = 'Ты · лично Мише';
         addAvatar(content);
         result.push({step:id, key:id+'-'+index, content});
       });
@@ -132,12 +150,12 @@ function playScene() {
     const {id} = state;
     const data = pages.get(id);
     const atEnd = id === 'end';
-    heading.textContent = atEnd ? 'Сцена завершена' : data.title;
+    heading.textContent = atEnd ? 'Сцена завершена' : pages.get('start').title;
     freeze.hidden = atEnd;
     freeze.textContent = data?.question ? 'Стоп-кадр' : 'Разбор';
     thread.hidden = atEnd;
     thread.style.display = atEnd ? 'none' : '';
-    scene.querySelector('.note').textContent = atEnd ? '' : data.note;
+    scene.querySelector('.note').textContent = atEnd || forks.includes(id) ? '' : data.note;
     scene.querySelector('h2').textContent = atEnd ? '' : data.question;
     if (atEnd) {
       choices.append(catalogueLink(), button('forward','Пройти ещё раз', () => go('start')));
@@ -154,7 +172,7 @@ function playScene() {
       controls.append(button('rewind','На шаг назад', () => go(previous)));
     }
     if (data.review || parents[id]) controls.append(button('rewind','Перемотать в начало', () => go('start')));
-    controls.append(button('finish','Завершить', () => dialog.showModal()));
+    controls.append(button('finish','Завершить', askToEnd));
   }
   function go(id) {
     visit({id, fork:forks.includes(id) ? id : state.fork});
@@ -164,19 +182,18 @@ function playScene() {
     history.pushState({sceneFork:next.fork}, '', '#'+next.id);
     render(next, true);
   }
-  function showHistory(expanded) {
-    let hasEarlier = false;
-    for (const row of thread.children) {
-      const earlier = row.dataset.step !== state.id;
-      if (earlier) hasEarlier = true;
-      row.hidden = earlier && !expanded;
-    }
-    historyToggle.hidden = !hasEarlier;
-    historyToggle.setAttribute('aria-expanded', String(expanded));
-    historyToggle.textContent = expanded ? 'Свернуть предыдущие сообщения' : 'Показать предыдущие сообщения';
+  function askToEnd() {
+    pauseMedia();
+    dialog.showModal();
   }
-  historyToggle.addEventListener('click', () => {
-    if (!busy) showHistory(historyToggle.getAttribute('aria-expanded') !== 'true');
+  let followNew = false;
+  function stopFollowing() { followNew = false; }
+  window.addEventListener('wheel', stopFollowing, {passive:true});
+  window.addEventListener('touchmove', stopFollowing, {passive:true});
+  thread.addEventListener('pointerdown', stopFollowing);
+  thread.addEventListener('focusin', stopFollowing);
+  window.addEventListener('keydown', event => {
+    if (['PageUp', 'PageDown', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key)) stopFollowing();
   });
 
   let wake = null;
@@ -204,13 +221,14 @@ function playScene() {
     ++sequence;
     finishWaiting();
     busy = false;
+    pauseMedia();
     state = locationState();
     if (dialog.open) dialog.close();
+    if (photo.open) photo.close();
     clearPrompt();
     heading.textContent = pages.get('start').title;
     thread.replaceChildren();
     thread.style.display = 'none';
-    historyToggle.hidden = true;
     choices.append(button('forward', 'Старт', () => {
       history.replaceState({sceneFork:state.fork, started:true}, '', '#start');
       render({id:'start', fork:state.fork}, true);
@@ -220,10 +238,13 @@ function playScene() {
   async function render(next, interactive) {
     const ticket = ++sequence;
     finishWaiting();
+    pauseMedia();
     skip = !interactive || reduced.matches;
+    followNew = interactive;
     busy = true;
     clearPrompt();
     if (dialog.open) dialog.close();
+    if (photo.open) photo.close();
     thread.getAnimations({subtree:true}).forEach(animation => animation.cancel());
     const items = messages(next);
     const current = [...thread.children];
@@ -235,10 +256,6 @@ function playScene() {
     if (removed.length && motion) {
       // Remove the newest bubble first. As each collapses, the older history comes into view.
       for (const row of removed) {
-        if (row.hidden) {
-          row.remove();
-          continue;
-        }
         const height = row.offsetHeight;
         const effect = row.animate([
           {height:height+'px', opacity:1, transform:'translateY(0)'},
@@ -252,16 +269,12 @@ function playScene() {
     } else removed.forEach(row => row.remove());
     state = next;
     const active = pages.get(next.id);
-    heading.textContent = active?.title || 'Сцена завершена';
+    heading.textContent = active ? pages.get('start').title : 'Сцена завершена';
     thread.hidden = next.id === 'end';
     thread.style.display = thread.hidden ? 'none' : '';
-    showHistory(false);
     if (next.id !== 'end') {
       controls.append(button('dismiss', 'Показать сразу', finishWaiting, 'play'),
-        button('finish', 'Завершить', () => dialog.showModal()));
-    }
-    if (interactive && heading.getBoundingClientRect().top < 0) {
-      heading.scrollIntoView({block:'start', behavior:'instant'});
+        button('finish', 'Завершить', askToEnd));
     }
     for (const [i, item] of items.slice(common).entries()) {
       const onStep = item.step === next.id;
@@ -269,7 +282,13 @@ function playScene() {
       if (!skip && onStep && name) {
         const incoming = name !== 'Ты' && name !== 'Ремарка';
         typing.hidden = !incoming;
-        if (incoming) typing.querySelector('.typing-name').textContent = name + ' пишет';
+        if (incoming) {
+          const action = item.content.classList.contains('live-voice') ? ' говорит'
+            : item.content.classList.contains('voice') ? ' записывает голосовое'
+            : item.content.classList.contains('sticker') ? ' выбирает стикер'
+            : item.content.querySelector('img, video') ? ' отправляет вложение' : ' пишет';
+          typing.querySelector('.typing-name').textContent = name + action;
+        }
         const longPause = incoming && (i + pathFor(next).length) % 3 === 0;
         await delay(longPause ? 2150 : 420 + Math.min(420, item.content.textContent.length * 4));
         if (ticket !== sequence) return;
@@ -280,9 +299,12 @@ function playScene() {
       const row = element('div', 'item');
       row.dataset.key = item.key;
       row.dataset.step = item.step;
-      row.hidden = !onStep;
+      if (item.content.dataset.context) row.append(element('p', 'chat-context', item.content.dataset.context));
       row.append(item.content);
       thread.append(row);
+      if (onStep && followNew && (!skip || i === 0) && row.getBoundingClientRect().bottom > window.innerHeight) {
+        row.scrollIntoView({block:'nearest', behavior:'instant'});
+      }
       if (motion && onStep && !skip) row.animate([{opacity:0, transform:'translateY(6px)'},{opacity:1, transform:'none'}],
         {duration:160, easing:'ease-out'});
     }
@@ -292,14 +314,18 @@ function playScene() {
       if (dialog.open) await new Promise(resolve => dialog.addEventListener('close', resolve, {once:true}));
       if (ticket !== sequence) return;
     }
-    showHistory(false);
     setControls();
     if (motion && !skip && active?.question) {
       thread.animate([{boxShadow:'0 0 0 3px #b4d6bb'},{boxShadow:'0 0 0 0 transparent'}], {duration:650, easing:'ease-out'});
       freeze.animate([{opacity:.3},{opacity:1}], {duration:240});
     }
     if (interactive) {
-      (active?.question ? question : heading).focus({preventScroll:true});
+      const target = active ? (active.question ? question : freeze) : heading;
+      target.tabIndex = -1;
+      if (followNew) {
+        target.focus({preventScroll:true});
+        if (next.id === 'end' || items.length === common) target.scrollIntoView({block:'nearest', behavior:'instant'});
+      }
       status.textContent = active?.question ? 'Стоп-кадр. ' + active.question : heading.textContent;
     }
     scene.removeAttribute('aria-busy');

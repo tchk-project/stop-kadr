@@ -29,12 +29,24 @@ function element(tag, className, value) {
 }
 
 function addAvatar(bubble) {
+  if (bubble.dataset.reactions) {
+    const group = element('div', 'reactions');
+    for (const [emoji, names] of Object.entries(JSON.parse(bubble.dataset.reactions))) {
+      const details = element('details', 'reaction');
+      const button = element('summary');
+      button.setAttribute('aria-label', 'Реакция ' + emoji + ', ' + names.length + '. Кто отреагировал');
+      button.append(element('span', '', emoji), element('span', '', String(names.length)));
+      details.append(button, element('span', 'reactors', names.join(', ')));
+      group.append(details);
+    }
+    bubble.append(group);
+  }
   const name = bubble.querySelector('strong').textContent.split(' · ')[0];
   if (name === 'Ремарка') {
     bubble.classList.add('stage-note');
     return;
   }
-  const index = avatarSlots[name];
+  const index = avatarSlots[name === 'Ты' && episode?.personalName ? episode.personalName : name];
   if (index === undefined) return;
   const avatar = element('span','avatar');
   avatar.setAttribute('aria-hidden','true');
@@ -43,9 +55,58 @@ function addAvatar(bubble) {
   bubble.prepend(avatar);
 }
 
-function bubbleFromPair([who, words]) {
+function bubbleFromPair([who, words, context, reactions]) {
   const bubble = element('div', who.startsWith('Ты') ? 'msg you' : 'msg');
-  bubble.append(element('strong', '', who), element('p', '', words));
+  if (context) bubble.dataset.context = context;
+  if (reactions) bubble.dataset.reactions = JSON.stringify(reactions);
+  bubble.append(element('strong', '', who));
+  if (typeof words === 'string') {
+    bubble.append(element('p', '', words));
+    return bubble;
+  }
+  bubble.classList.add(words.kind);
+  const media = element('div', 'chat-media');
+  if (words.caption) media.append(element('p', '', words.caption));
+  if (words.kind === 'voice') {
+    if (words.live) {
+      bubble.classList.add('live-voice');
+      media.append(element('p', '', words.transcript));
+    }
+    const audio = element('audio');
+    audio.controls = true;
+    audio.preload = 'metadata';
+    audio.src = words.src;
+    audio.setAttribute('aria-label', words.live ? 'Реплика в голосовом канале · ' + who : 'Голосовое Леры');
+    const transcript = element('details', 'transcript');
+    transcript.append(element('summary', '', 'Текст голосового'), element('p', '', words.transcript));
+    media.append(audio);
+    if (!words.live) media.append(transcript);
+  } else if (words.kind === 'sticker') {
+    const image = element('img');
+    image.src = words.src;
+    image.alt = words.alt;
+    image.width = image.height = 100;
+    media.append(element('span', 'reply-to', personalRole ? 'На твоё голосовое' : 'На голосовое Леры'), image);
+  } else {
+    const image = element('img', 'preview');
+    image.src = words.src;
+    image.alt = words.alt;
+    if (words.kind === 'document') {
+      const file = element('a', 'file-card');
+      file.href = words.file;
+      file.target = '_blank';
+      file.rel = 'noopener';
+      file.append(image, element('span', '', 'Открыть презентацию · PDF'));
+      media.append(file);
+    } else {
+      const open = element('button', 'open-image');
+      open.type = 'button';
+      open.setAttribute('aria-label', 'Увеличить скриншот. ' + words.alt);
+      open.append(image, element('span', '', 'Увеличить скриншот'));
+      media.append(open);
+    }
+  }
+  bubble.append(media);
   return bubble;
 }
 
@@ -64,11 +125,11 @@ function loadEpisode(pages, item) {
       lines:story.later.map(bubbleFromPair), links:responses
     });
   });
-  story.actions.forEach(([title, words, note], i) => {
+  story.actions.forEach(([title, words, note, context], i) => {
     // Narrative actions are stage directions and do not appear as speech from the participant.
-    const who = words.startsWith('Ты ') ? 'Ремарка' : 'Ты';
+    const who = typeof words === 'string' && words.startsWith('Ты ') ? 'Ремарка' : 'Ты';
     pages.set(responses[i].id, {
-      title, question:'', note, lines:[bubbleFromPair([who, words])], links:[], review:true
+      title, question:'', note, lines:[bubbleFromPair([who, words, context])], links:[], review:true
     });
   });
 }
