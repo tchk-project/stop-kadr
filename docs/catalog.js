@@ -156,11 +156,22 @@ function showCatalogue(panel) {
   document.title = 'Стоп-кадр · '+selectedRole.textContent;
   const section = element('section','catalogue');
   const catalog = [{id:'dubl', title:'Дубль для своих', place:'Школьная музыкальная группа'}, ...scenarios];
-  const heading = personalRole ? 'Что делать, если на меня давят?' : 'Как поступить?';
-  const intro = personalRole ? 'В этих историях давят на тебя. Ты решаешь, что ответить и у кого попросить поддержки.' :
-    'В этих историях ты видишь, как давят на другого. Присмотрись к его словам и реши, как ему помочь.';
-  section.append(element('p','small','Тренажёр в переписке · '+catalog.length+' ситуаций'), element('h1','',heading),
-    element('p','catalog-intro',intro), element('p','catalog-how','Выбери историю. На стоп-кадре реши, что сказать или сделать. В конце увидишь последствия. Можно отмотать разговор и попробовать другой ход.'));
+  const heading = personalRole ? 'Что делать, если на меня давят?' : 'Как помочь, если на кого-то давят?';
+  const intro = personalRole
+    ? 'Это игра про школьные переписки. Здесь давят на тебя. Можно попробовать разные ответы, попросить поддержки и посмотреть, что будет дальше.'
+    : 'Это игра про школьные переписки. Представь: весь чат смеётся над голосовым, а его автор замолчал. Как понять, что с ним, и чем помочь? Здесь можно попробовать разные ответы.';
+  section.append(element('p','small',catalog.length+' школьных историй'), element('h1','',heading),
+    element('p','catalog-intro',intro));
+  const guide = element('div','catalog-guide');
+  guide.append(element('h2','','Как играть'));
+  const steps = element('ol','');
+  for (const step of [
+    'Выбери роль вверху и открой любую историю ниже. Сообщения появятся сами.',
+    'На стоп-кадре нажми на один из ответов. Переписка продолжится, и ты увидишь, к чему привёл выбор.',
+    'В конце нажми «Разобрать детали», чтобы узнать, какие слова и поступки стоило заметить. Хочешь попробовать иначе — вернись на шаг назад.'
+  ]) steps.append(element('li','',step));
+  guide.append(steps);
+  section.append(guide);
   const cards = element('div','case-grid');
   catalog.forEach(item => {
     const card = element('a','case-card');

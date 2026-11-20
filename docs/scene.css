@@ -74,7 +74,12 @@
 .catalogue { padding:clamp(17px,4vw,30px); }
 .catalogue h1 { margin-bottom:8px; }
 .catalog-intro { color:#455e54; }
-.catalog-how { margin-top:9px; color:#354b42; }
+.catalog-guide { margin:16px 0; padding:12px 16px; background:#f2f7f4; border-radius:10px; }
+.catalog-guide h2 { margin:0 0 6px; }
+.catalog-guide ol { margin:0; padding-inline-start:1.35em; }
+.catalog-guide li + li { margin-top:5px; }
+.catalog-guide li::marker { color:#175542; font-weight:650; }
+.choice-hint { color:#455e54; margin:0 0 6px; font-size:.94rem; }
 .outcome {
   --accent:#215b40; --surface:#e8f5ed;
   margin:16px 0; padding:15px 17px; background:var(--surface); color:#192c25;

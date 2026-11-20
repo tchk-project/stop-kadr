@@ -60,6 +60,7 @@ function playScene() {
       <h2 id="outcome-title"></h2><p class="outcome-reason"></p>
     </section>
     <p class="note"></p><h2 class="question" tabindex="-1"></h2>
+    <p class="choice-hint" hidden>Переписка на паузе. Нажми на один из вариантов ниже, чтобы продолжить.</p>
     <nav class="choices" aria-label="Продолжить беседу"></nav>
     <nav class="tools" aria-label="Управление сценой"><div class="playback-controls"></div></nav>
     <div class="sr" role="status"></div>`;
@@ -82,6 +83,7 @@ function playScene() {
     negative: {label:'Неудачный исход', icon:'×'},
     open: {label:'Исход пока открыт', icon:'…'}
   };
+  const hint = scene.querySelector('.choice-hint');
   const choices = scene.querySelector('.choices');
   const controls = scene.querySelector('.playback-controls');
   controls.after(button('finish', 'Завершить', finishScene));
@@ -178,6 +180,7 @@ function playScene() {
       note.textContent = forks.includes(id) ? '' : data.note;
     }
     question.textContent = data.question;
+    hint.hidden = id !== 'start' || !data.question;
     if (!data.question && [...thread.children].some(row => review.cueFor(row.dataset.key))) {
       choices.append(button('inspect', 'Разобрать детали', () => {
         pauseMedia();
@@ -237,6 +240,7 @@ function playScene() {
     typing.hidden = true;
     note.textContent = '';
     question.textContent = '';
+    hint.hidden = true;
     choices.replaceChildren();
     controls.replaceChildren();
   }
