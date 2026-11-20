@@ -126,6 +126,7 @@ function loadEpisode(pages, item) {
     links.splice(alternative.position, 0, {id:'consequence', label:alternative.label});
     pages.set('consequence', {
       title:alternative.label, question:'', note:alternative.note,
+      outcome:{kind:'negative', headline:alternative.headline},
       lines:alternative.lines.map(bubbleFromPair), links:[], review:true
     });
   }
@@ -139,12 +140,13 @@ function loadEpisode(pages, item) {
       lines:story.later.map(bubbleFromPair), links
     });
   });
-  story.actions.forEach(([title, words, note, context], i) => {
+  story.actions.forEach(([title, words, note, context, headline], i) => {
     // Narrative actions are stage directions and do not appear as speech from the participant.
     const who = typeof words === 'string' && words.startsWith('Ты ') ? 'Ремарка' : 'Ты';
     const lines = Array.isArray(words) ? words : [[who, words, context]];
     pages.set(responses[i].id, {
-      title, question:'', note, lines:lines.map(bubbleFromPair), links:[], review:true
+      title, question:'', note, outcome:{kind:'positive', headline},
+      lines:lines.map(bubbleFromPair), links:[], review:true
     });
   });
 }
@@ -155,9 +157,10 @@ function showCatalogue(panel) {
   const section = element('section','catalogue');
   const catalog = [{id:'dubl', title:'Дубль для своих', place:'Школьная музыкальная группа'}, ...scenarios];
   const heading = personalRole ? 'Что делать, если на меня давят?' : 'Как поступить?';
-  const intro = personalRole ? 'Выбери ситуацию и попробуй разные ответы. Что ты чувствуешь? Какой поддержки тебе хочется и у кого её можно попросить?' :
-    'Ты видишь ситуацию со стороны. Какие детали подскажут, каково другому человеку? Как узнать, какая помощь ему нужна?';
-  section.append(element('p','small',catalog.length+' ситуаций'), element('h1','',heading), element('p','catalog-intro',intro));
+  const intro = personalRole ? 'В этих историях давят на тебя. Ты решаешь, что ответить и у кого попросить поддержки.' :
+    'В этих историях ты видишь, как давят на другого. Присмотрись к его словам и реши, как ему помочь.';
+  section.append(element('p','small','Тренажёр в переписке · '+catalog.length+' ситуаций'), element('h1','',heading),
+    element('p','catalog-intro',intro), element('p','catalog-how','Выбери историю. На стоп-кадре реши, что сказать или сделать. В конце увидишь последствия. Можно отмотать разговор и попробовать другой ход.'));
   const cards = element('div','case-grid');
   catalog.forEach(item => {
     const card = element('a','case-card');

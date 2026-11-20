@@ -14,6 +14,7 @@ function playScene() {
     pages.set(section.id, {
       title: section.querySelector('h1').textContent,
       parent: section.dataset.parent,
+      outcome: section.dataset.outcome && {kind:section.dataset.outcome, headline:section.dataset.headline},
       review: section.hasAttribute('data-review'),
       lines: [...section.querySelectorAll('.msg')].map(el => el.cloneNode(true)),
       note: section.querySelector('.note')?.textContent || '',
@@ -54,7 +55,11 @@ function playScene() {
     <div class="typing" hidden><span class="typing-name"></span><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span></div>
     <div class="screen-flash" aria-hidden="true"></div>
     <p class="freeze" hidden>Стоп-кадр</p>
-    <p class="note"></p><h2 tabindex="-1"></h2>
+    <section class="outcome" aria-labelledby="outcome-label outcome-title" tabindex="-1" hidden>
+      <p class="outcome-label"><span class="outcome-icon" aria-hidden="true"></span><span id="outcome-label"></span></p>
+      <h2 id="outcome-title"></h2><p class="outcome-reason"></p>
+    </section>
+    <p class="note"></p><h2 class="question" tabindex="-1"></h2>
     <nav class="choices" aria-label="Продолжить беседу"></nav>
     <nav class="tools" aria-label="Управление сценой"><div class="playback-controls"></div></nav>
     <div class="sr" role="status"></div>`;
@@ -70,7 +75,13 @@ function playScene() {
   const flash = scene.querySelector('.screen-flash');
   const freeze = scene.querySelector('.freeze');
   const note = scene.querySelector('.note');
-  const question = scene.querySelector('h2');
+  const question = scene.querySelector('.question');
+  const outcome = scene.querySelector('.outcome');
+  const outcomeLabels = {
+    positive: {label:'Удачный исход', icon:'✓'},
+    negative: {label:'Неудачный исход', icon:'×'},
+    open: {label:'Исход пока открыт', icon:'…'}
+  };
   const choices = scene.querySelector('.choices');
   const controls = scene.querySelector('.playback-controls');
   controls.after(button('finish', 'Завершить', finishScene));
@@ -154,9 +165,18 @@ function playScene() {
     controls.replaceChildren();
     const {id} = state;
     const data = pages.get(id);
-    freeze.hidden = false;
-    freeze.textContent = data.question ? 'Стоп-кадр' : 'Разбор';
-    note.textContent = forks.includes(id) ? '' : data.note;
+    freeze.hidden = !data.question;
+    if (data.outcome) {
+      const {kind, headline} = data.outcome;
+      outcome.dataset.kind = kind;
+      outcome.querySelector('.outcome-icon').textContent = outcomeLabels[kind].icon;
+      outcome.querySelector('#outcome-label').textContent = outcomeLabels[kind].label;
+      outcome.querySelector('#outcome-title').textContent = headline;
+      outcome.querySelector('.outcome-reason').textContent = data.note;
+      outcome.hidden = false;
+    } else {
+      note.textContent = forks.includes(id) ? '' : data.note;
+    }
     question.textContent = data.question;
     if (!data.question && [...thread.children].some(row => review.cueFor(row.dataset.key))) {
       choices.append(button('inspect', 'Разобрать детали', () => {
@@ -213,6 +233,7 @@ function playScene() {
     flash.getAnimations().forEach(animation => animation.cancel());
     freeze.getAnimations().forEach(animation => animation.cancel());
     freeze.hidden = true;
+    outcome.hidden = true;
     typing.hidden = true;
     note.textContent = '';
     question.textContent = '';
@@ -305,7 +326,7 @@ function playScene() {
     }
     setControls();
     if (interactive) {
-      const target = active.question ? question : note;
+      const target = active.outcome ? outcome : question;
       target.tabIndex = -1;
       if (followNew) {
         target.focus({preventScroll:true});
@@ -313,7 +334,7 @@ function playScene() {
           target.scrollIntoView({block:'nearest', behavior:'instant'});
         }
       }
-      status.textContent = active.question ? 'Стоп-кадр. ' + active.question : heading.textContent;
+      status.textContent = active.outcome ? outcomeLabels[active.outcome.kind].label + '. ' + active.outcome.headline : 'Стоп-кадр. ' + active.question;
     }
     if (interactive && active.question && motionAllowed()) flashFreeze();
     scene.removeAttribute('aria-busy');

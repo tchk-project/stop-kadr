@@ -1,11 +1,11 @@
 <!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Давят на меня · Дубль для своих</title>
 
-<link rel="stylesheet" href="./scene.css?v=direct-1">
-<script src="./scenarios.js?v=choices-2" defer></script>
-<script src="./catalog.js?v=role-1" defer></script>
+<link rel="stylesheet" href="./scene.css?v=outcomes-1">
+<script src="./scenarios.js?v=outcomes-1" defer></script>
+<script src="./catalog.js?v=outcomes-1" defer></script>
 <script src="./detail-cues.js?v=1" defer></script>
 <script src="./detail-review.js?v=1" defer></script>
-<script src="./scene.js?v=direct-1" defer></script>
+<script src="./scene.js?v=outcomes-1" defer></script>
 </head><body><main class="panel"><header class="top">Стоп-кадр</header><nav class="roles" aria-label="Точка зрения"><a href="./index.html" data-role="witness">Я очевидец</a><a href="./self.html" data-role="self" aria-current="page">Давят на меня</a></nav>
 <section class="page" id="ask" tabindex="-1" aria-labelledby="title-ask" data-parent="start">
 <p class="small">Учебная сцена · школьная музыкальная группа</p>
@@ -18,7 +18,7 @@
 <a href="#accept">«Понял, не выкладываю»</a>
 <a href="#insist">«Слишком серьёзно ты к этому»</a>
 </nav></section>
-<section class="page" id="accept" tabindex="-1" aria-labelledby="title-accept" data-parent="ask" data-review>
+<section class="page" id="accept" data-outcome="positive" data-headline="Костя спросил, какую запись можно отправить" tabindex="-1" aria-labelledby="title-accept" data-parent="ask" data-review>
 <p class="small">Учебная сцена · школьная музыкальная группа</p>
 <h1 id="title-accept">Просьбу приняли</h1>
 <div class="chat">
@@ -42,7 +42,7 @@
 <a href="#ally">Написать Вере лично</a>
 <a href="#pause">Взять паузу и обратиться за поддержкой</a>
 </nav></section>
-<section class="page" id="answer" tabindex="-1" aria-labelledby="title-answer" data-parent="insist" data-review>
+<section class="page" id="answer" data-outcome="positive" data-headline="Ты прямо сказал, что против публикации" tabindex="-1" aria-labelledby="title-answer" data-parent="insist" data-review>
 <p class="small">Учебная сцена · школьная музыкальная группа</p>
 <h1 id="title-answer">Короткий ответ</h1>
 <div class="chat">
@@ -53,7 +53,7 @@
 <a href="#insist">Попробовать другой вариант</a>
 <a href="#start">В начало</a>
 </nav></section>
-<section class="page" id="ally" tabindex="-1" aria-labelledby="title-ally" data-parent="insist" data-review>
+<section class="page" id="ally" data-outcome="positive" data-headline="Ты попросил Веру поддержать тебя в чате" tabindex="-1" aria-labelledby="title-ally" data-parent="insist" data-review>
 <p class="small">Учебная сцена · школьная музыкальная группа</p>
 <h1 id="title-ally">Попросить о поддержке</h1>
 <div class="chat">
@@ -64,7 +64,7 @@
 <a href="#insist">Попробовать другой вариант</a>
 <a href="#start">В начало</a>
 </nav></section>
-<section class="page" id="pause" tabindex="-1" aria-labelledby="title-pause" data-parent="insist" data-review>
+<section class="page" id="pause" data-outcome="positive" data-headline="Ты можешь взять паузу и обратиться за поддержкой" tabindex="-1" aria-labelledby="title-pause" data-parent="insist" data-review>
 <p class="small">Учебная сцена · школьная музыкальная группа</p>
 <h1 id="title-pause">Взять паузу</h1>
 <p class="note">Можно выключить уведомления и поговорить с тем, кому доверяешь. Молчание не даёт другим согласия на публикацию. За решение разослать запись отвечает тот, кто это делает.</p>
@@ -72,7 +72,7 @@
 <a href="#insist">Попробовать другой вариант</a>
 <a href="#start">В начало</a>
 </nav></section>
-<section class="page" id="support" tabindex="-1" aria-labelledby="title-support" data-parent="start" data-review>
+<section class="page" id="support" data-outcome="positive" data-headline="Вера готова поддержать тебя в чате" tabindex="-1" aria-labelledby="title-support" data-parent="start" data-review>
 <p class="small">Учебная сцена · школьная музыкальная группа</p>
 <h1 id="title-support">Личная переписка</h1>
 <div class="chat">
@@ -83,7 +83,7 @@
 <nav aria-label="Варианты" class="choices">
 <a href="#start">Вернуться к началу</a>
 </nav></section>
-<section class="page" id="swap" tabindex="-1" aria-labelledby="title-swap" data-parent="start" data-review>
+<section class="page" id="swap" data-outcome="negative" data-headline="Запись с Верой отправили без её согласия" tabindex="-1" aria-labelledby="title-swap" data-parent="start" data-review>
 <h1 id="title-swap">Другой дубль</h1>
 <div class="chat">
 <div class="msg you"><strong>Ты</strong><p>Лучше тот, где у Веры палочка улетела. Вер, помнишь?</p></div>
