@@ -31,7 +31,8 @@ function playScene() {
     rewind: '<path d="m12 5-8 7 8 7zM21 5l-8 7 8 7z"/>',
     finish: '<rect x="5.5" y="5.5" width="13" height="13" rx="2"/>',
     play: '<path d="m7 4 13 8-13 8z"/>',
-    dismiss: '<path d="m6 6 12 12M6 18 18 6"/>'
+    dismiss: '<path d="m6 6 12 12M6 18 18 6"/>',
+    inspect: '<circle cx="10" cy="10" r="6"/><path d="m15 15 5 5"/>'
   };
 
   function button(kind, label, onClick, icon = kind) {
@@ -74,11 +75,11 @@ function playScene() {
   const controls = scene.querySelector('.tools');
   const status = scene.querySelector('[role=status]');
   function pauseMedia(except) {
-    thread.querySelectorAll('audio, video').forEach(player => {
+    scene.querySelectorAll('audio, video').forEach(player => {
       if (player !== except && !player.paused) player.pause();
     });
   }
-  thread.addEventListener('play', event => pauseMedia(event.target), true);
+  scene.addEventListener('play', event => pauseMedia(event.target), true);
   window.addEventListener('pagehide', () => pauseMedia());
   const photo = document.createElement('dialog');
   photo.className = 'photo-dialog';
@@ -86,7 +87,7 @@ function playScene() {
   const fullImage = document.createElement('img');
   photo.append(fullImage, button('dismiss', 'Закрыть скриншот', () => photo.close()));
   scene.append(photo);
-  thread.addEventListener('click', event => {
+  scene.addEventListener('click', event => {
     const preview = event.target.closest('.open-image')?.querySelector('img');
     if (!preview) return;
     fullImage.src = preview.src;
@@ -100,7 +101,11 @@ function playScene() {
   scene.append(dialog);
   dialog.querySelector('.buttons').append(
     button('dismiss','Отмена', () => dialog.close()),
-    button('confirm-end','Завершить сцену', () => { dialog.close(); visit({id:'end', fork:state.fork}); }, 'finish')
+    button('confirm-end','Завершить сцену', () => {
+      const played = {id:state.id, fork:state.fork, keys:[...thread.children].map(row => row.dataset.key)};
+      dialog.close();
+      visit({id:'end', fork:state.fork}, played);
+    }, 'finish')
   );
 
   function locationState() {
@@ -146,6 +151,16 @@ function playScene() {
   let busy = false;
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
   const motionAllowed = () => !reduced.matches && typeof Element.prototype.animate === 'function';
+  const review = createDetailReview(scene, sceneDetails[episode?.id || 'dubl']?.[role] || {}, makeRow, motionAllowed);
+
+  function makeRow(item) {
+    const row = element('div', 'item');
+    row.dataset.key = item.key;
+    row.dataset.step = item.step;
+    if (item.content.dataset.context) row.append(element('p', 'chat-context', item.content.dataset.context));
+    row.append(item.content);
+    return row;
+  }
 
   function setControls() {
     choices.replaceChildren();
@@ -160,6 +175,18 @@ function playScene() {
     thread.style.display = atEnd ? 'none' : '';
     note.textContent = atEnd || forks.includes(id) ? '' : data.note;
     scene.querySelector('h2').textContent = atEnd ? '' : data.question;
+    if (!data?.question) {
+      const played = atEnd ? history.state?.played : {
+        id:state.id, fork:state.fork, keys:[...thread.children].map(row => row.dataset.key)
+      };
+      if (played && pages.has(played.id) && played.keys.some(key => review.cueFor(key))) {
+        choices.append(button('inspect', 'Разобрать детали', () => {
+          pauseMedia();
+          const seen = new Set(played.keys);
+          review.open(messages(played).filter(item => seen.has(item.key)), pages.get('start').title);
+        }));
+      }
+    }
     if (atEnd) {
       choices.append(catalogueLink(), button('forward','Пройти ещё раз', () => go('start')));
       return;
@@ -180,9 +207,9 @@ function playScene() {
   function go(id) {
     visit({id, fork:forks.includes(id) ? id : state.fork});
   }
-  function visit(next) {
+  function visit(next, played) {
     if (busy && next.id !== 'end') return;
-    history.pushState({sceneFork:next.fork}, '', '#'+next.id);
+    history.pushState({sceneFork:next.fork, played}, '', '#'+next.id);
     render(next, true);
   }
   function askToEnd() {
@@ -241,6 +268,7 @@ function playScene() {
     ], {duration: 680, easing: 'cubic-bezier(.3, 0, .2, 1)'});
   }
   function intro() {
+    review.close();
     ++sequence;
     finishWaiting();
     busy = false;
@@ -259,6 +287,7 @@ function playScene() {
   }
 
   async function render(next, interactive) {
+    review.close();
     const ticket = ++sequence;
     finishWaiting();
     pauseMedia();
@@ -319,11 +348,7 @@ function playScene() {
         if (ticket !== sequence) return;
       }
       typing.hidden = true;
-      const row = element('div', 'item');
-      row.dataset.key = item.key;
-      row.dataset.step = item.step;
-      if (item.content.dataset.context) row.append(element('p', 'chat-context', item.content.dataset.context));
-      row.append(item.content);
+      const row = makeRow(item);
       thread.append(row);
       if (onStep && followNew && (!skip || i === 0) && row.getBoundingClientRect().bottom > window.innerHeight) {
         row.scrollIntoView({block:'nearest', behavior:'instant'});

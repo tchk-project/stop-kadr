@@ -153,8 +153,8 @@ function showCatalogue(panel) {
   document.title = 'Стоп-кадр · '+(personalRole ? 'Давят на меня' : 'Я очевидец');
   const section = element('section','catalogue');
   const catalog = [{id:'dubl', title:'Дубль для своих', place:'Школьная музыкальная группа'}, ...scenarios];
-  const intro = personalRole ? 'Тебя касается то, что происходит. Выбери ситуацию и попробуй разные ответы.' :
-    'Ты видишь, что происходит рядом. Выбери ситуацию и реши, как отреагировать.';
+  const intro = personalRole ? 'Ты внутри ситуации. Попробуй разные ответы и присмотрись, кто замечает твою просьбу и как тебя могут поддержать.' :
+    'Ты видишь ситуацию со стороны. Какие детали подскажут, каково другому человеку? Как узнать, какая помощь ему нужна?';
   section.append(element('p','small',catalog.length+' ситуаций'), element('h1','','Как поступить?'), element('p','catalog-intro',intro));
   const cards = element('div','case-grid');
   catalog.forEach(item => {
