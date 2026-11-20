@@ -39,7 +39,8 @@ scene.className = 'scene';
 scene.innerHTML = `
   <p class="small">Учебная сцена · школьная музыкальная группа</p>
   <h1 tabindex="-1"></h1>
-  <div class="thread" role="region" aria-label="История переписки" tabindex="0"></div>
+  <button type="button" class="history-toggle" aria-controls="messages" aria-expanded="false" hidden>Показать предыдущие сообщения</button>
+  <div class="thread" id="messages" role="region" aria-label="История переписки"></div>
   <p class="note"></p><h2></h2>
   <nav class="choices" aria-label="Продолжить беседу"></nav>
   <nav class="tools" aria-label="Управление сценой"></nav>
@@ -48,6 +49,7 @@ panel.querySelectorAll('.page').forEach(el => el.remove());
 panel.append(scene);
 const heading = scene.querySelector('h1');
 const thread = scene.querySelector('.thread');
+const historyToggle = scene.querySelector('.history-toggle');
 const choices = scene.querySelector('.choices');
 const controls = scene.querySelector('.tools');
 const status = scene.querySelector('[role=status]');
@@ -87,12 +89,12 @@ function messages(location) {
       const marker = document.createElement('p');
       marker.className = 'choice-mark';
       marker.textContent = 'Твой выбор · ' + decision.label;
-      result.push({key:id+'-choice', content:marker});
+      result.push({step:id, key:id+'-choice', content:marker});
     }
     data.lines.forEach((line, index) => {
       const content = line.cloneNode(true);
       if (id === 'direct') content.querySelector('strong').textContent = 'Ты · лично Мише';
-      result.push({key:id+'-'+index, content});
+      result.push({step:id, key:id+'-'+index, content});
     });
   });
   return result;
@@ -140,7 +142,20 @@ function visit(next) {
   history.pushState({sceneFork:next.fork}, '', '#'+next.id);
   render(next, true);
 }
-function bottom() { thread.scrollTop = thread.scrollHeight; }
+function showHistory(expanded) {
+  let hasEarlier = false;
+  for (const row of thread.children) {
+    const earlier = row.dataset.step !== state.id;
+    if (earlier) hasEarlier = true;
+    row.hidden = earlier && !expanded;
+  }
+  historyToggle.hidden = !hasEarlier;
+  historyToggle.setAttribute('aria-expanded', String(expanded));
+  historyToggle.textContent = expanded ? 'Свернуть предыдущие сообщения' : 'Показать предыдущие сообщения';
+}
+historyToggle.addEventListener('click', () => {
+  if (!busy) showHistory(historyToggle.getAttribute('aria-expanded') !== 'true');
+});
 
 async function render(next, interactive) {
   const ticket = ++sequence;
@@ -155,9 +170,12 @@ async function render(next, interactive) {
   const motion = interactive && motionAllowed() && next.id !== 'end';
   scene.setAttribute('aria-busy','true');
   if (removed.length && motion) {
-    bottom();
     // Remove the newest bubble first. As each collapses, the older history comes into view.
     for (const row of removed) {
+      if (row.hidden) {
+        row.remove();
+        continue;
+      }
       const height = row.offsetHeight;
       const effect = row.animate([
         {height:height+'px', opacity:1, transform:'translateY(0)'},
@@ -167,7 +185,6 @@ async function render(next, interactive) {
       await effect.finished.catch(() => {});
       if (ticket !== sequence) return;
       row.remove();
-      bottom();
     }
   } else removed.forEach(row => row.remove());
   state = next;
@@ -176,15 +193,16 @@ async function render(next, interactive) {
     const row = document.createElement('div');
     row.className = 'item';
     row.dataset.key = item.key;
+    row.dataset.step = item.step;
     row.append(item.content);
     thread.append(row);
     if (motion) row.animate([{opacity:0, transform:'translateY(8px)'},{opacity:1, transform:'none'}],
       {duration:170, delay:i*32, fill:'backwards'});
   }
-  bottom();
+  showHistory(false);
   if (interactive) {
     heading.focus({preventScroll:true});
-    scene.scrollIntoView({block:'nearest', behavior:'instant'});
+    if (heading.getBoundingClientRect().top < 0) heading.scrollIntoView({block:'start', behavior:'instant'});
     status.textContent = removed.length && next.id !== 'end' ? 'Перемотка завершена. '+heading.textContent : heading.textContent;
   }
   scene.removeAttribute('aria-busy');

@@ -8,14 +8,11 @@
   border: 1px solid #d1dfd8;
   border-radius: 14px;
   background: #f6f8f6;
-  max-height: clamp(170px, 34dvh, 320px);
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  overflow-anchor: none;
   padding: 12px;
   display: grid;
   gap: 8px;
-  scrollbar-color: #92aba1 transparent;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 .item { min-width: 0; }
 .item .msg { width: fit-content; max-width: 91%; }
@@ -41,7 +38,7 @@
 .finish:hover { background: #fbefee; }
 .dismiss { background: #fff; border: 1px solid #a9b9b1; color: #29463d; }
 .confirm-end { background: #793e44; border: 1px solid #793e44; color: #fff; }
-.action:focus-visible, .thread:focus-visible {
+.action:focus-visible, .history-toggle:focus-visible {
   outline: 3px solid #885921; outline-offset: 3px;
 }
 .tools {
@@ -69,3 +66,18 @@
 .roles { display:flex; flex-wrap:wrap; gap:4px; padding:10px clamp(12px,4vw,30px); border-bottom:1px solid #d9e3dd; }
 .roles a { font-size:.88rem; padding:9px 12px; line-height:1.55; min-height:44px; border:1px solid transparent; border-radius:9px; display:inline-flex; align-items:center; }
 .roles a[aria-current=page] { background:#e2f1e9; color:#163d31; border-color:#bfd6c8; }
+
+.history-toggle {
+  margin: 0 0 8px; padding: 5px 10px; color: #355249; background: #fff;
+  border: 1px solid #c6d6ce; border-radius: 8px; font-size: .88rem;
+}
+.history-toggle::before { content: "+"; margin-right: .45em; }
+.history-toggle[aria-expanded="true"]::before { content: "−"; }
+@media (max-width: 600px), (max-height: 700px) {
+  .top { padding-block: 10px; }
+  .roles { padding-block: 4px; }
+  .scene { padding-top: 12px; }
+  .scene h1 { margin-bottom: 10px; }
+  .item .msg { padding: 7px 11px; }
+  .thread { gap: 6px; }
+}
