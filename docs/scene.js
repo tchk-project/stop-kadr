@@ -68,6 +68,7 @@ function playScene() {
   const typing = scene.querySelector('.typing');
   const flash = scene.querySelector('.screen-flash');
   const freeze = scene.querySelector('.freeze');
+  const note = scene.querySelector('.note');
   const question = scene.querySelector('h2');
   const choices = scene.querySelector('.choices');
   const controls = scene.querySelector('.tools');
@@ -157,7 +158,7 @@ function playScene() {
     freeze.textContent = data?.question ? 'Стоп-кадр' : 'Разбор';
     thread.hidden = atEnd;
     thread.style.display = atEnd ? 'none' : '';
-    scene.querySelector('.note').textContent = atEnd || forks.includes(id) ? '' : data.note;
+    note.textContent = atEnd || forks.includes(id) ? '' : data.note;
     scene.querySelector('h2').textContent = atEnd ? '' : data.question;
     if (atEnd) {
       choices.append(catalogueLink(), button('forward','Пройти ещё раз', () => go('start')));
@@ -216,7 +217,7 @@ function playScene() {
     freeze.getAnimations().forEach(animation => animation.cancel());
     freeze.hidden = true;
     typing.hidden = true;
-    scene.querySelector('.note').textContent = '';
+    note.textContent = '';
     question.textContent = '';
     choices.replaceChildren();
     controls.replaceChildren();
@@ -338,12 +339,11 @@ function playScene() {
     }
     setControls();
     if (interactive) {
-      const target = active ? (active.question ? question : freeze) : heading;
+      const target = active ? (active.question ? question : note) : heading;
       target.tabIndex = -1;
       if (followNew) {
         target.focus({preventScroll:true});
-        if (next.id === 'end' || items.length === common ||
-            (active?.question && freeze.getBoundingClientRect().bottom > window.innerHeight)) {
+        if (next.id === 'end' || items.length === common || target.getBoundingClientRect().bottom > window.innerHeight) {
           target.scrollIntoView({block:'nearest', behavior:'instant'});
         }
       }

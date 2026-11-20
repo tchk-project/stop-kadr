@@ -1,9 +1,9 @@
 <!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Дубль для своих — интерактивная переписка</title>
 
 <link rel="stylesheet" href="./scene.css?v=screen-flash">
-<script src="./scenarios.js" defer></script>
-<script src="./catalog.js" defer></script>
-<script src="./scene.js?v=screen-flash" defer></script>
+<script src="./scenarios.js?v=choices-2" defer></script>
+<script src="./catalog.js?v=choices-2" defer></script>
+<script src="./scene.js?v=choices-2" defer></script>
 </head><body><main class="panel"><header class="top">Стоп-кадр</header><nav class="roles" aria-label="Точка зрения"><a href="./index.html" aria-current="page">Я очевидец</a><a href="./self.html">Давят на меня</a></nav>
 <section class="page" id="joke" tabindex="-1" aria-labelledby="title-joke"><p class="small">Учебная сцена · школьная музыкальная группа</p>
 <h1 id="title-joke">Миша ответил</h1><p class="note">Да, Миша сам упомянул ошибку. Про публикацию он пока ничего не сказал.</p>
@@ -56,8 +56,19 @@
 <h2>Ты в этом чате. Что сделаешь сейчас?</h2>
 <nav aria-label="Варианты" class="choices">
 <a href="#group">Напишу в группу</a>
+<a href="#vote">Проголосую за публикацию</a>
 <a href="#direct">Напишу Мише лично</a>
 <a href="#wait">Подожду, может, обойдётся</a></nav></section>
+<section class="page" id="vote" tabindex="-1" aria-labelledby="title-vote" data-parent="pressure" data-review>
+<h1 id="title-vote">На следующей репетиции</h1>
+<div class="chat">
+<div class="msg you" data-reactions='{"👍":["Даня"]}'><strong>Ты</strong><p>Я за. У всех бывают такие дубли.</p></div>
+<div class="msg"><strong>Костя</strong><p>Уже отправил в школьный чат.</p></div>
+<div class="msg"><strong>Вера</strong><p>Миш, тебя сегодня ждать?</p></div>
+<div class="msg misha" data-context="На следующий день · личная переписка с тобой"><strong>Миша · лично тебе</strong><p>Вчера в столовой меня попросили спеть «как на видео». Сегодня поиграйте без меня.</p></div>
+</div>
+<p class="note">Ты хотел показать, что ошибиться может каждый. Костя услышал голос за публикацию, хотя Миша уже попросил оставить дубль в группе. Теперь Мише напоминают о записи даже в столовой. Можно написать ему «Зря я проголосовал за, ты же просил не выкладывать» и попросить админа убрать запись.</p>
+<nav aria-label="Варианты" class="choices"><a href="#pressure">Попробовать другой ответ</a><a href="#start">В начало</a></nav></section>
 <section class="page" id="group" tabindex="-1" aria-labelledby="title-group"><p class="small">Учебная сцена · школьная музыкальная группа</p>
 <h1 id="title-group">Ответ в группе</h1>
 <div class="chat">

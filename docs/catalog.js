@@ -119,6 +119,15 @@ function loadEpisode(pages, item) {
   const story = item[role];
   const options = story.observations.map(([label], i) => ({label, id:'notice-'+i}));
   const responses = story.actions.map(([label], i) => ({label, id:'act-'+i}));
+  const alternative = story.alternative;
+  const links = [...responses];
+  if (alternative) {
+    links.splice(alternative.position, 0, {id:'consequence', label:alternative.label});
+    pages.set('consequence', {
+      title:alternative.label, question:'', note:alternative.note,
+      lines:alternative.lines.map(bubbleFromPair), links:[], review:true
+    });
+  }
   pages.set('start', {
     title:item.title, question:story.question, note:'',
     lines:story.opening.map(bubbleFromPair), links:options
@@ -126,7 +135,7 @@ function loadEpisode(pages, item) {
   story.observations.forEach(([, note], i) => {
     pages.set(options[i].id, {
       title:item.title, question:story.prompt, note,
-      lines:story.later.map(bubbleFromPair), links:responses
+      lines:story.later.map(bubbleFromPair), links
     });
   });
   story.actions.forEach(([title, words, note, context], i) => {

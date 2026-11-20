@@ -1,9 +1,9 @@
 <!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Давят на меня · Дубль для своих</title>
 
 <link rel="stylesheet" href="./scene.css?v=screen-flash">
-<script src="./scenarios.js" defer></script>
-<script src="./catalog.js" defer></script>
-<script src="./scene.js?v=screen-flash" defer></script>
+<script src="./scenarios.js?v=choices-2" defer></script>
+<script src="./catalog.js?v=choices-2" defer></script>
+<script src="./scene.js?v=choices-2" defer></script>
 </head><body><main class="panel"><header class="top">Стоп-кадр</header><nav class="roles" aria-label="Точка зрения"><a href="./index.html">Я очевидец</a><a href="./self.html" aria-current="page">Давят на меня</a></nav>
 <section class="page" id="ask" tabindex="-1" aria-labelledby="title-ask" data-parent="start">
 <p class="small">Учебная сцена · школьная музыкальная группа</p>
@@ -81,6 +81,16 @@
 <nav aria-label="Варианты" class="choices">
 <a href="#start">Вернуться к началу</a>
 </nav></section>
+<section class="page" id="swap" tabindex="-1" aria-labelledby="title-swap" data-parent="start" data-review>
+<h1 id="title-swap">Другой дубль</h1>
+<div class="chat">
+<div class="msg you"><strong>Ты</strong><p>Лучше тот, где у Веры палочка улетела. Вер, помнишь?</p></div>
+<div class="msg"><strong>Костя</strong><p>Точно! Вот его и отправил.</p></div>
+<div class="msg" data-context="Личная переписка с Верой"><strong>Вера · лично тебе</strong><p>Я думала, ты из всех поймёшь, каково это. Я тот дубль даже сама смотреть не хотела.</p></div>
+<div class="msg"><strong>Ремарка</strong><p>На следующей репетиции Вера просит убрать телефон, пока она играет.</p></div>
+</div>
+<p class="note">Ты хотел уберечь свою запись и предложил чужую. Костя сам решил её отправить. Вера оказалась на твоём месте, хотя разрешения у неё тоже никто не спросил. Можно извиниться перед Верой и вместе попросить удалить дубль. Твой отказ публиковать собственную запись по-прежнему в силе.</p>
+<nav aria-label="Варианты" class="choices"><a href="#start">Попробовать другой ответ</a></nav></section>
 <section class="page" id="start" tabindex="-1" aria-labelledby="title-start">
 <p class="small">Учебная сцена · школьная музыкальная группа</p>
 <h1 id="title-start">Этот дубль — с тобой</h1>
@@ -91,6 +101,7 @@
 <h2>На записи ты. Тебе не хочется, чтобы её разослали.</h2>
 <nav aria-label="Варианты" class="choices">
 <a href="#ask">Попросить не выкладывать запись</a>
+<a href="#swap">Предложить другой смешной дубль</a>
 <a href="#support">Сначала поговорить с Верой лично</a>
 </nav></section>
 </main></body></html>
