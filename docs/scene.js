@@ -49,7 +49,7 @@ function playScene() {
   const scene = document.createElement('section');
   scene.className = 'scene';
   scene.innerHTML = `
-    <p class="small">Учебная сцена · школьная музыкальная группа</p>
+    <p class="small scene-role"></p>
     <h1 tabindex="-1"></h1>
     <div class="thread" id="messages" role="region" aria-label="История переписки"></div>
     <div class="typing" hidden><span class="typing-name"></span><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span></div>
@@ -66,10 +66,9 @@ function playScene() {
     <div class="sr" role="status"></div>`;
   panel.querySelectorAll('.page').forEach(el => el.remove());
   panel.append(scene);
-  if (episode) {
-    scene.querySelector('.small').textContent = episode.place + ' · ' + (personalRole ? (episode.personalName ? 'ты — ' + episode.personalName : 'Давят на меня') : 'Я очевидец');
-    document.title = episode.title + ' · Стоп-кадр';
-  }
+  const roleLine = scene.querySelector('.scene-role');
+  roleLine.append(portrait(playerName), element('span', '', 'Ты — '+playerName+' · '+activeStory.place));
+  document.title = activeStory.title + ' · Стоп-кадр';
   const heading = scene.querySelector('h1');
   const thread = scene.querySelector('.thread');
   const typing = scene.querySelector('.typing');
@@ -81,6 +80,7 @@ function playScene() {
   const outcomeLabels = {
     positive: {label:'Удачный исход', icon:'✓'},
     negative: {label:'Неудачный исход', icon:'×'},
+    mixed: {label:'Смешанный исход', icon:'≈'},
     open: {label:'Исход пока открыт', icon:'…'}
   };
   const hint = scene.querySelector('.choice-hint');
@@ -129,11 +129,11 @@ function playScene() {
     const path = pathFor(location);
     path.forEach((id, i) => {
       const data = pages.get(id);
-      if (i && (forks.includes(id) || !data.lines.length)) {
+      if (i && (forks.includes(id) || data.continuation || !data.lines.length)) {
         const decision = pages.get(path[i-1]).links.find(link => link.id === id);
         const marker = document.createElement('div');
         marker.className = 'choice-mark';
-        marker.append(element('p', '', 'Твой выбор · ' + decision.label));
+        marker.append(element('p', '', data.continuation ? 'Возможное продолжение · '+data.continuation : 'Твой выбор · '+decision.label));
         if (forks.includes(id) && data.note) marker.append(element('p', 'choice-comment', data.note));
         result.push({step:id, key:id+'-choice', content:marker});
       }

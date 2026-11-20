@@ -86,7 +86,7 @@
   border-inline-start:5px solid var(--accent); border-radius:10px; scroll-margin-block:12px;
 }
 .outcome[data-kind=negative] { --accent:#953b3d; --surface:#fdf0ed; }
-.outcome[data-kind=open] { --accent:#80530d; --surface:#fff5df; }
+.outcome[data-kind=mixed], .outcome[data-kind=open] { --accent:#80530d; --surface:#fff5df; }
 .outcome-label { display:flex; align-items:center; gap:8px; font-weight:750; color:var(--accent); }
 .outcome-icon {
   display:inline-grid; place-items:center; width:1.35em; height:1.35em;
@@ -99,7 +99,10 @@
 .case-place { font-size:.84rem; color:#4c665a; font-weight:450; }
 .case-name { font-size:1.08rem; color:#173f32; }
 .item .msg.has-avatar { display:grid; grid-template-columns:30px minmax(0,1fr); column-gap:8px; align-items:start; max-width:96%; }
-.has-avatar .avatar { grid-column:1; grid-row:1 / 3; width:30px; height:30px; border-radius:50%; background:#d4e5dc url('./assets/avatars.webp') no-repeat; background-size:400% 400%; box-shadow:inset 0 0 0 1px #1c453122; }
+.avatar { display:inline-block; flex:none; width:30px; height:30px; border-radius:50%; background:#d4e5dc url('./assets/avatars.webp') no-repeat; background-size:400% 400%; box-shadow:inset 0 0 0 1px #1c453122; }
+.has-avatar > .avatar { grid-column:1; grid-row:1 / 3; }
+.scene-role { display:flex; align-items:center; gap:8px; }
+.scene-role .avatar { width:26px; height:26px; }
 .has-avatar strong, .has-avatar p { grid-column:2; }
 .item .msg.stage-note { max-width:100%; width:auto; background:transparent; border:0; color:#3e514c; font-size:.94rem; padding:6px; }
 .stage-note strong { font-weight:500; }
@@ -153,7 +156,9 @@
 .reaction summary { display:inline-flex; align-items:center; gap:5px; padding:1px 8px; min-height:27px; cursor:pointer; border:1px solid #b9cfc2; border-radius:20px; background:#eff5f0; color:#315344; font-size:.82rem; font-weight:600; }
 .reaction summary::-webkit-details-marker { display:none; }
 .reaction[open] summary { background:#dcebe0; }
-.reactors { display:block; font-size:.81rem; color:#3c5547; margin-top:4px; }
+.reactor { display:inline-flex; align-items:center; gap:4px; }
+.reactor .avatar { width:18px; height:18px; }
+.reactors { display:flex; flex-wrap:wrap; gap:8px; font-size:.81rem; color:#3c5547; margin-top:4px; }
 .choice-mark { border-block:1px solid #d6e2da; background:#edf3ee; padding:7px 10px; }
 .choice-mark p:first-child { font-weight:600; }
 .choice-comment { margin-top:3px; }
