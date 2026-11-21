@@ -27,6 +27,7 @@
 }
 .hero-copy h1 em { color:var(--blue-print); font-style:normal; }
 .intro-copy { max-width:42ch; font-size:clamp(1.08rem,2vw,1.3rem); line-height:1.46; }
+.intro-copy a { display:inline; padding:0; border:0; border-radius:0; background:transparent; color:var(--blue-print); font-weight:inherit; text-decoration:underline; text-underline-offset:.15em; }
 .how-to-play { max-width:47ch; margin:12px 0 20px; }
 .role-prompt { font-weight:700; }
 .catalog-home .roles { padding:5px 0 14px; gap:0; border:0; }

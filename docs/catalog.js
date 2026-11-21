@@ -311,7 +311,11 @@ function showCatalogue(panel) {
     const copy = element('div','hero-copy');
     const title = element('h1','','Тренажёр ');
     title.append(element('em','','внимания'));
-    copy.append(title,element('p','intro-copy','В «Стоп-кадре» ты выбираешь, как действовать по ходу истории. Так можно потренироваться замечать перемены и осознанно переходить от одного уровня внимания к другому.'),
+    const intro = element('p','intro-copy','В «Стоп-кадре» ты выбираешь, как действовать по ходу истории. Так можно потренироваться замечать перемены и осознанно переходить от одного ');
+    const levelsLink = element('a','','уровня внимания');
+    levelsLink.href = '#home-guide-title';
+    intro.append(levelsLink,' к другому.');
+    copy.append(title,intro,
       element('p','how-to-play','Когда история остановится, выбери ответ. Потом можно отмотать её назад и попробовать другой вариант.'));
     const start = element('button','start-game','Начать тренировку');
     start.type = 'button';
