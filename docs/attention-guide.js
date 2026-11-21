@@ -33,11 +33,14 @@ function attentionGuide(panel) {
     if (observer) observer.observe(el);
     else remember(colour);
   }
+  function levelTitle(colour) {
+    return element('strong','level-title',attentionModes[colour].name+' уровень');
+  }
   let intro;
   if (!known.has('yellow')) {
     intro = element('aside','colour-intro');
     intro.setAttribute('aria-label','Первое прохождение');
-    intro.append(element('strong','','Начинаем с жёлтого'),
+    intro.append(levelTitle('yellow'),
       element('p','','Можно болтать с друзьями и замечать, что происходит вокруг. Например, услышать не только шутку, но и просьбу перестать. Так проще уловить перемену, даже когда ничего плохого не ждёшь.'),
       element('p','','Цвет на кнопке показывает, какой уровень внимания ты выбираешь. Каждая история начинается с жёлтого.'));
     panel.querySelector('.mode-bar').after(intro);
@@ -55,7 +58,8 @@ function attentionGuide(panel) {
       row.append(label);
       mergeSaved();
       if (known.has('black')) return;
-      const tip = element('p','reaction-hint','Иногда от неожиданности замираешь. Это случается само. В игре такая реакция не считается ошибкой.');
+      const tip = element('p','reaction-hint');
+      tip.append(levelTitle('black'),'Иногда от неожиданности замираешь. Это случается само. В игре такая реакция не считается ошибкой.');
       row.append(tip);
       bubbles.push(tip);
       onDisplay(tip,'black');
@@ -67,7 +71,8 @@ function attentionGuide(panel) {
         const colour = option.dataset.code;
         if (!colourHelp[colour] || known.has(colour) || shown.has(colour)) continue;
         shown.add(colour);
-        const bubble = element('p','colour-tip',colourHelp[colour]);
+        const bubble = element('p','colour-tip');
+        bubble.append(levelTitle(colour),colourHelp[colour]);
         bubble.id = 'help-'+colour;
         bubble.dataset.code = colour;
         option.classList.add('new-colour');

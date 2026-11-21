@@ -10,6 +10,7 @@
 .colour-intro strong { font-size:1rem; color:#58460c; }
 .colour-intro p + p { margin-top:6px; font-size:.9rem; }
 .colour-tip { position:relative; margin:-2px 0 5px 14px; padding:9px 13px; background:var(--tint); color:var(--ink); border:1px solid var(--line); border-radius:2px 12px 12px; font-size:.89rem; }
+.level-title { display:block; color:inherit; font-size:1em; font-weight:700; margin:0 0 .2em; }
 .colour-tip::before { content:""; position:absolute; left:16px; top:-5px; width:8px; height:8px; transform:rotate(45deg); background:var(--tint); border-top:1px solid var(--line); border-left:1px solid var(--line); }
 .new-colour { outline:2px solid var(--ink); outline-offset:1px; }
 @media (prefers-reduced-motion:no-preference) {

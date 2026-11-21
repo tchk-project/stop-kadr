@@ -6,8 +6,9 @@ const source = readFileSync(__dirname+'/../docs/attention-guide.js','utf8');
 
 function lesson(saved) {
   const observed = new Set();
-  const node = () => ({
-    dataset:{}, classList:{add() {}}, append() {}, remove() {},
+  const node = (tag, className, textContent) => ({
+    tag, className, textContent, children:[],
+    dataset:{}, classList:{add() {}}, append(...parts) { this.children.push(...parts); }, remove() {},
     after(value) { this.afterNode = value; },
     setAttribute(key,value) { this[key] = value; }
   });
@@ -19,7 +20,7 @@ function lesson(saved) {
   }
   const panel = {querySelector:() => node()};
   const context = vm.createContext({localStorage:saved,IntersectionObserver:Observer,element:node,
-    attentionModes:{white:{},yellow:{},orange:{},red:{}}});
+    attentionModes:{white:{name:'Белый'},yellow:{name:'Жёлтый'},orange:{name:'Оранжевый'},red:{name:'Красный'},black:{name:'Чёрный'}}});
   vm.runInContext(source,context);
   const guide = context.attentionGuide(panel);
   function option(colour) { const el = node(); el.dataset.code = colour; return el; }
@@ -53,4 +54,14 @@ test('blocked persistence still lets the player choose and suppresses repeated h
   const again = option('red');
   guide.annotate([again]);
   assert.equal(again.afterNode,undefined);
+});
+
+test('all five level explanations start with a bold heading', () => {
+  const {guide,observed,option} = lesson({getItem:()=>null});
+  guide.annotate(['white','orange','red'].map(option));
+  guide.explainReaction(option('black'));
+  assert.deepEqual([...observed].map(el=>[el.children[0].tag,el.children[0].textContent]), [
+    ['strong','Жёлтый уровень'], ['strong','Белый уровень'], ['strong','Оранжевый уровень'],
+    ['strong','Красный уровень'], ['strong','Чёрный уровень']
+  ]);
 });
