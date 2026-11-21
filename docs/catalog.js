@@ -205,6 +205,10 @@ function showCatalogue(panel) {
   archiveLink.href = personalRole ? './v1/self.html' : './v1/index.html';
   panel.querySelector('.top').append(archiveLink);
   const section = element('section','catalogue');
+  const demo = element('a','demo-entry');
+  demo.href = './v2/index.html' + (personalRole ? '?role=self' : '');
+  demo.append(element('strong','','Играть в демо второй версии'), element('span','','Заметь, что изменилось · 3 ситуации'));
+  section.append(demo);
   const catalog = [rehearsal, ...scenarios];
   const heading = personalRole ? 'Что делать, если на меня давят?' : 'Как помочь, если на кого-то давят?';
   const intro = personalRole
