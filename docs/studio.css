@@ -47,7 +47,7 @@
 .catalog-guide ol { max-width:69ch; margin:8px 0 14px; }
 .catalog-home .case-grid { grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin:0; }
 .catalog-home .case-card { position:relative; align-content:center; min-height:92px; padding:14px 40px 14px 18px; background:#fffdf5; border:1px solid #bdc7b7; border-radius:12px; }
-.case-card::after { content:"↗"; position:absolute; right:15px; top:50%; transform:translateY(-50%); color:#47665f; }
+.case-card::after { content:""; position:absolute; right:17px; top:50%; width:7px; height:7px; border-top:2px solid #47665f; border-right:2px solid #47665f; transform:translateY(-50%) rotate(45deg); }
 .catalog-home .case-card:is(:hover,:focus-visible) { background:#fff1ce; border-color:#58675a; }
 .catalog-home .case-name { color:#203f3d; line-height:1.2; }
 .previous-demo { font-size:.85rem; width:fit-content; margin-top:22px; }
