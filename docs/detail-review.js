@@ -81,6 +81,7 @@ function createDetailReview(scene, cues, makeRow, motionAllowed) {
     if (!dialog.open) return;
     while (position < items.length) {
       const item = items[position++];
+      if (item.attention) dialog.dataset.code = item.attention;
       const row = makeRow(item);
       transcript.append(row);
       const cue = cueFor(item.key);

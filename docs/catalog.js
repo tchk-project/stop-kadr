@@ -1,10 +1,11 @@
 'use strict';
 
+const isAttentionPilot = document.body?.hasAttribute('data-attention-pilot') === true;
 const selectedRole = document.querySelector('.roles a[aria-current="page"]');
-const role = selectedRole.dataset.role;
+const role = isAttentionPilot ? 'witness' : selectedRole.dataset.role;
 const personalRole = role === 'self';
-const currentFile = selectedRole.getAttribute('href');
-const selection = new URLSearchParams(location.search).get('case');
+const currentFile = isAttentionPilot ? './index.html' : selectedRole.getAttribute('href');
+const selection = isAttentionPilot ? 'money' : new URLSearchParams(location.search).get('case');
 const episode = scenarios.find(item => item.id === selection);
 const rehearsal = {id:'dubl', title:'Дубль для своих', place:'Школьная музыкальная группа', actors:{witness:'Тимур', self:'Миша'}};
 const activeStory = episode || rehearsal;
@@ -206,8 +207,8 @@ function showCatalogue(panel) {
   panel.querySelector('.top').append(archiveLink);
   const section = element('section','catalogue');
   const demo = element('a','demo-entry');
-  demo.href = './v2/index.html' + (personalRole ? '?role=self' : '');
-  demo.append(element('strong','','Играть в демо второй версии'), element('span','','Заметь, что изменилось · 3 ситуации'));
+  demo.href = './focus.html';
+  demo.append(element('strong','','Играть в «Сбор после уроков»'), element('span','','Цвета внимания · переписка за Мишу'));
   section.append(demo);
   const catalog = [rehearsal, ...scenarios];
   const heading = personalRole ? 'Что делать, если на меня давят?' : 'Как помочь, если на кого-то давят?';
@@ -234,6 +235,9 @@ function showCatalogue(panel) {
     cards.append(card);
   });
   section.append(cards);
+  const earlierDemo = element('a','','Предыдущее демо · три короткие ситуации');
+  earlierDemo.href = './v2/index.html' + (personalRole ? '?role=self' : '');
+  section.append(earlierDemo);
   panel.append(section);
 }
 

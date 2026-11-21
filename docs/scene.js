@@ -24,8 +24,9 @@ function playScene() {
       }))
     });
   }
-  if (episode) loadEpisode(pages, episode);
-  const forks = episode ? ['notice-0', 'notice-1'] : ['joke', 'permission', 'unclear'];
+  if (isAttentionPilot) loadAttentionScene(pages);
+  else if (episode) loadEpisode(pages, episode);
+  const forks = isAttentionPilot ? [] : episode ? ['notice-0', 'notice-1'] : ['joke', 'permission', 'unclear'];
   const parents = {readrespect:'respect', cautious:'respect', group:'pressure', direct:'pressure', wait:'pressure'};
   const shapes = {
     forward: '<path d="M4 4h16v12H9l-5 4z"/>',
@@ -129,18 +130,23 @@ function playScene() {
     const path = pathFor(location);
     path.forEach((id, i) => {
       const data = pages.get(id);
-      if (i && (forks.includes(id) || data.continuation || !data.lines.length)) {
+      if (i && (isAttentionPilot || forks.includes(id) || data.continuation || !data.lines.length)) {
         const decision = pages.get(path[i-1]).links.find(link => link.id === id);
         const marker = document.createElement('div');
         marker.className = 'choice-mark';
         marker.append(element('p', '', data.continuation ? 'Возможное продолжение · '+data.continuation : 'Твой выбор · '+decision.label));
         if (forks.includes(id) && data.note) marker.append(element('p', 'choice-comment', data.note));
-        result.push({step:id, key:id+'-choice', content:marker});
+        if (isAttentionPilot && !data.continuation) {
+          const before = pages.get(path[i-1]).mode;
+          const label = before === data.mode ? attentionModes[data.mode].name : attentionModes[before].name+' → '+attentionModes[data.mode].name;
+          marker.prepend(element('p','mode-change',label));
+        }
+        result.push({step:id, key:id+'-choice', content:marker, attention:data.mode});
       }
       data.lines.forEach((line, index) => {
         const content = line.cloneNode(true);
         addAvatar(content);
-        result.push({step:id, key:id+'-'+index, content});
+        result.push({step:id, key:id+'-'+index, content, attention:data.mode});
       });
     });
     return result;
@@ -151,7 +157,8 @@ function playScene() {
   let busy = false;
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
   const motionAllowed = () => !reduced.matches && typeof Element.prototype.animate === 'function';
-  const review = createDetailReview(scene, sceneDetails[episode?.id || 'dubl']?.[role] || {}, makeRow, motionAllowed);
+  const cues = isAttentionPilot ? attentionCues : sceneDetails[episode?.id || 'dubl']?.[role] || {};
+  const review = createDetailReview(scene, cues, makeRow, motionAllowed);
 
   function makeRow(item) {
     const row = element('div', 'item');
@@ -179,7 +186,7 @@ function playScene() {
     } else {
       note.textContent = forks.includes(id) ? '' : data.note;
     }
-    question.textContent = data.question;
+    question.textContent = data.question || '';
     hint.hidden = id !== 'start' || !data.question;
     if (!data.question && [...thread.children].some(row => review.cueFor(row.dataset.key))) {
       choices.append(button('inspect', 'Разобрать детали', () => {
@@ -191,13 +198,28 @@ function playScene() {
       if (target === 'start') continue;
       const isRewind = data.review || Boolean(parents[id]);
       const container = isRewind ? controls : choices;
-      container.append(button(isRewind ? 'rewind' : 'forward', label, () => go(target)));
+      const option = button(isRewind ? 'rewind' : 'forward', label, () => go(target));
+      if (isAttentionPilot) {
+        const next = pages.get(target);
+        if (next.continuation) option.classList.add('take');
+        else {
+          const code = attentionModes[next.mode];
+          option.dataset.code = next.mode;
+          option.classList.add('coded');
+          option.prepend(element('span','code-tag',code.name+' · '+code.meaning));
+        }
+      }
+      container.append(option);
+    }
+    if (isAttentionPilot && data.outcome) {
+      const calm = pathFor(state).includes('calm');
+      controls.append(button('rewind', calm ? 'Сравнить с давлением' : 'Сравнить со спокойным дублем', () => go(calm ? 'pressure' : 'calm')));
     }
     const previous = pathFor(state).at(-2);
     if (previous && !data.links.some(link => link.id === previous)) {
       controls.append(button('rewind','На шаг назад', () => go(previous)));
     }
-    if (data.review || parents[id]) controls.append(button('rewind','Перемотать в начало', () => go('start')));
+    if (data.review || parents[id] || (isAttentionPilot && data.outcome)) controls.append(button('rewind','Перемотать в начало', () => go('start')));
   }
   function go(id) {
     if (busy) return;
@@ -250,11 +272,12 @@ function playScene() {
     const scale = Math.min(2.4, chat.width * 0.85 / label.width);
     const x = chat.left + (chat.width - label.width * scale) / 2 - label.left;
     const y = chat.bottom - Math.min(chat.height / 2, 100) - label.height * scale / 2 - label.top;
+    const stampColor = isAttentionPilot ? getComputedStyle(scene).getPropertyValue('--tint').trim() : '#eef7f0';
     const stamp = {
       transform: `translate(${x}px, ${y}px) scale(${scale})`,
-      backgroundColor: '#eef7f0', boxShadow: '0 0 0 4px #eef7f0'
+      backgroundColor: stampColor, boxShadow: '0 0 0 4px '+stampColor
     };
-    flash.animate([
+    if (!isAttentionPilot) flash.animate([
       {opacity: 1}, {opacity: 1, offset: 0.12, easing: 'ease-out'}, {opacity: 0}
     ], {duration: 270});
     freeze.animate([
@@ -271,6 +294,14 @@ function playScene() {
     followNew = interactive;
     busy = true;
     clearPrompt();
+    if (isAttentionPilot) {
+      const mode = pages.get(next.id).mode;
+      const changed = document.documentElement.dataset.code !== mode;
+      setAttentionMode(mode);
+      if (changed && interactive && motionAllowed()) {
+        flash.animate([{opacity:.85}, {opacity:0}], {duration:320, easing:'ease-out'});
+      }
+    }
     if (photo.open) photo.close();
     thread.getAnimations({subtree:true}).forEach(animation => animation.cancel());
     const items = messages(next);
