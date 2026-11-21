@@ -284,14 +284,6 @@ function playAttentionPilot(ui) {
       const {kind} = data.outcome;
       ui.showOutcome(data);
       choices.append(attentionTrail(path));
-      if (healthScenes.includes(episode)) {
-        const [label,href] = episode.source || ['О признаках инсульта и первой помощи · НМИЦ ТПМ Минздрава России','https://gnicpm.ru/articles/paczientam-articles/pervaya-pomoshh-pri-ostrom-narushenii-mozgovogo-krovoobrashheniya.html'];
-        const source = element('a','cooper-link',label);
-        source.href = href;
-        source.target = '_blank';
-        source.rel = 'noopener';
-        choices.append(source);
-      }
       if (path.includes('calm')) {
         choices.append(element('p','calm-ending',kind === 'positive' ? 'В этот раз всё пошло хорошо.' : 'Так закончился этот дубль.'),
           button('rewind','А если бы всё пошло не так спокойно…',() => navigate('pressure')));

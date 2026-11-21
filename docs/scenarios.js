@@ -1105,8 +1105,6 @@ const scenarios = [
 const healthScenes = [
   {id:'speech',title:'Перед командным фото',place:'Спортзал',actors:{witness:'Вера',self:'Тренер'}},
   {id:'vision',title:'Две буквы вместо одной',place:'У школьной афиши',actors:{witness:'Тимур',self:'Марина Сергеевна'}},
-  {id:'abdomen',title:'Десять минут до матча',place:'У раздевалки',actors:{witness:'Тимур',self:'Миша'},
-    source:['Об аппендиците у детей · НИКИ детства','https://nikid.ru/kak-raspoznat-appendicit-u-rebenka-i/']},
-  {id:'chest',title:'Последняя коробка',place:'После школьной ярмарки',actors:{witness:'Лера',self:'Папа'},
-    source:['О признаках сердечного приступа · Минздрав Кировской области','https://www.medkirov.ru/site/first-aid-02.html']}
+  {id:'abdomen',title:'Десять минут до матча',place:'У раздевалки',actors:{witness:'Тимур',self:'Миша'}},
+  {id:'chest',title:'Последняя коробка',place:'После школьной ярмарки',actors:{witness:'Лера',self:'Папа'}}
 ];
