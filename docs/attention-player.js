@@ -35,6 +35,12 @@ async function playAttentionPilot(ui) {
   const guide = attentionGuide(document.querySelector('.panel'));
   const speed = 4;
   const bar = document.querySelector('.mode-bar');
+  const levelBadge = [bar.querySelector('.signal'), bar.querySelector('.level-name')];
+  const dropFrames = [
+    {transform:'translateY(-10px) scale(1.55)'},
+    {transform:'translateY(1px) scale(.98)', offset:.78},
+    {transform:'none'}
+  ];
   const direction = element('span', 'tape-direction');
   direction.setAttribute('role', 'status');
   const skip = button('dismiss', 'Показать сразу', () => run?.abort(), 'play');
@@ -86,6 +92,12 @@ async function playAttentionPilot(ui) {
     if (document.documentElement.dataset.code === code) return;
     const leavingReaction = document.documentElement.dataset.code === 'black';
     setAttentionMode(code);
+    if (animated) {
+      for (const part of levelBadge) {
+        part.getAnimations().forEach(animation => animation.cancel());
+        part.animate(dropFrames, {duration:420, easing:'cubic-bezier(.22,.65,.3,1)'});
+      }
+    }
     if (animated && code !== 'black' && !leavingReaction) {
       flash.getAnimations().forEach(a => a.cancel());
       flash.animate([{opacity:.85}, {opacity:0}], {duration:280, easing:'ease-out'});
@@ -362,6 +374,9 @@ async function playAttentionPilot(ui) {
     ui.pauseMedia();
     const old = run;
     run = new AbortController();
+    run.signal.addEventListener('abort', () => {
+      for (const part of levelBadge) part.getAnimations().forEach(animation => animation.cancel());
+    }, {once:true});
     old?.abort();
     busy = true;
     showActivity();

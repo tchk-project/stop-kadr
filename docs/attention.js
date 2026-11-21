@@ -186,7 +186,8 @@ function loadAttentionScene(pages, route, title) {
 function setAttentionMode(mode) {
   const {name,meaning,chrome} = attentionModes[mode];
   document.documentElement.dataset.code = mode;
-  document.getElementById('mode-name').textContent = name+' · '+meaning;
+  document.querySelector('#mode-name .level-name').textContent = name;
+  document.querySelector('#mode-name .level-meaning').textContent = ' · '+meaning;
   document.querySelector('meta[name="theme-color"]').content = chrome;
 }
 
