@@ -1,110 +1,12 @@
-<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Дубль для своих — интерактивная переписка</title>
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Стоп-кадр · Игра в переписке</title>
 
 <link rel="stylesheet" href="./attention-colors.css?v=1">
 <link rel="stylesheet" href="./scene.css?v=demo-2">
 <script src="./scenarios.js?v=health-2" defer></script>
 <script src="./attention.js?v=reaction-1" defer></script>
 <script src="./catalog.js?v=current-only-1" defer></script>
-<script src="./detail-cues.js?v=cast-1" defer></script>
-<script src="./detail-review.js?v=cast-1" defer></script>
-<script src="./scene.js?v=reading-1" defer></script>
+<script src="./catalog-home.js" defer></script>
 <link rel="stylesheet" href="./studio.css?v=mobile-1">
 <link rel="stylesheet" href="./cooper.css?v=1">
 </head><body><main class="panel"><header class="top">Стоп-кадр</header><nav class="roles" aria-label="Точка зрения"><a href="./index.html" data-role="witness" aria-current="page">Я очевидец</a><a href="./self.html" data-role="self">Со мной</a></nav>
-<section class="page" id="joke" tabindex="-1" aria-labelledby="title-joke"><p class="small">Учебная сцена · школьная музыкальная группа</p>
-<h1 id="title-joke">Миша ответил</h1><p class="note">Да, Миша сам упомянул ошибку. Про публикацию он пока ничего не сказал.</p>
-<div class="chat">
-<div class="msg misha"><strong>Миша</strong><p>Кость, этот в школьный не кидай. Сюда можно.</p></div></div>
-<h2>Сравни два возможных продолжения. С какого начнёшь?</h2>
-<nav aria-label="Варианты" class="choices">
-<a href="#respect">«Ок, не буду»</a>
-<a href="#pressure">«Да ладно тебе»</a></nav></section>
-<section class="page" id="permission" tabindex="-1" aria-labelledby="title-permission"><p class="small">Учебная сцена · школьная музыкальная группа</p>
-<h1 id="title-permission">Миша ответил</h1><p class="note">В чате есть шутка Миши и вопрос Кости. Согласие на публикацию мы додумали.</p>
-<div class="chat">
-<div class="msg misha"><strong>Миша</strong><p>Кость, этот в школьный не кидай. Сюда можно.</p></div></div>
-<h2>Сравни два возможных продолжения. С какого начнёшь?</h2>
-<nav aria-label="Варианты" class="choices">
-<a href="#respect">«Ок, не буду»</a>
-<a href="#pressure">«Да ладно тебе»</a></nav></section>
-<section class="page" id="unclear" tabindex="-1" aria-labelledby="title-unclear"><p class="small">Учебная сцена · школьная музыкальная группа</p>
-<h1 id="title-unclear">Миша ответил</h1><p class="note">Именно. У нас есть переписка, но ответа Миши на вопрос Кости пока нет.</p>
-<div class="chat">
-<div class="msg misha"><strong>Миша</strong><p>Кость, этот в школьный не кидай. Сюда можно.</p></div></div>
-<h2>Сравни два возможных продолжения. С какого начнёшь?</h2>
-<nav aria-label="Варианты" class="choices">
-<a href="#respect">«Ок, не буду»</a>
-<a href="#pressure">«Да ладно тебе»</a></nav></section>
-<section class="page" id="respect" tabindex="-1" aria-labelledby="title-respect"><p class="small">Учебная сцена · школьная музыкальная группа</p>
-<h1 id="title-respect">Просьбу услышали</h1>
-<div class="chat">
-<div class="msg "><strong>Костя</strong><p>Ок, не буду. Есть последний прогон. Его можно?</p></div>
-<div class="msg "><strong>Вера</strong><p>Давай его. Спасибо.</p></div><div class="msg misha"><strong>Миша</strong><p>Да, этот можно. Я там вовремя вступил.</p></div><div class="msg video"><strong>Костя</strong><div class="chat-media"><video controls playsinline preload="none" poster="./assets/rehearsal.webp" src="./assets/rehearsal.mp4" aria-label="Удачный дубль репетиции. Гитара, клавиши и ударные играют вместе."></video><p class="clip-caption">Репетиция · удачный дубль</p></div></div></div>
-<h2>Что тебе даёт этот ответ?</h2>
-<nav aria-label="Варианты" class="choices">
-<a href="#readrespect">Сейчас просьбу приняли</a>
-<a href="#cautious">Хочу узнать у Миши, всё ли в порядке</a></nav></section>
-<section class="page" id="readrespect" data-outcome="positive" data-headline="Мишину просьбу услышали" tabindex="-1" aria-labelledby="title-readrespect"><p class="small">Учебная сцена · школьная музыкальная группа</p>
-<h1 id="title-readrespect">Что изменилось</h1><p class="note">Костя принял просьбу и предложил другую запись. В этой переписке давления дальше не видно. Если позже появятся новые сообщения, оценку можно пересмотреть.</p>
-<nav aria-label="Варианты" class="choices">
-<a href="#pressure">Сравнить с другим продолжением</a>
-<a href="#start">В начало</a></nav></section>
-<section class="page" id="cautious" data-outcome="positive" data-headline="Костя выбрал другой дубль" tabindex="-1" aria-labelledby="title-cautious"><p class="small">Учебная сцена · школьная музыкальная группа</p>
-<h1 id="title-cautious">Спросить лично</h1><div class="chat"><div class="msg you" data-context="Личная переписка с Мишей"><strong>Ты</strong><p>Миш, как ты?</p></div><div class="msg"><strong>Миша</strong><p>Норм. Костя другой скинул, я его маме тоже покажу.</p></div></div><p class="note">Ты спросил Мишу лично. Он доволен другим дублем и сам решил, кому ещё его показать.</p>
-<nav aria-label="Варианты" class="choices">
-<a href="#pressure">Сравнить с другим продолжением</a>
-<a href="#start">В начало</a></nav></section>
-<section class="page" id="pressure" tabindex="-1" aria-labelledby="title-pressure"><p class="small">Учебная сцена · школьная музыкальная группа</p>
-<h1 id="title-pressure">После просьбы</h1>
-<div class="chat">
-<div class="msg " data-reactions='{"🤔":["Вера"]}'><strong>Костя</strong><p>Да ладно тебе. Кто за то, чтобы всё-таки скинуть?</p></div>
-<div class="msg misha"><strong>Миша</strong><p>Я уже попросил.</p></div><div class="msg"><strong>Вера</strong><p>А зачем голосовать?</p></div></div>
-<h2>Ты в этом чате. Что сделаешь сейчас?</h2>
-<nav aria-label="Варианты" class="choices">
-<a href="#group">Напишу в группу</a>
-<a href="#vote">Проголосую за публикацию</a>
-<a href="#direct">Напишу Мише лично</a>
-<a href="#wait">Подожду, может, обойдётся</a></nav></section>
-<section class="page" id="vote" data-outcome="negative" data-headline="Мишин дубль разошёлся по школе" tabindex="-1" aria-labelledby="title-vote" data-parent="pressure" data-review>
-<h1 id="title-vote">На следующей репетиции</h1>
-<div class="chat">
-<div class="msg you" data-reactions='{"👍":["Даня"]}'><strong>Ты</strong><p>Я за. У всех бывают такие дубли.</p></div>
-<div class="msg"><strong>Костя</strong><p>Уже отправил в школьный чат.</p></div>
-<div class="msg"><strong>Вера</strong><p>Миш, тебя сегодня ждать?</p></div>
-<div class="msg misha" data-context="На следующий день · личная переписка с тобой"><strong>Миша · лично тебе</strong><p>Вчера в столовой меня попросили спеть «как на видео». Сегодня поиграйте без меня.</p></div>
-</div>
-<p class="note">Ты хотел показать, что ошибиться может каждый. Костя услышал голос за публикацию, хотя Миша уже попросил оставить дубль в группе. Теперь Мише напоминают о записи даже в столовой. Можно написать ему «Зря я проголосовал за, ты же просил не выкладывать» и попросить админа убрать запись.</p>
-<nav aria-label="Варианты" class="choices"><a href="#pressure">Попробовать другой ответ</a><a href="#start">В начало</a></nav></section>
-<section class="page" id="group" data-outcome="positive" data-headline="В чате прозвучала поддержка Миши" tabindex="-1" aria-labelledby="title-group"><p class="small">Учебная сцена · школьная музыкальная группа</p>
-<h1 id="title-group">Ответ в группе</h1>
-<div class="chat">
-<div class="msg you"><strong>Ты</strong><p>Кость, Миша уже ответил. Давайте без голосования. Вер, какой ещё дубль есть?</p></div><div class="msg"><strong>Миша</strong><p>Тим, спасибо. Последний прогон можно.</p></div><div class="msg"><strong>Костя</strong><p>Ок, беру последний.</p></div></div><p class="note">В голосование предложили вынести решение, которое Миша уже принял сам. Такая реплика помогает остановить давление, не заставляя его ещё раз объясняться.</p>
-<nav aria-label="Варианты" class="choices">
-<a href="#respect">Сравнить со спокойным продолжением</a>
-<a href="#pressure">Попробовать другой ответ</a>
-<a href="#start">В начало</a></nav></section>
-<section class="page" id="direct" data-outcome="positive" data-headline="Мише предложили помощь в личке" tabindex="-1" aria-labelledby="title-direct"><p class="small">Учебная сцена · школьная музыкальная группа</p>
-<h1 id="title-direct">Личное сообщение</h1>
-<div class="chat">
-<div class="msg you" data-context="Личная переписка с Мишей"><strong>Ты · лично Мише</strong><p>Миш, я видел переписку. Хочешь, я напишу в чат, чтобы не выкладывали?</p></div><div class="msg"><strong>Миша</strong><p>В общий пока не пиши. Просто посиди со мной, пока они там спорят.</p></div><div class="msg you"><strong>Ты</strong><p>Давай. Я рядом.</p></div></div><p class="note">Так Миша узнает, что у него есть поддержка, и сам говорит, какая помощь ему нужна. Пока вы переписываетесь, предложение голосовать остаётся в общем чате.</p>
-<nav aria-label="Варианты" class="choices">
-<a href="#respect">Сравнить со спокойным продолжением</a>
-<a href="#pressure">Попробовать другой ответ</a>
-<a href="#start">В начало</a></nav></section>
-<section class="page" id="wait" data-outcome="open" data-headline="Голосование всё ещё обсуждают" tabindex="-1" aria-labelledby="title-wait"><p class="small">Учебная сцена · школьная музыкальная группа</p>
-<h1 id="title-wait">Если подождать</h1><p class="note">Запись пока не выложили. Уже известно другое: после ясной просьбы Костя предложил решить вопрос большинством. Даже сейчас можно поддержать Мишу лично или коротко откликнуться в группе.</p>
-<nav aria-label="Варианты" class="choices">
-<a href="#pressure">Вернуться к переписке</a>
-<a href="#respect">Сравнить со спокойным продолжением</a>
-<a href="#start">В начало</a></nav></section>
-<section class="page" id="start" tabindex="-1" aria-labelledby="title-start"><p class="small">Учебная сцена · школьная музыкальная группа</p>
-<h1 id="title-start">Дубль для своих</h1>
-<div class="chat">
-<div class="msg "><strong>Вера</strong><p>У кого видео с репетиции? Хочу посмотреть, как мы вышли.</p></div>
-<div class="msg misha" data-reactions='{"😂":["Даня","Саша"]}'><strong>Миша</strong><p>Есть ещё дубль, где я начинаю припев на куплет раньше 😅</p></div>
-<div class="msg "><strong>Костя</strong><p>Ахаха. А в школьный чат этот скинем?</p></div></div>
-<h2>Ты читаешь чат группы. Что уже понятно?</h2>
-<nav aria-label="Варианты" class="choices">
-<a href="#joke">Миша сам пошутил про ошибку</a>
-<a href="#permission">Миша разрешил выложить запись</a>
-<a href="#unclear">Я пока не знаю, хочет ли он этого</a></nav></section></main></body></html>
+<noscript>Включи JavaScript, чтобы открыть истории и выбирать ответы.</noscript></main></body></html>

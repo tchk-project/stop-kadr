@@ -1,113 +1,12 @@
-<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Давят на меня · Дубль для своих</title>
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Стоп-кадр · Игра в переписке</title>
 
 <link rel="stylesheet" href="./attention-colors.css?v=1">
 <link rel="stylesheet" href="./scene.css?v=demo-2">
 <script src="./scenarios.js?v=health-2" defer></script>
 <script src="./attention.js?v=reaction-1" defer></script>
 <script src="./catalog.js?v=current-only-1" defer></script>
-<script src="./detail-cues.js?v=cast-1" defer></script>
-<script src="./detail-review.js?v=cast-1" defer></script>
-<script src="./scene.js?v=reading-1" defer></script>
+<script src="./catalog-home.js" defer></script>
 <link rel="stylesheet" href="./studio.css?v=mobile-1">
 <link rel="stylesheet" href="./cooper.css?v=1">
 </head><body><main class="panel"><header class="top">Стоп-кадр</header><nav class="roles" aria-label="Точка зрения"><a href="./index.html" data-role="witness">Я очевидец</a><a href="./self.html" data-role="self" aria-current="page">Со мной</a></nav>
-<section class="page" id="ask" tabindex="-1" aria-labelledby="title-ask" data-parent="start">
-<p class="small">Учебная сцена · школьная музыкальная группа</p>
-<h1 id="title-ask">Начало разговора</h1>
-<div class="chat">
-<div class="msg you"><strong>Ты</strong><p>Кость, этот в школьный не кидай. Сюда можно.</p></div>
-</div>
-<h2>Что мог бы ответить Костя?</h2>
-<nav aria-label="Варианты" class="choices">
-<a href="#accept">«Ок, не буду»</a>
-<a href="#insist">«Да ладно тебе»</a>
-</nav></section>
-<section class="page" id="accept" data-outcome="positive" data-headline="Костя спросил, какую запись можно отправить" tabindex="-1" aria-labelledby="title-accept" data-parent="ask" data-review>
-<p class="small">Учебная сцена · школьная музыкальная группа</p>
-<h1 id="title-accept">Просьбу приняли</h1>
-<div class="chat">
-<div class="msg"><strong>Костя</strong><p>Ок, не буду. Есть последний прогон. Его можно?</p></div><div class="msg"><strong>Вера</strong><p>Давай его. Спасибо.</p></div><div class="msg you"><strong>Ты</strong><p>Да, этот можно. Я там вовремя вступил.</p></div><div class="msg video"><strong>Костя</strong><div class="chat-media"><video controls playsinline preload="none" poster="./assets/rehearsal.webp" src="./assets/rehearsal.mp4" aria-label="Удачный дубль репетиции. Гитара, клавиши и ударные играют вместе."></video><p class="clip-caption">Репетиция · удачный дубль</p></div></div>
-</div>
-<p class="note">Костя принял твою просьбу. Разговор можно закончить здесь. Если позже что-то изменится, ты сможешь решить, как поступить тогда.</p>
-<nav aria-label="Варианты" class="choices">
-<a href="#ask">Посмотреть другой ответ</a>
-<a href="#start">В начало</a>
-</nav></section>
-<section class="page" id="insist" tabindex="-1" aria-labelledby="title-insist" data-parent="ask">
-<p class="small">Учебная сцена · школьная музыкальная группа</p>
-<h1 id="title-insist">Тебя продолжают уговаривать</h1>
-<div class="chat">
-<div class="msg" data-reactions='{"🤔":["Вера"]}'><strong>Костя</strong><p>Да ладно тебе. Кто за то, чтобы всё-таки скинуть?</p></div><div class="msg you"><strong>Ты</strong><p>Я уже попросил.</p></div>
-<div class="msg"><strong>Вера</strong><p>А зачем голосовать?</p></div>
-</div>
-<h2>Как тебе удобнее поступить сейчас?</h2>
-<nav aria-label="Варианты" class="choices">
-<a href="#answer">Коротко ответить в группе</a>
-<a href="#ally">Написать Вере лично</a>
-<a href="#pause">Взять паузу и обратиться за поддержкой</a>
-</nav></section>
-<section class="page" id="answer" data-outcome="positive" data-headline="Костя убрал голосование" tabindex="-1" aria-labelledby="title-answer" data-parent="insist" data-review>
-<p class="small">Учебная сцена · школьная музыкальная группа</p>
-<h1 id="title-answer">Короткий ответ</h1>
-<div class="chat">
-<div class="msg you"><strong>Ты</strong><p>Кость, убери голосовалку, пожалуйста.</p></div><div class="msg"><strong>Костя</strong><p>Всё, убрал.</p></div>
-</div>
-<p class="note">Так ты прямо говоришь, чего хочешь. Ты уже выразил свою позицию раньше. Повторять её или объяснять причину по кругу ты не обязан.</p>
-<nav aria-label="Варианты" class="choices">
-<a href="#insist">Попробовать другой вариант</a>
-<a href="#start">В начало</a>
-</nav></section>
-<section class="page" id="ally" data-outcome="positive" data-headline="Ты попросил Веру поддержать тебя в чате" tabindex="-1" aria-labelledby="title-ally" data-parent="insist" data-review>
-<p class="small">Учебная сцена · школьная музыкальная группа</p>
-<h1 id="title-ally">Попросить о поддержке</h1>
-<div class="chat">
-<div class="msg you" data-context="Личная переписка с Верой"><strong>Ты · лично Вере</strong><p>Вер, поддержишь меня в чате? Я уже устал.</p></div><div class="msg"><strong>Вера</strong><p>Ага. Скажу, что ты уже ответил. Про нашу личку писать не буду.</p></div>
-</div>
-<p class="note">Вера уже откликнулась. Можно обратиться к одному человеку и самому выбрать, какую помощь попросить.</p>
-<nav aria-label="Варианты" class="choices">
-<a href="#insist">Попробовать другой вариант</a>
-<a href="#start">В начало</a>
-</nav></section>
-<section class="page" id="pause" data-outcome="positive" data-headline="Ты выключил звук у чата и сел рядом с Верой" tabindex="-1" aria-labelledby="title-pause" data-parent="insist" data-review>
-<p class="small">Учебная сцена · школьная музыкальная группа</p>
-<h1 id="title-pause">Взять паузу</h1><div class="chat"><div class="msg"><strong>Ремарка</strong><p>Ты выключаешь звук у чата и идёшь к Вере. Она подвигает рюкзак, чтобы ты сел рядом.</p></div></div>
-<p class="note">Можно выключить уведомления и поговорить с тем, кому доверяешь. Молчание не даёт другим согласия на публикацию. За решение разослать запись отвечает тот, кто это делает.</p>
-<nav aria-label="Варианты" class="choices">
-<a href="#insist">Попробовать другой вариант</a>
-<a href="#start">В начало</a>
-</nav></section>
-<section class="page" id="support" data-outcome="positive" data-headline="Вера готова поддержать тебя в чате" tabindex="-1" aria-labelledby="title-support" data-parent="start" data-review>
-<p class="small">Учебная сцена · школьная музыкальная группа</p>
-<h1 id="title-support">Личная переписка</h1>
-<div class="chat">
-<div class="msg you" data-context="Личная переписка с Верой"><strong>Ты · лично Вере</strong><p>Вер, я против. Поможешь сказать об этом ребятам?</p></div>
-<div class="msg"><strong>Вера · лично тебе</strong><p>Конечно. Давай напишу, что отправляем только общий удачный дубль?</p></div>
-</div>
-<p class="note">Ты можешь попросить помощи ещё до того, как запись разошлась. Вера уточняет, какая поддержка тебе подходит.</p>
-<nav aria-label="Варианты" class="choices">
-<a href="#start">Вернуться к началу</a>
-</nav></section>
-<section class="page" id="swap" data-outcome="negative" data-headline="Запись с Верой отправили без её согласия" tabindex="-1" aria-labelledby="title-swap" data-parent="start" data-review>
-<h1 id="title-swap">Другой дубль</h1>
-<div class="chat">
-<div class="msg you"><strong>Ты</strong><p>Лучше тот, где у Веры палочка улетела. Вер, помнишь?</p></div>
-<div class="msg"><strong>Костя</strong><p>Точно! Вот его и отправил.</p></div>
-<div class="msg" data-context="Личная переписка с Верой"><strong>Вера · лично тебе</strong><p>Я думала, ты из всех поймёшь, каково это. Я тот дубль даже сама смотреть не хотела.</p></div>
-<div class="msg"><strong>Ремарка</strong><p>На следующей репетиции Вера просит убрать телефон, пока она играет.</p></div>
-</div>
-<p class="note">Ты хотел уберечь свою запись и предложил чужую. Костя сам решил её отправить. Вера оказалась на твоём месте, хотя разрешения у неё тоже никто не спросил. Можно извиниться перед Верой и вместе попросить удалить дубль. Твой отказ публиковать собственную запись по-прежнему в силе.</p>
-<nav aria-label="Варианты" class="choices"><a href="#start">Попробовать другой ответ</a></nav></section>
-<section class="page" id="start" tabindex="-1" aria-labelledby="title-start">
-<p class="small">Учебная сцена · школьная музыкальная группа</p>
-<h1 id="title-start">Этот дубль — с тобой</h1>
-<div class="chat">
-<div class="msg "><strong>Вера</strong><p>У кого видео с репетиции? Хочу посмотреть, как мы вышли.</p></div>
-<div class="msg you" data-reactions='{"😂":["Даня","Саша"]}'><strong>Ты</strong><p>Есть ещё дубль, где я начинаю припев на куплет раньше 😅</p></div>
-<div class="msg "><strong>Костя</strong><p>Ахаха. А в школьный чат этот скинем?</p></div></div>
-<h2>На записи ты. Тебе не хочется, чтобы её разослали.</h2>
-<nav aria-label="Варианты" class="choices">
-<a href="#ask">Попросить не выкладывать запись</a>
-<a href="#swap">Предложить другой смешной дубль</a>
-<a href="#support">Сначала поговорить с Верой лично</a>
-</nav></section>
-</main></body></html>
+<noscript>Включи JavaScript, чтобы открыть истории и выбирать ответы.</noscript></main></body></html>
