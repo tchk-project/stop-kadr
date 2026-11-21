@@ -31,7 +31,7 @@ async function playAttentionPilot(ui) {
   const {pages, pathFor, messages, makeRow, button, scene, heading, thread, typing, flash,
     freeze, question, outcome, outcomeLabels, choices, controls, status, motionAllowed} = ui;
   const {story,cues,decisions} = ui.route;
-  thread.className = 'transcript';
+  thread.className = 'chat-transcript';
   const guide = attentionGuide(document.querySelector('.panel'));
   const speed = 2.5;
   const bar = document.querySelector('.mode-bar');
@@ -120,12 +120,32 @@ async function playAttentionPilot(ui) {
     const incoming = !['Ты','Ремарка','Система'].includes(who) && !item.content.classList.contains('live-voice') && !item.content.classList.contains('video');
     const line = Number(item.key.slice(item.key.lastIndexOf('-')+1));
     const long = incoming && (line+pathFor({id:item.step}).length)%3 === 0;
-    return {speaker:incoming ? who : '', pause:long ? 2150 : 420+Math.min(420, item.content.textContent.length*4)};
+    return {pause:long ? 2150 : 420+Math.min(420, item.content.textContent.length*4)};
   }
 
-  function typingAs(speaker) {
-    typing.hidden = !speaker;
-    if (speaker) typing.querySelector('.typing-name').textContent = speaker+' пишет';
+  function activityFor(content, channel) {
+    const who = content.querySelector('strong')?.textContent.split(' · ')[0];
+    const name = who === 'Ты' ? playerName : who;
+    if (!name) return {label:'Твой выбор', kind:'dots'};
+    if (name === 'Ремарка') return {label:'Сцена продолжается', kind:'dots'};
+    if (name === 'Система') return {label:'Обновление чата', kind:'dots'};
+    const types = [
+      ['live-voice','говорит','voice'], ['voice','записывает голосовое','voice'],
+      ['sticker','выбирает стикер','dots'], ['video','отправляет видео','upload'],
+      ['document','прикрепляет файл','upload'], ['image','отправляет изображение','upload']
+    ];
+    const media = types.find(([type]) => content.classList.contains(type));
+    if (media) return {label:name+' '+media[1], kind:media[2]};
+    if (channel && !channel.startsWith('Голосовой канал')) return {label:name+' печатает сообщение', kind:'dots'};
+    return {label:name+' говорит', kind:'voice'};
+  }
+
+  function showActivity(activity) {
+    typing.hidden = !activity;
+    if (!activity) return;
+    typing.dataset.kind = activity.kind;
+    typing.querySelector('.typing-name').textContent = activity.label;
+    if (typing.getBoundingClientRect().bottom > window.innerHeight) scrollTo(typing);
   }
 
   async function animateRow(row, backwards, rate, task) {
@@ -143,13 +163,16 @@ async function playAttentionPilot(ui) {
     while (common < items.length && common < rows.length &&
            items[common].key === rows[common].dataset.key) common++;
     if (common < rows.length) direction.textContent = '◀◀ Назад · 2,5×';
+    let reverseActivity = {label:'Перемотка назад', kind:'dots'};
     while (rows.length > common) {
       const row = rows.pop();
       if (!task.signal.aborted) {
         scrollTo(row);
+        showActivity(reverseActivity);
         await wait(Number(row.dataset.readingPause)/speed, task.signal);
         if (run !== task) return;
       }
+      showActivity();
       await animateRow(row, true, speed, task);
       if (run !== task) return;
       const block = row.parentElement;
@@ -160,34 +183,41 @@ async function playAttentionPilot(ui) {
       changeColour(code, !task.signal.aborted);
       if (!task.signal.aborted) {
         scrollTo(last);
-        typingAs(row.dataset.speaker);
+        reverseActivity = {label:row.dataset.activity, kind:row.dataset.kind};
+        showActivity(reverseActivity);
         await wait(Number(row.dataset.pause)/speed, task.signal);
         if (run !== task) return;
-        typingAs('');
+        showActivity();
       }
     }
     if (common < items.length) direction.textContent = rate === speed ? '▶▶ Вперёд · 2,5×' : '';
-    for (const item of items.slice(common)) {
-      const {speaker, pause} = timing(item);
-
-      if (!task.signal.aborted) {
-        typingAs(speaker);
-        await wait(pause/rate, task.signal);
-        if (run !== task) return;
-      }
-      typingAs('');
-      changeColour(item.attention, !task.signal.aborted);
-      let block = thread.lastElementChild;
+    let channel = thread.lastElementChild?.dataset.channel || '';
+    const pending = items.slice(common).map(item => {
       const label = item.content.dataset.context;
       const context = label
         ? transcriptContext(label, item.content.querySelector('strong')?.textContent.split(' · ')[0])
-        : {title:block?.dataset.channel || '', caption:''};
+        : {title:channel, caption:''};
+      channel = context.title;
+      return {item, context, activity:activityFor(item.content, channel)};
+    });
+    for (const [index, {item, context, activity}] of pending.entries()) {
+      const {pause} = timing(item);
+
+      if (!task.signal.aborted) {
+        showActivity(activity);
+        await wait(pause/rate, task.signal);
+        if (run !== task) return;
+      }
+      showActivity();
+      changeColour(item.attention, !task.signal.aborted);
+      let block = thread.lastElementChild;
       const row = makeRow(item, context.caption);
       row.dataset.attention = item.attention;
       if (item.reaction) guide.explainReaction(row);
       row.dataset.readingPause = readingPause(row);
       row.dataset.pause = pause;
-      row.dataset.speaker = speaker || '';
+      row.dataset.activity = activity.label;
+      row.dataset.kind = activity.kind;
       if (!block || block.dataset.channel !== context.title) {
         block = element(context.title ? 'section' : 'div', 'thread');
         block.dataset.channel = context.title;
@@ -202,10 +232,12 @@ async function playAttentionPilot(ui) {
       await animateRow(row, false, rate, task);
       if (run !== task) return;
       if (!task.signal.aborted) {
+        showActivity(pending[index+1]?.activity || {label:'Пауза на чтение', kind:'dots'});
         await wait(Number(row.dataset.readingPause)/rate, task.signal);
         if (run !== task) return;
       }
       if (signals.includes(item.key)) {
+        showActivity();
         drawSignal(row, item.key);
         if (!task.signal.aborted) {
           direction.textContent = 'Стоп-кадр · деталь';
@@ -365,7 +397,7 @@ async function playAttentionPilot(ui) {
     if (run !== task) return;
     direction.textContent = '';
     skip.hidden = true;
-    typingAs('');
+    showActivity();
     const target = stop ? showReview(stops,next.index) : showGame(data,path,stops);
     status.textContent = stop ? 'Разбор. Решение '+(next.index+1)+' из '+stops.length :
       data.outcome ? data.outcome.headline : 'Стоп-кадр. '+data.question;
