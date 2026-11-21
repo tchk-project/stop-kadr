@@ -12,7 +12,7 @@ const rehearsal = {id:'dubl', title:'Дубль для своих', place:'Шк�
 const allStories = [rehearsal, ...scenarios, ...healthScenes];
 const activeStory = episode || rehearsal;
 const playerName = activeStory.actors[role];
-const originalSelected = selection === 'dubl' || (!selection && location.hash.length > 1);
+const originalSelected = selection === 'dubl' || (!selection && location.hash.length > 1 && location.hash !== '#home-guide-title');
 const isCatalogue = !isAttentionPilot && !episode && !originalSelected;
 function focusLink(id, pointOfView) {
   return './focus.html?case='+encodeURIComponent(id)+'&role='+pointOfView+'&v=reading-1';
