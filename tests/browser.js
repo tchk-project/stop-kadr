@@ -125,17 +125,13 @@ async function exercise() {
               await click(find('button.inspect'));
               do {
                 const review=find('.decision-review:not([hidden])');
-                check(review && review.querySelector('li') && find('#moment-line option:nth-child(2)'),'Пустой разбор');
+                check(review && review.querySelector('li') && review.querySelector('.chosen-answer') && !review.querySelector('select'),'Пустой разбор');
                 check(!doc().documentElement.hasAttribute('data-ending'),'Цвет внимания при перемотке');
                 reviews++;
                 if(named('Дальше').disabled) break;
                 await click(named('Дальше'));
               } while(true);
               while(!named('Назад').disabled) await click(named('Назад'));
-              const selector=find('#moment-line');
-              selector.selectedIndex=1;
-              selector.dispatchEvent(new Event('change',{bubbles:true}));
-              check(!find('.my-moment').hidden,'Мой момент');
               const retry=[...doc().querySelectorAll('button')].find(b=>/Попробовать другой ответ|Вернуться к выбору ответа/.test(b.textContent));
               await click(retry);
               check(buttons().length>1,'Повтор решения');

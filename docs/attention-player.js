@@ -33,7 +33,7 @@ function playAttentionPilot(ui) {
   function navigate(id, index, mode = 'travel') {
     if (busy) return;
     const method = index != null && view.index != null ? 'replaceState' : 'pushState';
-    history[method]({reviewIndex:index,moments:[...chosenMoments]}, '', '#'+id);
+    history[method]({reviewIndex:index}, '', '#'+id);
     render({id, index}, mode);
   }
 
@@ -164,62 +164,6 @@ function playAttentionPilot(ui) {
     }
   }
 
-  const chosenMoments = new Map(history.state?.moments || []);
-  thread.addEventListener('click',event => {
-    if (busy || review.hidden || event.target.closest('button,a,audio,video,details')) return;
-    const row = event.target.closest('.moment-eligible');
-    if (!row) return;
-    const input = review.querySelector('select');
-    input.value = row.dataset.key;
-    input.dispatchEvent(new Event('change'));
-    status.textContent = 'Мой момент · '+input.selectedOptions[0].textContent;
-  });
-  function momentPicker(stop) {
-    const key = stop.parent+'/'+stop.id;
-    const form = element('div','moment-picker');
-    const label = element('label','','Отметь реплику в переписке или выбери её здесь');
-    const input = element('select');
-    input.id = 'moment-line';
-    label.htmlFor = input.id;
-    const prompt = element('option','','Выбрать свой момент');
-    prompt.value = '';
-    input.append(prompt);
-    const items = messages({id:stop.parent});
-    for (const {key,content} of items) {
-      const speaker = content.querySelector('strong');
-      if (!speaker) continue;
-      const media = content.querySelector('.chat-media');
-      const speech = media
-        ? [...media.querySelectorAll('p, img[alt]')].map(el => el.alt || el.textContent).filter(Boolean).join(' · ')
-        : content.querySelector('p')?.textContent;
-      if (!speech) continue;
-      const option = element('option','',speaker.textContent+' · '+speech);
-      option.value = key;
-      thread.querySelector('[data-key="'+key+'"]')?.classList.add('moment-eligible');
-      input.append(option);
-    }
-    const result = element('div','my-moment');
-    result.setAttribute('aria-live','polite');
-    function reflect() {
-      result.replaceChildren();
-      result.hidden = !input.value;
-      if (!input.value) return;
-      const row = thread.querySelector('[data-key="'+input.value+'"]');
-      row?.classList.add('picked-moment');
-      result.append(element('strong','','Мой момент'),element('blockquote','',input.selectedOptions[0].textContent),
-        element('p','','Мой выбор на этой развилке · '+stop.answer));
-    }
-    input.value = chosenMoments.get(key) || '';
-    input.onchange = () => {
-      thread.querySelector('.picked-moment')?.classList.remove('picked-moment');
-      chosenMoments.set(key,input.value);
-      history.replaceState({...history.state,moments:[...chosenMoments]},'');
-      reflect();
-    };
-    form.append(label,input,result);
-    reflect();
-    return form;
-  }
   function showReview(stops, index) {
     const stop = stops[index];
     const title = element('h2', '', 'Решение '+(index+1)+' из '+stops.length);
@@ -235,7 +179,6 @@ function playAttentionPilot(ui) {
     review.append(title, list, element('p','chosen-answer',transitionLabel(attentionAtLine(story[stop.parent],story[stop.parent].lines.length-1),story[stop.id].mode)+' · '+stop.answer),
       element('p','',stop.effect));
     if (stop.recovery) review.append(element('p','recovery',stop.recovery));
-    review.append(momentPicker(stop));
     review.hidden = false;
     const nav = element('div','review-steps');
     const previous = button('rewind','Назад',() => navigate(view.id,index-1));
@@ -322,8 +265,6 @@ function playAttentionPilot(ui) {
     busy = true;
     ui.clearPrompt();
     clearSignals();
-    for (const row of thread.querySelectorAll('.moment-eligible')) row.classList.remove('moment-eligible');
-    thread.querySelector('.picked-moment')?.classList.remove('picked-moment');
     review.replaceChildren();
     review.hidden = true;
     skip.hidden = false;
