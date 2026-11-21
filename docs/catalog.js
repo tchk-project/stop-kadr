@@ -261,6 +261,35 @@ function makeTakePreview() {
   return preview;
 }
 
+function cooperOverview(article) {
+  const guide = element('section','home-guide');
+  guide.setAttribute('aria-labelledby','home-guide-title');
+  const title = element('h2','','🎨 Цветовые коды Купера');
+  title.id = 'home-guide-title';
+  guide.append(title);
+  const levels = [
+    ['⬜ Белый — совсем отвлёкся','📱 «Иду и смотрю только в экран».','Отложи телефон и посмотри вокруг.'],
+    ['🟨 Жёлтый — внимательный и спокойный','👀 «Я замечаю, что происходит вокруг».','Продолжай идти и спокойно замечай, что меняется вокруг.'],
+    ['🟧 Оранжевый — что-то насторожило','🤔 «Тут что-то не так. Пойду туда, где безопаснее».','Держи дистанцию и направляйся к людям или знакомому взрослому.'],
+    ['🟥 Красный — действую сейчас','🗣️ «Мне нужна помощь!»','Если опасность угрожает тебе, уходи к людям и громко зови на помощь. Если кому-то рядом резко стало плохо, вызови скорую.']
+  ];
+  const grid = element('div','home-levels');
+  for (const [name,quote,action] of levels) {
+    const item = element('section','home-level');
+    const advice = element('p');
+    advice.append(element('strong','','Что делать: '),action);
+    item.append(element('h3','',name),element('p','level-quote',quote),advice);
+    grid.append(item);
+  }
+  const black = element('aside','home-level home-black');
+  black.append(element('h3','','🖤 Чёрный — растерялся'),element('p','level-quote','😵 «Я не понимаю, что происходит!»'),
+    element('p','','Растеряться можно в любой момент. Если это случилось, начни с одного действия — позови на помощь.'));
+  const more = element('div','home-guide-more');
+  more.append(article);
+  guide.append(grid,black,more);
+  return guide;
+}
+
 function showCatalogue(panel) {
   panel.querySelectorAll('.page').forEach(el => el.remove());
   const section = element('section','catalogue');
@@ -271,7 +300,7 @@ function showCatalogue(panel) {
   const home = element('a','wordmark','Стоп-кадр');
   home.href = currentFile;
   masthead.replaceChildren(home);
-  document.title = listOpen ? 'Выбор ситуации · Стоп-кадр' : 'Стоп-кадр · Игра в переписке';
+  document.title = listOpen ? 'Выбор ситуации · Стоп-кадр' : 'Стоп-кадр · Тренажёр внимания';
   const article = element('a','cooper-link','Подробнее о цветах Купера');
   article.href = './cooper.html';
   article.target = '_blank';
@@ -280,16 +309,17 @@ function showCatalogue(panel) {
     masthead.append(reviewerLink('Выбрать ситуацию'));
     const hero = element('div','catalog-hero');
     const copy = element('div','hero-copy');
-    const title = element('h1','','Что ты ');
-    title.append(element('em','','ответишь?'));
-    copy.append(title,element('p','intro-copy','Это игра в переписке. Саша сказал, что не будет скидываться на подарок. Как Даня ответил на его отказ? Иногда по одной реплике видно, что пора насторожиться. А бывают ситуации, когда человеку уже угрожает опасность и важно сразу позвать на помощь.'),
-      element('p','how-to-play','Цвет показывает, сколько внимания сейчас требует разговор. Когда переписка остановится, выбери ответ. Потом можно отмотать разговор и попробовать другой вариант.'));
-    const start = element('button','start-game','Начать');
+    const title = element('h1','','Тренажёр ');
+    title.append(element('em','','внимания'));
+    copy.append(title,element('p','intro-copy','В «Стоп-кадре» ты выбираешь, как действовать по ходу истории. Так можно потренироваться замечать перемены и осознанно переходить от одного уровня внимания к другому.'),
+      element('p','how-to-play','Когда история остановится, выбери ответ. Потом можно отмотать её назад и попробовать другой вариант.'));
+    const start = element('button','start-game','Начать тренировку');
     start.type = 'button';
     start.onclick = () => location.assign(randomStoryUrl());
     copy.append(element('p','role-prompt','С чьей стороны сыграешь?'), roles, start);
     hero.append(copy,makeTakePreview());
-    section.append(hero,article);
+    article.textContent = 'Подробнее о цветовых кодах Купера →';
+    section.append(hero,cooperOverview(article));
     panel.append(section);
     return;
   }

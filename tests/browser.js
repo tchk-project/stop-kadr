@@ -62,7 +62,7 @@ async function exercise() {
     frame.style.width = width+'px';
     const preview = phone.getBoundingClientRect();
     const intro = copy.getBoundingClientRect();
-    if (width <= 720) check(preview.bottom <= intro.top,'Телефон над вступлением при ширине '+width);
+    if (width <= 720) check(intro.bottom <= preview.top,'Вступление над телефоном при ширине '+width);
     else check(intro.right <= preview.left,'Вступление слева от телефона на широком экране');
   }
   frame.style.removeProperty('width');
@@ -78,7 +78,8 @@ async function exercise() {
   check(phone.dataset.code==='yellow' && phone.textContent===initial,'Возврат первого ответа и цвета');
   const article=find('.cooper-link').href;
   const loaded = new Promise(resolve => frame.addEventListener('load',resolve,{once:true}));
-  named('Начать').click();
+  check(find('.home-guide-more .cooper-link') && doc().querySelectorAll('.home-guide h3').length===5,'Все пять цветов и ссылка после памятки');
+  named('Начать тренировку').click();
   await loaded;
   check(find('.scene-loader:not([hidden])') && find('.panel[hidden]') && !find('.thread .item'),'Загрузчик до показа сцены');
   await new Promise((resolve,reject) => {
