@@ -1,0 +1,5 @@
+[data-code=yellow] { --zone:#f2e4ab; --tint:#fbf4d9; --line:#d1b256; --ink:#59450a; --signal:#edc340; --paper:#fffdf4; --symbol:"◉"; }
+[data-code=orange] { --zone:#f4d2b6; --tint:#fff0e0; --line:#d39156; --ink:#773c1b; --signal:#f18a39; --paper:#fff9f3; --symbol:"◇"; }
+[data-code=red] { --zone:#edc1c8; --tint:#fbe7ea; --line:#ce8996; --ink:#792c39; --signal:#df6674; --paper:#fff7f8; --symbol:"!"; }
+[data-code=white] { --zone:#f0f2f4; --tint:#f8f9fa; --line:#b4bdc5; --ink:#404b56; --signal:#fff; --paper:#fff; --symbol:"○"; }
+[data-code=black] { --zone:#e1e2e5; --tint:#f0f0f2; --line:#999ca2; --ink:#34383e; --signal:#35383d; --paper:#fcfcfd; --symbol:"▪"; }

@@ -56,9 +56,16 @@ async function exercise() {
   const reviewer=find('.reviewer-link');
   check(reviewer.textContent.includes('(для проверяющих)'),'Пометка входа в каталог');
   const swap=find('.take-toggle');
+  const phone = find('.take-preview');
+  const initial = phone.textContent;
+  const background = () => frame.contentWindow.getComputedStyle(phone).backgroundColor;
+  const yellow = background();
   swap.click();
-  check(find('.take-preview mark')?.textContent==='двести','Демонстрация');
+  check(phone.dataset.code==='orange' && find('.take-preview mark')?.textContent==='двести','Ответ с давлением');
+  check(find('.preview-mode').textContent.startsWith('Оранжевый') && find('.preview-note').textContent.includes('требует деньги'),'Причина смены цвета');
+  await until(()=>background()!==yellow,'Смена фона телефона');
   swap.click();
+  check(phone.dataset.code==='yellow' && phone.textContent===initial,'Возврат первого ответа и цвета');
   const article=find('.cooper-link').href;
   named('Начать').click();
   await until(()=>buttons().length && find('.scene:not([aria-busy])'),'Случайный старт с главной');

@@ -1,5 +1,4 @@
-/* Two-colour school paper: ink, blue pencil and a clipped chat transcript. */
-:root { --ink-print:#201e21; --paper-print:#faf9f3; --blue-print:#30299a; --marker:#f4ed87; --studio:#28234e; }
+:root { --ink-print:#201e21; --paper-print:#faf9f3; --blue-print:#30299a; --studio:#28234e; }
 .catalog-home {
   min-height:100vh; padding:0 clamp(16px,5vw,68px) 40px; color:var(--ink-print);
   background:var(--paper-print); font-family:system-ui,sans-serif;
@@ -36,20 +35,32 @@
   box-shadow:3px 3px 0 var(--ink-print); min-height:48px; padding:10px 17px; cursor:pointer; font:700 1rem/1.35 system-ui; }
 .start-game:hover { background:#211a78; }
 .start-game:focus-visible,.take-toggle:focus-visible,.moment-picker select:focus-visible { outline:3px solid #437db9; outline-offset:4px; }
-.take-preview { position:relative; background:repeating-linear-gradient(transparent 0 27px,#b2bcc85c 27px 28px),#eeedf5;
-  padding:clamp(22px,3.3vw,40px); transform:rotate(1.3deg); border-bottom:2px solid #aaa7b5; }
-.take-preview::before { content:""; position:absolute; width:84px; height:19px; top:-8px; left:calc(50% - 42px);
-  transform:rotate(-5deg); background:#ddd587d9; clip-path:polygon(2% 0,100% 4%,97% 100%,0 94%); }
-.preview-channel,.case-place,.list-info { color:#504c62; font:600 .86rem/1.45 ui-monospace,monospace; }
-.preview-channel { padding-bottom:12px; border-bottom:1px solid #88849b; }
-.preview-row { position:relative; margin:20px 0; padding-left:50px; }
-.preview-row .avatar { position:absolute; left:0; top:2px; width:39px; height:39px; filter:grayscale(1); }
-.preview-row strong { color:#49435b; }
-.preview-row p { color:#292332; font:700 clamp(1.45rem,3vw,2.2rem)/1.12 Georgia,serif; letter-spacing:-.035em; }
-.preview-row + .preview-row p { color:var(--blue-print); font-style:italic; }
-.preview-row mark { background:var(--marker); color:inherit; }
-.take-toggle { min-height:44px; padding:6px 0; margin-left:50px; border:0; color:var(--blue-print);
-  background:transparent; text-decoration:underline dashed; text-underline-offset:5px; cursor:pointer; font:650 .94rem/1.4 system-ui; }
+.case-place,.list-info { color:#504c62; font:600 .86rem/1.45 ui-monospace,monospace; }
+.take-preview {
+  box-sizing:border-box; position:relative; width:min(100%, 21rem); justify-self:center;
+  padding:32px clamp(12px,2vw,22px) 34px; border:7px solid #242427; border-radius:36px;
+  background:var(--zone); color:var(--ink); box-shadow:0 0 0 2px #706d6a, 6px 7px 0 #d8d5cf;
+}
+.take-preview::before,.take-preview::after { content:""; position:absolute; left:50%; transform:translateX(-50%); border-radius:10px; background:#242427; }
+.take-preview::before { top:9px; width:47px; height:6px; }
+.take-preview::after { bottom:10px; width:30%; height:4px; }
+.preview-channel { border-bottom:1px solid var(--line); padding-bottom:10px; margin-bottom:16px; }
+.preview-channel small { display:block; font:600 .8rem/1.4 ui-monospace,monospace; }
+.preview-channel strong { color:inherit; font-size:1.15rem; }
+.preview-row { position:relative; margin:0 0 12px; padding:10px 12px 12px 43px;
+  border-radius:13px 13px 13px 3px; background:var(--paper); color:#282626; }
+.preview-row .avatar { position:absolute; left:9px; top:11px; width:27px; height:27px; }
+.preview-row strong { color:var(--ink); font-size:.84rem; }
+.preview-row p { line-height:1.4; }
+.preview-row mark { color:var(--ink); background:var(--zone); font-weight:750; }
+.preview-mode { display:flex; align-items:baseline; gap:7px; margin:18px 0 5px; font-weight:750; line-height:1.35; }
+.preview-mode::before { content:var(--symbol); color:var(--ink); }
+.preview-note { min-height:3em; font-size:.94rem; line-height:1.45; }
+.take-toggle { width:100%; min-height:44px; margin-top:12px; padding:7px 10px; border:1px solid var(--ink);
+  border-radius:8px; background:var(--ink); color:white; cursor:pointer; font:650 .94rem/1.35 system-ui; }
+@media (prefers-reduced-motion:no-preference) {
+  .take-preview,.preview-row,.take-toggle { transition:background-color .2s ease; }
+}
 .catalog-home .catalogue > .cooper-link { margin-top:26px; color:#4c4960; }
 .catalog-home .case-grid { display:grid; grid-template-columns:1fr 1fr; gap:0 32px; margin:4px 0 0; }
 .catalog-home .case-card { display:flex; flex-direction:column; justify-content:center; align-items:start; gap:4px;
@@ -68,7 +79,6 @@
 [data-attention-pilot] .action.coded { border-radius:2px; }
 @media (max-width:720px) {
   .catalog-hero { grid-template-columns:1fr; gap:32px; }
-  .take-preview { transform:none; }
   .catalog-home .top { padding:8px 0; }
   .catalog-home .top .reviewer-link { max-width:52%; }
   .catalog-home .case-grid { grid-template-columns:1fr; }

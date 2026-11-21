@@ -227,22 +227,37 @@ function makeTakePreview() {
     return row;
   }
   const original = bubble('Саша','Я на подарок в этот раз не скидываюсь.');
-  const reply = bubble('Даня','Ок, Саш, вычеркнул.');
+  const reply = bubble('Даня','');
   const words = reply.querySelector('p');
-  words.setAttribute('aria-live','polite');
-  const swap = element('button','take-toggle','Сменить ответ Дани');
+  const mode = element('p','preview-mode');
+  const note = element('p','preview-note');
+  const change = element('div','preview-change');
+  change.setAttribute('aria-live','polite');
+  change.setAttribute('aria-atomic','true');
+  change.append(reply,mode,note);
+  const swap = element('button','take-toggle');
   swap.type = 'button';
-  let changed = false;
-  swap.onclick = () => {
-    changed = !changed;
-    preview.classList.toggle('take-changed', changed);
-    if (changed) words.replaceChildren('Тогда с тебя ',element('mark','','двести'),'.');
+
+  function render(code) {
+    const pressure = code === 'orange';
+    preview.dataset.code = code;
+    const {name,meaning} = attentionModes[code];
+    mode.textContent = name+' · '+meaning;
+    if (pressure) words.replaceChildren('Тогда с тебя ',element('mark','','двести'),'.');
     else words.textContent = 'Ок, Саш, вычеркнул.';
-    swap.textContent = changed ? 'Вернуть первый ответ' : 'Сменить ответ Дани';
-    if (words.animate && !matchMedia('(prefers-reduced-motion: reduce)').matches)
-      words.animate([{opacity:.25,transform:'translateY(5px)'},{opacity:1,transform:'none'}],{duration:240});
+    note.textContent = pressure ? 'Саша уже отказался. Даня всё равно требует деньги.' : 'Даня принял отказ Саши.';
+    swap.textContent = pressure ? 'Вернуть первый ответ' : 'Сменить ответ Дани';
+  }
+
+  render('yellow');
+  swap.onclick = () => {
+    render(preview.dataset.code === 'yellow' ? 'orange' : 'yellow');
+    if (reply.animate && !matchMedia('(prefers-reduced-motion: reduce)').matches)
+      reply.animate([{opacity:.4,transform:'translateY(4px)'},{opacity:1,transform:'none'}],{duration:200});
   };
-  preview.append(element('p','preview-channel','Пример из игры · чат секции'),original,reply,swap);
+  const channel = element('header','preview-channel');
+  channel.append(element('small','','Пример из игры'),element('strong','','Чат секции'));
+  preview.append(channel,original,change,swap);
   return preview;
 }
 
@@ -268,7 +283,7 @@ function showCatalogue(panel) {
     const title = element('h1','','Что ты ');
     title.append(element('em','','ответишь?'));
     copy.append(title,element('p','intro-copy','Это игра в переписке. Как понять, что шутка зашла слишком далеко? Что сказать, если на тебя давят или кому-то рядом нужна помощь? Здесь можно попробовать разные ответы.'),
-      element('p','how-to-play','Читай сообщения. Когда разговор остановится, выбери ответ и посмотри, что будет дальше. Потом можно отмотать переписку и попробовать ещё раз.'));
+      element('p','how-to-play','Цвет показывает, сколько внимания сейчас требует разговор. Когда переписка остановится, выбери ответ. Потом можно отмотать разговор и попробовать ещё раз.'));
     const start = element('button','start-game','Начать');
     start.type = 'button';
     start.onclick = () => location.assign(randomStoryUrl());
