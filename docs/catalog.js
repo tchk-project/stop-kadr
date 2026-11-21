@@ -307,13 +307,8 @@ function showCatalogue(panel) {
     cards.append(card);
   });
   section.append(cards);
-  const earlierDemo = element('a','','Предыдущее демо · три короткие ситуации');
-  earlierDemo.href = './v2/index.html' + (personalRole ? '?role=self' : '');
-  earlierDemo.className = "previous-demo";
-  const archiveLink = element('a','','Открыть первую версию');
-  archiveLink.href = personalRole ? './v1/self.html' : './v1/index.html';
   const foot = element('footer','catalog-foot');
-  foot.append(article,earlierDemo,archiveLink);
+  foot.append(article);
   section.append(foot);
   panel.append(section);
 }
