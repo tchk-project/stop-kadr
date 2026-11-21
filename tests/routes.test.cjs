@@ -6,7 +6,7 @@ const vm = require('node:vm');
 
 const docs = join(__dirname,'../docs');
 const context = vm.createContext({});
-for (const file of ['scenarios','attention','attention-takes','attention-paths','attention-catalog']) {
+for (const file of ['scenarios','attention','attention-takes','attention-paths','attention-readings','attention-catalog']) {
   vm.runInContext(readFileSync(join(docs,file+'.js'),'utf8'),context);
 }
 const {ids,build,stops,modes} = vm.runInContext(
@@ -15,6 +15,18 @@ const {ids,build,stops,modes} = vm.runInContext(
 for (const id of ids) for (const role of ['witness','self']) {
   test(id+' / '+role+' — both takes, all endings, visible signals and retry points',() => {
     const {story,cues,decisions} = build(id,role);
+    // The same external event can follow different conscious readings of it.
+    assert.notEqual(story.observe.mode,story.focus.mode);
+    assert.deepEqual(story.observe.lines,story.focus.lines);
+    for (const key of ['observe','focus']) {
+      assert.equal(story[key+'-ease'].mode,'yellow');
+      assert.equal(story[key+'-watch'].mode,'orange');
+      assert.deepEqual(story[key+'-ease'].lines,story[key+'-watch'].lines);
+      assert.ok(decisions[key].signals.length);
+    }
+    const quiet = id === 'project' ? 'calm-act-0' : 'calm-end';
+    assert.deepEqual(story[quiet].lines,story['calm-watch'].lines);
+    assert.notEqual(story[quiet].mode,story['calm-watch'].mode);
     const seen = new Set();
     const endings = new Set();
     function walk(key, path) {

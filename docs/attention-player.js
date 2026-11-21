@@ -4,6 +4,7 @@ function playAttentionPilot(ui) {
   const {pages, pathFor, messages, makeRow, button, scene, heading, thread, typing, flash,
     freeze, question, outcome, outcomeLabels, choices, controls, status, motionAllowed} = ui;
   const {story,cues,decisions} = ui.route;
+  const guide = attentionGuide(document.querySelector('.panel'));
   const speed = 2.5;
   const bar = document.querySelector('.mode-bar');
   const direction = element('span', 'tape-direction');
@@ -227,7 +228,7 @@ function playAttentionPilot(ui) {
       const row = thread.querySelector('[data-key="'+key+'"]');
       if (row) drawSignal(row,key);
     }
-    review.append(title, list, element('p','chosen-answer','Твой ответ · '+stop.answer),
+    review.append(title, list, element('p','chosen-answer',transitionLabel(story[stop.parent].mode,story[stop.id].mode)+' · '+stop.answer),
       element('p','',stop.effect));
     if (stop.recovery) review.append(element('p','recovery',stop.recovery));
     review.append(momentPicker(stop));
@@ -245,6 +246,30 @@ function playAttentionPilot(ui) {
     return review;
   }
 
+  function transitionLabel(before, after) {
+    const names = {white:'белом',yellow:'жёлтом',orange:'оранжевом',red:'красном'};
+    return before === after ? 'Остаться на '+names[after] : 'Перейти на '+attentionModes[after].name.toLowerCase();
+  }
+
+  function attentionTrail(path) {
+    const detail = element('details','attention-trail');
+    detail.append(element('summary','','Как менялось моё внимание'));
+    const list = element('ol');
+    for (const key of path.slice(2)) {
+      const node = story[key];
+      const parent = story[node.parent];
+      const answer = parent.links.find(([id]) => id === key)[1];
+      const item = element('li');
+      item.append(element('strong','',transitionLabel(parent.mode,node.mode)),element('p','',answer));
+      const signals = decisions[key]?.signals;
+      const quote = signals?.length && cues[signals[signals.length-1]]?.[0];
+      if (quote) item.append(element('small','','Перед этим в истории: «'+quote+'»'));
+      list.append(item);
+    }
+    detail.append(list);
+    return detail;
+  }
+
   function showGame(data, path, stops) {
     if (data.outcome) {
       const {kind, headline} = data.outcome;
@@ -254,6 +279,7 @@ function playAttentionPilot(ui) {
       outcome.querySelector('#outcome-title').textContent = headline;
       outcome.querySelector('.outcome-reason').textContent = data.note;
       outcome.hidden = false;
+      choices.append(attentionTrail(path));
       if (path.includes('calm')) {
         choices.append(element('p','calm-ending',kind === 'positive' ? 'В этот раз всё пошло хорошо.' : 'Так закончился этот дубль.'),
           button('rewind','А если бы всё пошло не так спокойно…',() => navigate('pressure')));
@@ -265,14 +291,18 @@ function playAttentionPilot(ui) {
       freeze.hidden = false;
       question.textContent = data.question;
       for (const {id, label} of data.links) {
-        const option = button('forward', label, () => navigate(id, undefined, 'conversation'));
+        const option = button('forward', label, () => {
+          guide.dismissIntro();
+          navigate(id, undefined, 'conversation');
+        });
         const next = pages.get(id);
         const code = attentionModes[next.mode];
         option.dataset.code = next.mode;
         option.classList.add('coded');
-        option.prepend(element('span', 'code-tag',code.name+' · '+code.meaning));
+        option.prepend(element('span','code-tag',transitionLabel(data.mode,next.mode)+' · '+code.meaning));
         choices.append(option);
       }
+      guide.annotate(choices.querySelectorAll('.coded'));
       if (path.length > 2) controls.append(button('rewind','На шаг назад',() => navigate(data.parent)));
     }
     controls.append(button('finish','К списку ситуаций',leave));
@@ -280,6 +310,7 @@ function playAttentionPilot(ui) {
   }
 
   function begin() {
+    guide.clear();
     ui.pauseMedia();
     const old = run;
     run = new AbortController();
@@ -307,6 +338,7 @@ function playAttentionPilot(ui) {
 
   async function render(next, mode) {
     const task = begin();
+    if (!view && guide.introducingYellow) ui.setFollow(false);
     view = next;
     const path = pathFor(next);
     const data = pages.get(next.id);

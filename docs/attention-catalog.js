@@ -53,7 +53,11 @@ const focusActionModes = {
 };
 
 function buildAttentionRoute(id, role) {
-  if (id === 'money' && role === 'witness') return {story:attentionStory,cues:attentionCues,decisions:attentionDecisions};
+  if (id === 'money' && role === 'witness') {
+    const story = Object.fromEntries(Object.entries(attentionStory).map(([key,node]) =>
+      [key,{...node,links:node.links?.map(link => [...link])}]));
+    return addReadingChoices(id,role,{story,cues:{...attentionCues},decisions:{...attentionDecisions}});
+  }
   const self = role === 'self';
   const select = value => value?.[role] ?? value;
   const episode = scenarios.find(scene => scene.id === id);
@@ -99,7 +103,11 @@ function buildAttentionRoute(id, role) {
   actions('pressure',part,select(focusActionModes[id]));
   const alt = part.alternative;
   const altLines = id === 'money' && self ? alt.lines.map((line,i) => i === 0 ? [...line.slice(0,2),'Чат секции'] : line) : alt.lines;
-  const altNode = {mode:'orange',lines:altLines, outcome:[self ? alt.kind || 'mixed' : alt.kind || 'negative',alt.headline],note:alt.note};
+  // Some alternatives are ordinary readings of an ambiguous exchange, even
+  // when the later outcome exposes a missed detail. Others notice the pressure.
+  const downplayed = self ? ['dubl','locker','project'] : ['dubl','locker','project','team','dance','voice'];
+  const altMode = downplayed.includes(id) ? 'yellow' : 'orange';
+  const altNode = {mode:altMode,lines:altLines, outcome:[self ? alt.kind || 'mixed' : alt.kind || 'negative',alt.headline],note:alt.note};
   const altDecision = {signals,effect:alt.note,miss:!self};
   add('pressure','alternative',alt.label,altNode,altDecision);
   const links = story.pressure.links;
@@ -110,11 +118,11 @@ function buildAttentionRoute(id, role) {
     const effect = altNode.note;
     const [why,followup] = followupNotes[id];
     const cue = signal('alternative',quote,why);
-    story.alternative = {parent:'pressure',mode:'orange',lines:altLines,question:'Что тебе сейчас подходит?',links:[]};
+    story.alternative = {parent:'pressure',mode:altMode,lines:altLines,question:'Что тебе сейчас подходит?',links:[]};
     const mode = ['money','dance'].includes(id) ? 'red' : 'orange';
     add('alternative','follow-up',label,{mode,lines:[[id==='geopoint'?'Ремарка':'Ты',words],[speaker,reply]],outcome:['positive',headline],note:followup},
       {signals:[cue],effect:followup});
-    add('alternative','pause','Закончить этот дубль здесь',{mode:'orange',lines:[['Ремарка','На этом дубль заканчивается.']],outcome:altNode.outcome,note:effect},
+    add('alternative','pause','Закончить этот дубль здесь',{mode:altMode,lines:[['Ремарка','На этом дубль заканчивается.']],outcome:altNode.outcome,note:effect},
       {signals:[cue],effect:'Можно взять паузу. Решать, возвращаться ли к этому разговору, по-прежнему тебе.'});
   } else {
     const p = witnessPauses[id];
@@ -141,5 +149,5 @@ function buildAttentionRoute(id, role) {
     add('calm','calm-end','Посмотреть, что будет дальше',{mode:'yellow',lines:select(quiet.ordinary),outcome:['positive',quiet.result],note:quietNotes[id][0]});
     add('calm','ask',label,{mode:['dubl','rumour'].includes(id)?'orange':'yellow',lines:[['Ты',answer,context],[who,reply]],outcome:['positive',actionSummary(id,role)],note:id === 'dance' && !self ? 'Вера спросила про воду. Со своего места Даня видит, что Аня идёт с ней, а Лёша танцует у сцены.' : quietNotes[id][1]});
   }
-  return {story,cues,decisions};
+  return addReadingChoices(id,role,{story,cues,decisions});
 }

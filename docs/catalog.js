@@ -253,7 +253,11 @@ function showCatalogue(panel) {
   copy.append(element('h1','','Заметь, что изменилось.'),
     element('p','',personalRole ? 'Ты уже сказал «нет». Что будет дальше? Выбери школьную историю и попробуй разные ответы.' : 'Саша отказался скидываться на подарок. Измени следующую реплику и посмотри, в какой момент обычный сбор превращается в давление.'));
   hero.append(copy,makeTakePreview());
-  section.append(hero);
+  const article = element('a','cooper-link','Подробнее о цветах Купера');
+  article.href = './cooper.html';
+  article.target = '_blank';
+  article.rel = 'noopener';
+  section.append(hero,article);
   const header = element('header','catalog-heading');
   header.append(element('h2','','Выбери ситуацию'),element('span','',catalog.length+' историй'));
   section.append(header);
@@ -263,7 +267,7 @@ function showCatalogue(panel) {
   for (const step of [
     'Выбери роль вверху и открой любую историю ниже. Сообщения появятся сами.',
     'На стоп-кадре нажми на один из ответов. Переписка продолжится, и ты увидишь, к чему привёл выбор.',
-    'Жёлтый — наблюдаешь, оранжевый — присматриваешься, красный — зовёшь на помощь. Белый появляется, если очевидец отмахнулся от замеченного.',
+    'Каждая история начинается с жёлтого. Цвет на кнопке показывает, какой уровень внимания ты выбираешь вместе с ответом.',
     'После истории с давлением можно перемотать переписку к своим решениям, посмотреть детали и выбрать другой ответ.'
   ]) steps.append(element('li','',step));
   guide.append(steps);

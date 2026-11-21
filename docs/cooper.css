@@ -1,0 +1,26 @@
+.reading { margin:0; background:#f5f2e9; color:#193a3a; font:1.04rem/1.66 system-ui,sans-serif; }
+.reading main { max-width:73ch; margin:auto; padding:clamp(18px,5vw,52px) 20px 70px; }
+.reading h1 { font-size:clamp(2rem,5vw,3.4rem); line-height:1.06; letter-spacing:-.045em; }
+.reading article { overflow-wrap:anywhere; }
+.reading aside { border-left:4px solid #b78735; padding:12px 17px; background:#fffaeb; }
+.reading a { color:#25574c; }
+.reading .omission { color:#655944; }
+.cooper-link { font-size:.78rem; color:#285651; text-decoration:underline; background:transparent; border:0; padding:6px 4px; }
+.catalog-home .cooper-link { display:inline-block; margin:8px 0; }
+.mode-bar .cooper-link { color:var(--ink); margin-inline-start:auto; }
+.colour-intro { margin:15px clamp(12px,4vw,28px) 0; border-inline-start:4px solid #c6992f; background:#fff7d8; color:#373116; padding:11px 15px; border-radius:6px; }
+.colour-intro strong { font-size:1rem; color:#58460c; }
+.colour-intro p + p { margin-top:6px; font-size:.9rem; }
+.colour-tip { position:relative; margin:-2px 0 5px 14px; padding:9px 13px; background:var(--tint); color:var(--ink); border:1px solid var(--line); border-radius:2px 12px 12px; font-size:.89rem; }
+.colour-tip::before { content:""; position:absolute; left:16px; top:-5px; width:8px; height:8px; transform:rotate(45deg); background:var(--tint); border-top:1px solid var(--line); border-left:1px solid var(--line); }
+.new-colour { outline:2px solid var(--ink); outline-offset:1px; }
+@media (prefers-reduced-motion:no-preference) {
+  .new-colour { animation:cooper-introduce .7s ease-out 1; }
+  .colour-tip { animation:cooper-tip .3s ease-out 1; }
+}
+@keyframes cooper-introduce { from { box-shadow:0 0 0 5px var(--line); } to { box-shadow:0 0 0 0 transparent; } }
+@keyframes cooper-tip { from { opacity:.4; transform:translateY(-3px); } to { opacity:1; transform:none; } }
+.attention-trail { margin:12px 0; padding:8px 12px; background:var(--paper); border:1px solid var(--line); border-radius:8px; }
+.attention-trail summary { cursor:pointer; font-weight:620; }
+.attention-trail ol { margin:8px 0; padding-left:23px; }
+.attention-trail li + li { margin-top:8px; }

@@ -1,10 +1,10 @@
 'use strict';
 
 const attentionModes = {
-  yellow: {name:'Жёлтый', meaning:'наблюдаю', chrome:'#59450a'},
-  orange: {name:'Оранжевый', meaning:'присматриваюсь', chrome:'#773c1b'},
-  red:    {name:'Красный', meaning:'зову на помощь', chrome:'#792c39'},
-  white:  {name:'Белый', meaning:'отмахиваюсь', chrome:'#f8f9fa'}
+  yellow: {name:'Жёлтый', meaning:'спокойно замечаю, что вокруг', chrome:'#59450a'},
+  orange: {name:'Оранжевый', meaning:'слежу за конкретным сигналом', chrome:'#773c1b'},
+  red:    {name:'Красный', meaning:'вижу угрозу прямо сейчас', chrome:'#792c39'},
+  white:  {name:'Белый', meaning:'переключаю внимание на своё', chrome:'#f8f9fa'}
 };
 
 // Each node has one parent, so a bookmark or rewind restores the same transcript and colour.
@@ -118,7 +118,7 @@ const attentionStory = {
       ['Саша','Вижу их. Да, вышел. Спасибо.']
     ],
     outcome:['positive','Вера привела тренера, а Саша знал, что помощь идёт'],
-    note:'Ты обратился к конкретному человеку, назвал место и дождался ответа от Саши. Красный цвет здесь означает срочность твоего действия. Итог для Саши — удачный.'
+    note:'Ты обратился к конкретному человеку, назвал место и дождался ответа от Саши. Ты видел непосредственную угрозу: Саше перекрыли выход. Вера с тренером подошли, и Саша сам подтвердил, что вышел.'
   },
   calm: {
     parent:'start',mode:'yellow',continuation:'Даня принимает отказ',lines:[
