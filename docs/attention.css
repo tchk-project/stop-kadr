@@ -105,14 +105,14 @@ html[data-code=black] .signal { color:white; }
 .mode-help-icon { display:none; }
 @media (max-width:720px) {
   .mode-bar {
-    display:grid; grid-template-columns:20px minmax(0,1fr) auto 34px;
-    gap:2px 7px; padding:3px 10px;
+    display:grid; grid-template-columns:24px minmax(0,1fr) auto 36px;
+    gap:3px 8px; padding:7px 12px;
   }
-  .mode-bar .signal { width:20px; height:20px; font-size:.78rem; }
+  .mode-bar .signal { width:24px; height:24px; font-size:.85rem; }
   .mode-bar > div { grid-column:2 / 4; }
   .mode-bar small,.mode-help-label { display:none; }
-  .mode-bar strong { font-size:.86rem; line-height:1.2; }
-  .mode-bar .cooper-link { display:grid; place-items:center; width:34px; min-height:34px; padding:0; text-decoration:none; }
+  .mode-bar strong { font-size:.94rem; line-height:1.28; }
+  .mode-bar .cooper-link { display:grid; place-items:center; width:36px; min-height:36px; padding:0; text-decoration:none; }
   .mode-help-icon {
     display:grid; place-items:center; width:20px; height:20px;
     border:1px solid currentColor; border-radius:50%; font-weight:700;
