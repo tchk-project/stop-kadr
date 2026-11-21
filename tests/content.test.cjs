@@ -15,6 +15,18 @@ const {scenarios, rehearsal, avatarSlots, sceneDetails} = vm.runInContext(
   '({scenarios, rehearsal, avatarSlots, sceneDetails})', context
 );
 
+test('all stories introduce both playable characters and name the other perspective', () => {
+  const {allStories,roleIntroductions,viewpointNames} = vm.runInContext(
+    '({allStories,roleIntroductions,viewpointNames})',context);
+  for (const {id,actors} of allStories) {
+    for (const role of ['witness','self']) {
+      assert.ok(roleIntroductions[id][role].length > 15, id+' / '+role);
+      assert.ok(viewpointNames[actors[role]], actors[role]);
+    }
+    assert.notEqual(roleIntroductions[id].witness, roleIntroductions[id].self, id);
+  }
+});
+
 test('every fixed character has a distinct portrait, including both players in each scene', () => {
   const slots = Object.values(avatarSlots);
   assert.equal(new Set(slots).size, slots.length);

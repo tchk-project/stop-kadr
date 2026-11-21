@@ -347,6 +347,10 @@ async function playAttentionPilot(ui) {
         choices.append(button('inspect',stops[0].miss ? 'Что я мог сделать иначе?' : 'Какие детали мне помогли?',
           () => navigate(view.id,0)));
       }
+      const otherRole = role === 'self' ? 'witness' : 'self';
+      const otherName = viewpointNames[activeStory.actors[otherRole]];
+      const replayUrl = focusLink(activeStory.id,otherRole)+'#'+path[1];
+      choices.append(button('forward','Посмотреть глазами '+otherName,() => leave(replayUrl),'play'));
     } else {
       freeze.hidden = false;
       question.textContent = data.question;

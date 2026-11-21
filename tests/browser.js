@@ -79,7 +79,8 @@ async function exercise() {
   const article=find('.cooper-link').href;
   const loaded = new Promise(resolve => frame.addEventListener('load',resolve,{once:true}));
   check(find('.home-guide-more .cooper-link') && doc().querySelectorAll('.home-guide h3').length===5,'Все пять цветов и ссылка после памятки');
-  named('Начать тренировку').click();
+  check(!find('.roles') && find('.home-colours-link').hash==='#home-guide-title','На главной сразу можно играть или посмотреть цвета');
+  named('Играть').click();
   await loaded;
   check(find('.scene-loader:not([hidden])') && find('.panel[hidden]') && !find('.thread .item'),'Загрузчик до показа сцены');
   await new Promise((resolve,reject) => {

@@ -88,8 +88,8 @@ function playScene() {
   const scene = document.createElement('section');
   scene.className = 'scene';
   scene.innerHTML = `
-    <p class="small scene-role"></p>
     <h1 tabindex="-1"></h1>
+    <p class="scene-role"></p>
     <div class="thread" id="messages" role="region" aria-label="История переписки"></div>
     <div class="typing" hidden><span class="typing-name"></span><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span></div>
     <div class="screen-flash" aria-hidden="true"></div>
@@ -116,10 +116,10 @@ function playScene() {
   }
   panel.append(scene);
   const roleLine = scene.querySelector('.scene-role');
-  const place = activeStory.place;
   const playerPortrait = portrait(playerName);
   if (playerPortrait) roleLine.append(playerPortrait);
-  roleLine.append(element('span', '', 'Ты — '+playerName+' · '+place));
+  const who = {Папа:'папа Леры', Тренер:'тренер'}[playerName] || playerName;
+  roleLine.append(element('span', '', 'Ты — '+who+'. '+roleIntroductions[activeStory.id][role]));
   document.title = activeStory.title + ' · Стоп-кадр';
   const heading = scene.querySelector('h1');
   const thread = scene.querySelector('.thread');

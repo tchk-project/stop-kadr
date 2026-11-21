@@ -12,14 +12,37 @@ const rehearsal = {id:'dubl', title:'Дубль для своих', place:'Шк�
 const allStories = [rehearsal, ...scenarios, ...healthScenes];
 const activeStory = episode || rehearsal;
 const playerName = activeStory.actors[role];
+
+const roleIntroductions = {
+  dubl: {witness:'Ты читаешь чат своей музыкальной группы после репетиции.', self:'На репетиции ты вступил раньше времени. У друзей осталась запись.'},
+  locker: {witness:'Ты в коридоре. Вера спрашивает, видел ли ты Мишин рюкзак.', self:'Ты оставил рюкзак на лавке в раздевалке и вернулся за ним.'},
+  sticker: {witness:'Вы с классом делаете стенгазету. Вчера Лера прислала в чат голосовое о встрече.', self:'Вчера ты отправила в чат класса голосовое о том, где вы встретитесь делать стенгазету.'},
+  project: {witness:'Через пять минут защита. Тебя попросили открыть презентацию на школьном ноутбуке.', self:'Вы с ребятами готовили проект о школьном дворе. Скоро ваша очередь выступать.'},
+  geopoint: {witness:'Ты пишешь Ане после кружка. У неё осталась фотография с доски.', self:'После кружка ты ждёшь автобус. Тебе пишет Лёша.'},
+  team: {witness:'Ты едешь с секцией на игру. У автобуса ребята встречают новичка Тимура.', self:'Ты впервые едешь на игру с этой командой.'},
+  dance: {witness:'Ты на школьной дискотеке. Вера пишет тебе, что подойдёт к Ане.', self:'Ты на школьной дискотеке. Лёша приглашает тебя танцевать.'},
+  voice: {witness:'Ты в голосовом чате команды. Слышишь, как Миша и Лёша договариваются, куда идти.', self:'Ты играешь с друзьями. Вы с Лёшей говорите по микрофону.'},
+  money: {witness:'Ты читаешь чат секции. Даня собирает деньги на подарок тренеру.', self:'В чате секции собирают деньги на подарок тренеру. В этот раз ты решил пропустить сбор.'},
+  stairs: {witness:'На перемене ты видишь Сашу у лестницы. Рядом ребята спорят о матче.', self:'Перемена заканчивается. Ты идёшь к лестнице, а ребята всё ещё спорят о матче.'},
+  rumour: {witness:'После тренировки Костя присылает тебе кусок переписки.', self:'После тренировки Вера присылает тебе скрин с твоими словами.'},
+  invite: {witness:'Ты в беседе «После отбоя». Ребята собирают команду на ночной турнир.', self:'В беседе «После отбоя» собирают команду на турнир. Ты решаешь выйти из чата.'},
+  speech: {witness:'После игры ты ставишь телефон на таймер для командного фото.', self:'После игры ты собираешь команду для общего фото.'},
+  vision: {witness:'Ты помогаешь Марине Сергеевне повесить афишу в школе.', self:'Вы с Тимуром вешаете афишу в школьном вестибюле.'},
+  abdomen: {witness:'До матча десять минут. Ты встречаешь Мишу у раздевалки.', self:'Скоро матч. Ты сидишь на ступеньках у раздевалки, когда подходит Тимур.'},
+  chest: {witness:'После школьной ярмарки вы с папой выносите коробки к машине.', self:'Вы с дочкой Лерой выносите коробки после школьной ярмарки.'}
+};
+const viewpointNames = {
+  Вера:'Веры', Миша:'Миши', Костя:'Кости', Саша:'Саши', Даня:'Дани', Аня:'Ани',
+  Тимур:'Тимура', Лера:'Леры', Тренер:'тренера', Папа:'папы Леры', 'Марина Сергеевна':'Марины Сергеевны'
+};
 const originalSelected = selection === 'dubl' || (!selection && location.hash.length > 1 && location.hash !== '#home-guide-title');
 const isCatalogue = !isAttentionPilot && !episode && !originalSelected;
 function focusLink(id, pointOfView) {
   return './focus.html?case='+encodeURIComponent(id)+'&role='+pointOfView+'&v=reading-1';
 }
-function randomStoryUrl(excludeId) {
+function randomStoryUrl(excludeId, startingRole = role) {
   const pool = allStories.filter(item => item.id !== excludeId);
-  return focusLink(pool[Math.floor(Math.random() * pool.length)].id, role);
+  return focusLink(pool[Math.floor(Math.random() * pool.length)].id, startingRole);
 }
 
 // Turn off the temporary shortcuts after the editorial read-through.
@@ -300,7 +323,7 @@ function showCatalogue(panel) {
   const home = element('a','wordmark','Стоп-кадр');
   home.href = currentFile;
   masthead.replaceChildren(home);
-  document.title = listOpen ? 'Выбор ситуации · Стоп-кадр' : 'Стоп-кадр · Тренажёр внимания';
+  document.title = listOpen ? 'Выбор ситуации · Стоп-кадр' : 'Стоп-кадр · Игра';
   const article = element('a','cooper-link','Подробнее о цветах Купера');
   article.href = './cooper.html';
   article.target = '_blank';
@@ -309,18 +332,16 @@ function showCatalogue(panel) {
     masthead.append(reviewerLink('Выбрать ситуацию'));
     const hero = element('div','catalog-hero');
     const copy = element('div','hero-copy');
-    const title = element('h1','','Тренажёр ');
-    title.append(element('em','','внимания'));
-    const intro = element('p','intro-copy','В «Стоп-кадре» ты выбираешь, как действовать по ходу истории. Так можно потренироваться замечать перемены и осознанно переходить от одного ');
-    const levelsLink = element('a','','уровня внимания');
-    levelsLink.href = '#home-guide-title';
-    intro.append(levelsLink,' к другому.');
-    copy.append(title,intro,
-      element('p','how-to-play','Когда история остановится, выбери ответ. Потом можно отмотать её назад и попробовать другой вариант.'));
-    const start = element('button','start-game','Начать тренировку');
+    roles.remove();
+    const title = element('h1','','Давай ');
+    title.append(element('em','','поиграем?'));
+    const intro = element('p','intro-copy','В чате или в школе что-то происходит. Попробуй заметить, когда обычная ситуация меняется, и выбери, как поступишь.');
+    const start = element('button','start-game','Играть');
     start.type = 'button';
-    start.onclick = () => location.assign(randomStoryUrl());
-    copy.append(element('p','role-prompt','С чьей стороны сыграешь?'), roles, start);
+    start.onclick = () => location.assign(randomStoryUrl(undefined, Math.random() < .5 ? 'witness' : 'self'));
+    const levelsLink = element('a','home-colours-link','Что означают цвета в игре?');
+    levelsLink.href = '#home-guide-title';
+    copy.append(title,intro,start,levelsLink);
     hero.append(copy,makeTakePreview());
     article.textContent = 'Подробнее о цветовых кодах Купера →';
     section.append(hero,cooperOverview(article));
@@ -330,6 +351,7 @@ function showCatalogue(panel) {
   const title = element('h1','','Выбери ситуацию');
   section.append(title,element('p','list-info',allStories.length+' историй · У каждой две роли'));
   roles.querySelectorAll('a').forEach(link => { link.search = '?view=cases'; });
+  roles.hidden = false;
   section.append(roles);
   const cards = element('div','case-grid');
   allStories.forEach(item => {
