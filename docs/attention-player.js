@@ -281,13 +281,8 @@ function playAttentionPilot(ui) {
 
   function showGame(data, path, stops) {
     if (data.outcome) {
-      const {kind, headline} = data.outcome;
-      outcome.dataset.kind = kind;
-      outcome.querySelector('.outcome-icon').textContent = outcomeLabels[kind].icon;
-      outcome.querySelector('#outcome-label').textContent = outcomeLabels[kind].label;
-      outcome.querySelector('#outcome-title').textContent = headline;
-      outcome.querySelector('.outcome-reason').textContent = data.note;
-      outcome.hidden = false;
+      const {kind} = data.outcome;
+      ui.showOutcome(data);
       choices.append(attentionTrail(path));
       if (healthScenes.includes(episode)) {
         const [label,href] = episode.source || ['О признаках инсульта и первой помощи · НМИЦ ТПМ Минздрава России','https://gnicpm.ru/articles/paczientam-articles/pervaya-pomoshh-pri-ostrom-narushenii-mozgovogo-krovoobrashheniya.html'];

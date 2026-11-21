@@ -180,6 +180,23 @@ function playScene() {
     return row;
   }
 
+  const root = document.documentElement;
+  const themeColor = document.querySelector('meta[name="theme-color"]');
+
+  function showOutcome(data) {
+    const {kind, headline} = data.outcome;
+    outcome.dataset.kind = kind;
+    outcome.querySelector('.outcome-icon').textContent = outcomeLabels[kind].icon;
+    outcome.querySelector('#outcome-label').textContent = outcomeLabels[kind].label;
+    outcome.querySelector('#outcome-title').textContent = headline;
+    outcome.querySelector('.outcome-reason').textContent = data.note;
+    outcome.hidden = false;
+    if (kind === 'positive' || kind === 'negative') {
+      root.dataset.ending = kind;
+      if (themeColor) themeColor.content = getComputedStyle(root).getPropertyValue('--ending-ink').trim();
+    }
+  }
+
   function setControls() {
     choices.replaceChildren();
     controls.replaceChildren();
@@ -187,13 +204,7 @@ function playScene() {
     const data = pages.get(id);
     freeze.hidden = !data.question;
     if (data.outcome) {
-      const {kind, headline} = data.outcome;
-      outcome.dataset.kind = kind;
-      outcome.querySelector('.outcome-icon').textContent = outcomeLabels[kind].icon;
-      outcome.querySelector('#outcome-label').textContent = outcomeLabels[kind].label;
-      outcome.querySelector('#outcome-title').textContent = headline;
-      outcome.querySelector('.outcome-reason').textContent = data.note;
-      outcome.hidden = false;
+      showOutcome(data);
     } else {
       note.textContent = forks.includes(id) ? '' : data.note;
     }
@@ -256,6 +267,10 @@ function playScene() {
     freeze.getAnimations().forEach(animation => animation.cancel());
     freeze.hidden = true;
     outcome.hidden = true;
+    if (root.hasAttribute('data-ending')) {
+      delete root.dataset.ending;
+      if (themeColor) themeColor.content = attentionModes[root.dataset.code].chrome;
+    }
     typing.hidden = true;
     note.textContent = '';
     question.textContent = '';
@@ -375,7 +390,7 @@ function playScene() {
   if (isAttentionPilot) {
     playAttentionPilot({route, pauseMedia, pages, pathFor, messages, makeRow, button, scene, heading, thread, typing,
       flash, freeze, question, outcome, outcomeLabels, choices, controls, status, finishScene,
-      clearPrompt, flashFreeze, motionAllowed, reduced, setFollow: value => { followNew = value; },
+      showOutcome, clearPrompt, flashFreeze, motionAllowed, reduced, setFollow: value => { followNew = value; },
       shouldFollow: () => followNew});
     return;
   }

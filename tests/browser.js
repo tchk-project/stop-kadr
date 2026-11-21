@@ -110,6 +110,8 @@ async function exercise() {
           for(const el of doc().querySelectorAll('.thread img[src],.thread audio[src],.thread video[src],.thread source[src],.thread a[download]')) assets.add(el.src || el.href);
           check(!find('.coded[data-code="black"]'),'Чёрный появился на кнопке');
           const outcome=find('.outcome:not([hidden])');
+          const expectedTheme=outcome && ['positive','negative'].includes(outcome.dataset.kind) ? outcome.dataset.kind : undefined;
+          check(doc().documentElement.dataset.ending===expectedTheme,'Тема исхода');
           if(outcome) {
             endings++;
             check(find('#outcome-title').textContent,'Пустой финал');
@@ -124,6 +126,7 @@ async function exercise() {
               do {
                 const review=find('.decision-review:not([hidden])');
                 check(review && review.querySelector('li') && find('#moment-line option:nth-child(2)'),'Пустой разбор');
+                check(!doc().documentElement.hasAttribute('data-ending'),'Цвет внимания при перемотке');
                 reviews++;
                 if(named('Дальше').disabled) break;
                 await click(named('Дальше'));

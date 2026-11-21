@@ -92,3 +92,20 @@
 .picked-moment .msg { outline:3px solid #916517; outline-offset:2px; }
 .moment-eligible .msg { cursor:pointer; }
 .moment-eligible .msg:hover { box-shadow:inset 0 0 0 2px #997122; }
+
+/* The ending colours the scene while the attention gauge keeps its last reading. */
+html[data-ending=positive] {
+  --ending-zone:#cee6d3; --ending-paper:#f5faf5; --ending-surface:#e0f1e3;
+  --ending-ink:#315e42; --ending-line:#9abc9e;
+}
+html[data-ending=negative] {
+  --ending-zone:#85334f; --ending-paper:#fcf5f7; --ending-surface:#f1dce3;
+  --ending-ink:#60213a; --ending-line:#be899c;
+}
+html[data-ending], html[data-ending] body { background:var(--ending-zone); }
+html[data-ending] .panel { background:var(--ending-paper); border-color:var(--ending-line); }
+html[data-ending] .panel > .top { background:var(--ending-ink); color:white; border-color:var(--ending-line); }
+html[data-ending] .thread { background:var(--ending-surface); border-color:var(--ending-line); }
+html[data-ending] .scene .outcome {
+  --accent:var(--ending-ink); background:var(--ending-surface); color:var(--ending-ink);
+}
