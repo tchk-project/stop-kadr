@@ -100,6 +100,14 @@ async function exercise() {
   }
   report.textContent+='Старт ситуации · загрузка, пустая переписка, первая реплика\n';
   await until(()=>buttons().length && find('.scene:not([aria-busy])'),'Случайный старт с главной');
+  for (const width of [320,360,390]) {
+    frame.style.width=width+'px';
+    const bar=find('.mode-bar');
+    const height=Math.ceil(bar.getBoundingClientRect().height);
+    check(height <= 60 && bar.scrollWidth <= bar.clientWidth,'Размер плашки при ширине '+width);
+    report.textContent+='Плашка внимания · '+width+' × '+height+' пикселей\n';
+  }
+  frame.style.removeProperty('width');
   const first=new URL(frame.contentWindow.location.href).searchParams.get('case');
   named('Следующая').click();
   await until(()=>buttons().length && find('.scene:not([aria-busy])') &&
