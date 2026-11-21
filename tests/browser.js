@@ -6,6 +6,8 @@ let frame = document.querySelector('iframe');
 const report = document.querySelector('#report');
 const progress = document.querySelector('#progress');
 const root = new URL('../',location.href);
+// Fetch the current entry documents even if a previous run warmed the Pages cache.
+root.searchParams.set('qa',Date.now().toString(36));
 const doc = () => frame.contentDocument;
 const find = selector => doc()?.querySelector(selector);
 const buttons = () => [...doc().querySelectorAll('button.action.coded')];
@@ -65,6 +67,7 @@ async function exercise() {
   }
   for (const role of ['witness','self']) {
     const catalog=new URL(role==='self'?'docs/self.html':'docs/index.html',root);
+    catalog.search=root.search;
     await openPage(catalog,'a.case-card');
     const links=[...doc().querySelectorAll('.case-card')].map(a=>[a.href,a.querySelector('.case-name').textContent]);
     const ids=new Set(links.map(([url])=>new URL(url).searchParams.get('case')));
