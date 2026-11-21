@@ -33,7 +33,7 @@ async function playAttentionPilot(ui) {
   const {story,cues,decisions} = ui.route;
   thread.className = 'chat-transcript';
   const guide = attentionGuide(document.querySelector('.panel'));
-  const speed = 2.5;
+  const speed = 4;
   const bar = document.querySelector('.mode-bar');
   const direction = element('span', 'tape-direction');
   direction.setAttribute('role', 'status');
@@ -183,7 +183,7 @@ async function playAttentionPilot(ui) {
     let common = 0;
     while (common < items.length && common < rows.length &&
            items[common].key === rows[common].dataset.key) common++;
-    if (common < rows.length) direction.textContent = '◀◀ Назад · 2,5×';
+    if (common < rows.length) direction.textContent = `◀◀ Назад · ${speed}×`;
     let reverseChannel = thread.lastElementChild?.dataset.channel || '';
     let reverseActivity = {label:'Перемотка назад', kind:'dots'};
     while (rows.length > common) {
@@ -213,7 +213,7 @@ async function playAttentionPilot(ui) {
         showActivity();
       }
     }
-    if (common < items.length) direction.textContent = rate === speed ? '▶▶ Вперёд · 2,5×' : '';
+    if (common < items.length) direction.textContent = rate === speed ? `▶▶ Вперёд · ${speed}×` : '';
     let channel = thread.lastElementChild?.dataset.channel || '';
     const pending = items.slice(common).map(item => {
       const label = item.content.dataset.context;
@@ -236,7 +236,8 @@ async function playAttentionPilot(ui) {
       const row = makeRow(item, context.caption);
       row.dataset.attention = item.attention;
       if (item.reaction) guide.explainReaction(row);
-      row.dataset.readingPause = readingPause(row);
+      const next = pending[index+1];
+      row.dataset.readingPause = next ? readingPause(row) : 1000;
       row.dataset.pause = pause;
       row.dataset.activity = activity.label;
       row.dataset.kind = activity.kind;
@@ -246,8 +247,7 @@ async function playAttentionPilot(ui) {
       await animateRow(row, false, rate, task);
       if (run !== task) return;
       if (!task.signal.aborted) {
-        const next = pending[index+1];
-        showActivity(next?.activity || {label:'Пауза на чтение', kind:'dots'}, next?.context.title ?? context.title);
+        if (next) showActivity(next.activity, next.context.title);
         await wait(Number(row.dataset.readingPause)/rate, task.signal);
         if (run !== task) return;
       }
@@ -259,7 +259,7 @@ async function playAttentionPilot(ui) {
           scrollTo(row);
           await wait(1250, task.signal);
           if (run !== task) return;
-          direction.textContent = '▶▶ Вперёд · 2,5×';
+          direction.textContent = `▶▶ Вперёд · ${speed}×`;
         }
       }
     }
