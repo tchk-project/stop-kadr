@@ -201,6 +201,9 @@ function loadEpisode(pages, item) {
 function showCatalogue(panel) {
   panel.querySelectorAll('.page').forEach(el => el.remove());
   document.title = 'Стоп-кадр · '+selectedRole.textContent;
+  const archiveLink = element('a', 'to-catalog', 'Открыть первую версию');
+  archiveLink.href = personalRole ? './v1/self.html' : './v1/index.html';
+  panel.querySelector('.top').append(archiveLink);
   const section = element('section','catalogue');
   const catalog = [rehearsal, ...scenarios];
   const heading = personalRole ? 'Что делать, если на меня давят?' : 'Как помочь, если на кого-то давят?';
