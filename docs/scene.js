@@ -21,6 +21,15 @@ if (!isAttentionPilot && healthScenes.includes(episode)) {
   playScene();
 }
 
+// Budget reading time after the message is visible, including context and media captions.
+function readingPause(row) {
+  const parts = row.querySelectorAll('p, .reply-to, .reaction-label');
+  const text = Array.from(parts, part => part.textContent).join(' ');
+  const words = text.match(/[\p{L}\p{N}]+(?:[-’'][\p{L}\p{N}]+)*/gu) || [];
+  const mediaTime = row.querySelector('.chat-media, audio, video, .preview') ? 2000 : 0;
+  return Math.max(2300, 500 + words.length * 500) + mediaTime;
+}
+
 function afterPaint() {
   return new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 }
@@ -380,10 +389,10 @@ function playScene() {
       }
       if (motion && onStep && !skip) row.animate([{opacity:0, transform:'translateY(6px)'},{opacity:1, transform:'none'}],
         {duration:160, easing:'ease-out'});
-    }
-    if (!skip) {
-      await delay(400);
-      if (ticket !== sequence) return;
+      if (onStep && !skip) {
+        await delay(readingPause(row));
+        if (ticket !== sequence) return;
+      }
     }
     setControls();
     if (interactive) {

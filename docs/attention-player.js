@@ -116,7 +116,11 @@ async function playAttentionPilot(ui) {
     if (common < thread.children.length) direction.textContent = '◀◀ Назад · 2,5×';
     while (thread.children.length > common) {
       const row = thread.lastElementChild;
-      if (!task.signal.aborted) scrollTo(row);
+      if (!task.signal.aborted) {
+        scrollTo(row);
+        await wait(Number(row.dataset.readingPause)/speed, task.signal);
+        if (run !== task) return;
+      }
       await animateRow(row, true, speed, task);
       if (run !== task) return;
       row.remove();
@@ -145,12 +149,17 @@ async function playAttentionPilot(ui) {
       const row = makeRow(item);
       row.dataset.attention = item.attention;
       if (item.reaction) guide.explainReaction(row);
+      row.dataset.readingPause = readingPause(row);
       row.dataset.pause = pause;
       row.dataset.speaker = speaker || '';
       thread.append(row);
       if (!task.signal.aborted) scrollTo(row, rate === 1 ? 'smooth' : 'instant');
       await animateRow(row, false, rate, task);
       if (run !== task) return;
+      if (!task.signal.aborted) {
+        await wait(Number(row.dataset.readingPause)/rate, task.signal);
+        if (run !== task) return;
+      }
       if (signals.includes(item.key)) {
         drawSignal(row, item.key);
         if (!task.signal.aborted) {

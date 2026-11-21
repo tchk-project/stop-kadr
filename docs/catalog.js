@@ -15,7 +15,7 @@ const playerName = activeStory.actors[role];
 const originalSelected = selection === 'dubl' || (!selection && location.hash.length > 1);
 const isCatalogue = !isAttentionPilot && !episode && !originalSelected;
 function focusLink(id, pointOfView) {
-  return './focus.html?case='+encodeURIComponent(id)+'&role='+pointOfView+'&v=start-1';
+  return './focus.html?case='+encodeURIComponent(id)+'&role='+pointOfView+'&v=reading-1';
 }
 function randomStoryUrl(excludeId) {
   const pool = allStories.filter(item => item.id !== excludeId);
