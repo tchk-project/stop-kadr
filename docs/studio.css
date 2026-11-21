@@ -77,3 +77,5 @@
   .catalog-home .case-card { min-height:68px; }
   .catalog-heading { margin-top:26px; }
 }
+.moment-eligible .msg { cursor:pointer; }
+.moment-eligible .msg:hover { box-shadow:inset 0 0 0 2px #997122; }

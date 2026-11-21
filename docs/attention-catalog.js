@@ -32,12 +32,15 @@ const focusSignals = {
   locker:[['Пройдёшь наш квест','Даня поставил условие, прежде чем вернуть чужую вещь.'],['Вчера тоже ждал','Миша говорит, что это повторилось.']],
   sticker:[['Я ему вчера написала, чтобы перестал','Лера уже просила об этом в личке. Сегодня тот же кот снова появился под голосовым.']],
   project:[['Верни имя','Тимур попросил указать его работу. На выступление он ещё не соглашался.'],['после защиты впишу','Класс увидит титульный раньше, чем в нём появится имя.']],
-  geopoint:[['Не говори, где я','Аня прямо сказала Тимуру, какую информацию хочет оставить между ними.']],
+  geopoint:{
+    witness:[['Не говори, где я','Аня прямо сказала Тимуру, какую информацию хочет оставить между ними.']],
+    self:[['Ты же мне доверяешь','Лёша снова просит геопозицию после твоего отказа. Дружба не обязывает тебя включать передачу.'],['Не говори, где я','Ты прямо назвала Тимуру свою просьбу.']]
+  },
   team:[['Тогда садишься отдельно','После отказа Костя поставил условие даже для места в автобусе.'],['Я вообще уже ехать не хочу','Тимур написал в личку, что теперь думает пропустить поездку.']],
   dance:{witness:[['Можно я с вами посижу','Даня не слышал разговора у стены. Сейчас Аня сама говорит, чего хочет.']],self:[['берёт тебя за запястье','Лёша удерживает тебя после отказа. Вера и дежурная рядом.']]},
   voice:[['хватит меня передразнивать','В голосовом слышна просьба Миши. Ребятам уже известно, хочет ли он продолжать эту шутку.']],
   money:[['Тогда с тебя двести','За отказ Даня повысил сумму и сказал, что будет ждать после уроков.']],
-  stairs:[['Ещё шаг — ударю','Лёша преградил проход и прямо пригрозил ударить.'],['дежурит Марина Сергеевна','Дежурная у соседней двери. Ей можно сказать, где нужна помощь.']],
+  stairs:[['дежурит Марина Сергеевна','Дежурная у соседней двери. Ей можно сказать, где нужна помощь.'],['Ещё шаг — ударю','Лёша преградил проход и прямо пригрозил ударить.']],
   rumour:{witness:[['тебе больше поверят','Костя хочет переслать обрезанный скрин от твоего имени.'],['Мне уже пишут гадости','Аня сама рассказала тебе, что получает сообщения.']],self:[['Он ведёт чат','Вера назвала человека, который может закрыть обсуждение под расписанием.']]},
   invite:[['Больше не добавляйте','Аня объяснила, что вышла сама.'],['Ань, нас пятеро','После её просьбы Костя снова добавил Аню ради команды.']]
 };
@@ -63,9 +66,11 @@ function buildAttentionRoute(id, role) {
     pressure = attentionStory.pressure.lines.map(([speaker,words,context]) =>
       [speaker,words,speaker === 'Саша' ? 'Личная переписка с Мишей' : context]);
   }
+  if (id === 'stairs' && self) pressure = part.later.map((line,i) =>
+    i === 0 ? [line[0],line[1]+' Тимур остановился рядом у окна.',...line.slice(2)] : line);
   if (id === 'rumour' && self) {
     opening = [['Вера',{...screenshot,caption:'Ань, мне вот такой кусок прислали. Тут про нашу команду?'},'Личная переписка с Верой'],['Ты','Я впервые вижу этот скрин.']];
-    pressure = [base.opening[0],...part.later];
+    pressure = [['Ты','Тим, мне уже пишут гадости. Ты знаешь, где это выложили?','Личная переписка с Тимуром'],...part.later];
   }
   const story = {}, cues = {}, decisions = {};
   story.start = {lines:opening,mode:'yellow',links:[['pressure','Читать дальше'],['calm','Спокойный дубль']]};
@@ -93,7 +98,8 @@ function buildAttentionRoute(id, role) {
   }
   actions('pressure',part,select(focusActionModes[id]));
   const alt = part.alternative;
-  const altNode = {mode:'orange',lines:alt.lines, outcome:[self ? alt.kind || 'mixed' : alt.kind || 'negative',alt.headline],note:alt.note};
+  const altLines = id === 'money' && self ? alt.lines.map((line,i) => i === 0 ? [...line.slice(0,2),'Чат секции'] : line) : alt.lines;
+  const altNode = {mode:'orange',lines:altLines, outcome:[self ? alt.kind || 'mixed' : alt.kind || 'negative',alt.headline],note:alt.note};
   const altDecision = {signals,effect:alt.note,miss:!self};
   add('pressure','alternative',alt.label,altNode,altDecision);
   const links = story.pressure.links;
@@ -102,36 +108,38 @@ function buildAttentionRoute(id, role) {
   if (self) {
     const [quote,label,words,speaker,reply,headline] = selfFollowups[id];
     const effect = altNode.note;
-    const cue = signal('alternative',quote,'Эта деталь уже была видна, когда ты решал, что делать дальше.');
-    story.alternative = {parent:'pressure',mode:'orange',lines:alt.lines,question:'Что тебе сейчас подходит?',links:[]};
+    const [why,followup] = followupNotes[id];
+    const cue = signal('alternative',quote,why);
+    story.alternative = {parent:'pressure',mode:'orange',lines:altLines,question:'Что тебе сейчас подходит?',links:[]};
     const mode = ['money','dance'].includes(id) ? 'red' : 'orange';
-    add('alternative','follow-up',label,{mode,lines:[[id==='geopoint'?'Ремарка':'Ты',words],[speaker,reply]],outcome:['positive',headline],note:headline+'.'},
-      {signals:[cue],effect:headline+'.'});
-    add('alternative','pause','На этом пока остановиться',{mode:'yellow',lines:[['Ремарка','Ты берёшь паузу.']],outcome:altNode.outcome,note:effect},
+    add('alternative','follow-up',label,{mode,lines:[[id==='geopoint'?'Ремарка':'Ты',words],[speaker,reply]],outcome:['positive',headline],note:followup},
+      {signals:[cue],effect:followup});
+    add('alternative','pause','Закончить этот дубль здесь',{mode:'orange',lines:[['Ремарка','На этом дубль заканчивается.']],outcome:altNode.outcome,note:effect},
       {signals:[cue],effect:'Можно взять паузу. Решать, возвращаться ли к этому разговору, по-прежнему тебе.'});
   } else {
     const p = witnessPauses[id];
     add('pressure','ignore',p.leave,{mode:'white',lines:[p.nudge],question:'Теперь ты знаешь ещё кое-что. Что сделаешь?',links:[]},
       {miss:true,signals,effect:'После твоего решения разговор продолжился: «'+p.nudge[1]+'»',repair:'rejoin',recovery:p.help[4]+'.'});
     const cue = signal('ignore',p.nudge[1],'Теперь к тебе обратились напрямую.');
+    const [stayContext,helpContext] = witnessChannels[id] || [];
+    const [stayEffect,helpEffect] = witnessEffects[id];
     const [label,who,words,headline] = p.stay;
-    add('ignore','stay',label,{mode:'white',lines:[[who,words]],outcome:['mixed',headline],note:headline+'.'},
-      {miss:true,signals:[cue],effect:headline+'.'});
+    add('ignore','stay',label,{mode:'white',lines:[[who,words,stayContext]],outcome:['mixed',headline],note:stayEffect},
+      {miss:true,signals:[cue],effect:stayEffect});
     const [help,answer,speaker,reply,result] = p.help;
-    add('ignore','rejoin',help,{mode:id==='stairs'?'red':'orange',lines:[['Ты',answer],[speaker,reply]],outcome:['positive',result],note:result+'.'});
+    add('ignore','rejoin',help,{mode:id==='stairs'?'red':'orange',lines:[['Ты',answer,helpContext],[speaker,reply]],outcome:['positive',result],note:helpEffect});
   }
 
   if (id === 'project') {
     story.calm = {parent:'start',continuation:true,mode:'yellow',lines:base.later,question:base.prompt,links:[]};
     actions('calm',base,['yellow','orange']);
-    const other = base.alternative;
-    add('calm','early',other.label,{mode:'orange',lines:other.lines,outcome:[other.kind || 'mixed',other.headline],note:other.note});
+
   } else {
     const quiet = quietTakes[id];
     const [label,answer,who,reply,context] = quiet[role];
     story.calm = {parent:'start',continuation:true,mode:'yellow',lines:select(quiet.lines),question:'Как продолжишь?',links:[]};
     add('calm','calm-end','Посмотреть, что будет дальше',{mode:'yellow',lines:select(quiet.ordinary),outcome:['positive',quiet.result],note:quietNotes[id][0]});
-    add('calm','ask',label,{mode:'orange',lines:[['Ты',answer,context],[who,reply]],outcome:['positive',actionSummary(id,role)],note:quietNotes[id][1]});
+    add('calm','ask',label,{mode:['dubl','rumour'].includes(id)?'orange':'yellow',lines:[['Ты',answer,context],[who,reply]],outcome:['positive',actionSummary(id,role)],note:id === 'dance' && !self ? 'Вера спросила про воду. Со своего места Даня видит, что Аня идёт с ней, а Лёша танцует у сцены.' : quietNotes[id][1]});
   }
   return {story,cues,decisions};
 }

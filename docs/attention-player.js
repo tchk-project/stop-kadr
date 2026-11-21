@@ -32,7 +32,7 @@ function playAttentionPilot(ui) {
   function navigate(id, index, mode = 'travel') {
     if (busy) return;
     const method = index != null && view.index != null ? 'replaceState' : 'pushState';
-    history[method]({reviewIndex:index}, '', '#'+id);
+    history[method]({reviewIndex:index,moments:[...chosenMoments]}, '', '#'+id);
     render({id, index}, mode);
   }
 
@@ -159,11 +159,20 @@ function playAttentionPilot(ui) {
     }
   }
 
-  const chosenMoments = new Map();
+  const chosenMoments = new Map(history.state?.moments || []);
+  thread.addEventListener('click',event => {
+    if (busy || review.hidden || event.target.closest('button,a,audio,video,details')) return;
+    const row = event.target.closest('.moment-eligible');
+    if (!row) return;
+    const input = review.querySelector('select');
+    input.value = row.dataset.key;
+    input.dispatchEvent(new Event('change'));
+    status.textContent = 'Мой момент · '+input.selectedOptions[0].textContent;
+  });
   function momentPicker(stop) {
     const key = stop.parent+'/'+stop.id;
     const form = element('div','moment-picker');
-    const label = element('label','','Какая реплика привлекла твоё внимание?');
+    const label = element('label','','Отметь реплику в переписке или выбери её здесь');
     const input = element('select');
     input.id = 'moment-line';
     label.htmlFor = input.id;
@@ -174,11 +183,14 @@ function playAttentionPilot(ui) {
     for (const {key,content} of items) {
       const speaker = content.querySelector('strong');
       if (!speaker) continue;
-      const speech = content.querySelector('.chat-media .clip-caption, .chat-media p, p')?.textContent
-        || content.querySelector('img[alt]')?.alt || content.querySelector('video')?.getAttribute('aria-label');
+      const media = content.querySelector('.chat-media');
+      const speech = media
+        ? [...media.querySelectorAll('p, img[alt]')].map(el => el.alt || el.textContent).filter(Boolean).join(' · ')
+        : content.querySelector('p')?.textContent;
       if (!speech) continue;
       const option = element('option','',speaker.textContent+' · '+speech);
       option.value = key;
+      thread.querySelector('[data-key="'+key+'"]')?.classList.add('moment-eligible');
       input.append(option);
     }
     const result = element('div','my-moment');
@@ -190,12 +202,13 @@ function playAttentionPilot(ui) {
       const row = thread.querySelector('[data-key="'+input.value+'"]');
       row?.classList.add('picked-moment');
       result.append(element('strong','','Мой момент'),element('blockquote','',input.selectedOptions[0].textContent),
-        element('p','','Мой следующий ход · '+stop.answer));
+        element('p','','Мой выбор на этой развилке · '+stop.answer));
     }
     input.value = chosenMoments.get(key) || '';
     input.onchange = () => {
       thread.querySelector('.picked-moment')?.classList.remove('picked-moment');
       chosenMoments.set(key,input.value);
+      history.replaceState({...history.state,moments:[...chosenMoments]},'');
       reflect();
     };
     form.append(label,input,result);
@@ -225,7 +238,9 @@ function playAttentionPilot(ui) {
     previous.disabled = index === 0;
     next.disabled = index === stops.length-1;
     nav.append(previous,next);
-    choices.append(nav, button('rewind','Попробовать другой ответ',() => navigate(stop.parent)));
+    let retry = stop.parent;
+    while (pages.get(retry).links.length < 2 && pages.get(retry).parent) retry = pages.get(retry).parent;
+    choices.append(nav, button('rewind',retry === stop.parent ? 'Попробовать другой ответ' : 'Вернуться к выбору ответа',() => navigate(retry)));
     controls.append(button('finish','К списку ситуаций',leave));
     return review;
   }
@@ -272,6 +287,7 @@ function playAttentionPilot(ui) {
     busy = true;
     ui.clearPrompt();
     clearSignals();
+    for (const row of thread.querySelectorAll('.moment-eligible')) row.classList.remove('moment-eligible');
     thread.querySelector('.picked-moment')?.classList.remove('picked-moment');
     review.replaceChildren();
     review.hidden = true;
@@ -290,7 +306,6 @@ function playAttentionPilot(ui) {
   }
 
   async function render(next, mode) {
-    const previous = view;
     const task = begin();
     view = next;
     const path = pathFor(next);
@@ -302,8 +317,8 @@ function playAttentionPilot(ui) {
     if (!motionAllowed() || mode === 'restore') task.abort();
     if (stop) {
       const end = items.findIndex(item => item.key === stop.id+'-choice')+1;
-      if (previous?.id === next.id && previous.index == null) {
-        const first = items.findIndex(item => item.key === stop.signals[0]);
+      const first = items.findIndex(item => stop.signals.includes(item.key));
+      if (thread.children.length > first && first >= 0) {
         await moveTo(items.slice(0,first),speed,task);
         if (run !== task) return;
       }
