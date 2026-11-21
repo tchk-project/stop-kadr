@@ -50,6 +50,7 @@ async function exercise() {
   const assets=new Set();
   const routes=new Set();
   await openPage(root,'a.case-card');
+  check(doc().querySelectorAll('a.case-card').length===16,'На главной должны быть все 16 историй');
   const swap=find('.take-toggle');
   swap.click();
   check(find('.take-preview mark')?.textContent==='двести','Демонстрация');
