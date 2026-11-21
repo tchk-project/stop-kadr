@@ -60,10 +60,10 @@ async function exercise() {
   check(find('.take-preview mark')?.textContent==='двести','Демонстрация');
   swap.click();
   const article=find('.cooper-link').href;
-  find('.start-game').click();
+  named('Начать').click();
   await until(()=>buttons().length && find('.scene:not([aria-busy])'),'Случайный старт с главной');
   const first=new URL(frame.contentWindow.location.href).searchParams.get('case');
-  named('Следующая случайная ситуация').click();
+  named('Следующая').click();
   await until(()=>buttons().length && find('.scene:not([aria-busy])') &&
     new URL(frame.contentWindow.location.href).searchParams.get('case')!==first,'Смена ситуации');
   find('.playback-controls .reviewer-link').click();

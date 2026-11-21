@@ -347,7 +347,7 @@ function playAttentionPilot(ui) {
   }
 
   function appendNavigation() {
-    controls.append(button('forward','Следующая случайная ситуация',() => leave(randomStoryUrl(selection)),'play'),
+    controls.append(button('forward','Следующая',() => leave(randomStoryUrl(selection)),'play'),
       reviewerLink('К списку ситуаций'));
   }
 

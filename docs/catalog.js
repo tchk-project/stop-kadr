@@ -269,7 +269,7 @@ function showCatalogue(panel) {
     title.append(element('em','','ответишь?'));
     copy.append(title,element('p','intro-copy','Это игра в переписке. Как понять, что шутка зашла слишком далеко? Что сказать, если на тебя давят или кому-то рядом нужна помощь? Здесь можно попробовать разные ответы.'),
       element('p','how-to-play','Читай сообщения. Когда разговор остановится, выбери ответ и посмотри, что будет дальше. Потом можно отмотать переписку и попробовать ещё раз.'));
-    const start = element('button','start-game','Начать случайную ситуацию');
+    const start = element('button','start-game','Начать');
     start.type = 'button';
     start.onclick = () => location.assign(randomStoryUrl());
     copy.append(element('p','role-prompt','С чьей стороны сыграешь?'), roles, start);
