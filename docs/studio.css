@@ -78,7 +78,8 @@
 [data-attention-pilot] .tools .reviewer-link { color:var(--ink); }
 [data-attention-pilot] .action.coded { border-radius:2px; }
 @media (max-width:720px) {
-  .catalog-hero { grid-template-columns:1fr; gap:32px; }
+  .catalog-hero { grid-template-columns:1fr; gap:32px; reading-flow:grid-rows; }
+  .catalog-hero > .take-preview { grid-row:1; }
   .catalog-home .top { padding:8px 0; }
   .catalog-home .top .reviewer-link { max-width:52%; }
   .catalog-home .case-grid { grid-template-columns:1fr; }

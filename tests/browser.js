@@ -57,6 +57,16 @@ async function exercise() {
   check(reviewer.textContent.includes('(для проверяющих)'),'Пометка входа в каталог');
   const swap=find('.take-toggle');
   const phone = find('.take-preview');
+  const copy = find('.hero-copy');
+  for (const width of [390,720,1024]) {
+    frame.style.width = width+'px';
+    const preview = phone.getBoundingClientRect();
+    const intro = copy.getBoundingClientRect();
+    if (width <= 720) check(preview.bottom <= intro.top,'Телефон над вступлением при ширине '+width);
+    else check(intro.right <= preview.left,'Вступление слева от телефона на широком экране');
+  }
+  frame.style.removeProperty('width');
+  report.textContent+='Главная · порядок блоков проверен при 390, 720 и 1024 пикселях\n';
   const initial = phone.textContent;
   const background = () => frame.contentWindow.getComputedStyle(phone).backgroundColor;
   const yellow = background();
