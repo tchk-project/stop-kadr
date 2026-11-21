@@ -48,6 +48,7 @@ const named = name => [...doc().querySelectorAll('button')].find(b=>b.textConten
 async function exercise() {
   let endings=0, edges=0, reviews=0, events=0;
   const assets=new Set();
+  const routes=new Set();
   await openPage(root,'a.case-card');
   const swap=find('.take-toggle');
   swap.click();
@@ -65,7 +66,8 @@ async function exercise() {
     const catalog=new URL(role==='self'?'docs/self.html':'docs/index.html',root);
     await openPage(catalog,'a.case-card');
     const links=[...doc().querySelectorAll('.case-card')].map(a=>[a.href,a.querySelector('.case-name').textContent]);
-    check(links.length===14,'Должно быть 14 ситуаций');
+    const ids=new Set(links.map(([url])=>new URL(url).searchParams.get('case')));
+    check(links.length===14 && ids.size===14 && ids.has('speech') && ids.has('vision'),'Состав каталога: '+role);
     for (const [url,title] of links) {
       const id=new URL(url).searchParams.get('case');
       const seen=new Set();
@@ -133,6 +135,7 @@ async function exercise() {
         }
         await walk('#'+take);
       }
+      routes.add(id+'/'+role);
       report.textContent+=role+' · '+title+' · '+(endings-tally)+' финалов\n';
     }
   }
@@ -141,7 +144,7 @@ async function exercise() {
     check(response.ok,'Медиа '+response.status+' '+url);
   }
   check(events===8,'Ожидались два финала с замиранием в каждой из четырёх личных историй');
-  return 'Проверено: 28 прохождений, '+edges+' переходов, '+endings+' финалов, '+reviews+' остановок разбора, '+assets.size+' медиафайлов.';
+  return 'Проверено: '+routes.size+' прохождений, '+edges+' переходов, '+endings+' финалов, '+reviews+' остановок разбора, '+assets.size+' медиафайлов.';
 }
 
 document.querySelector('#run').onclick=async function() {
