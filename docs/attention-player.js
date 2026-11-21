@@ -246,7 +246,7 @@ function playAttentionPilot(ui) {
     let retry = stop.parent;
     while (pages.get(retry).links.length < 2 && pages.get(retry).parent) retry = pages.get(retry).parent;
     choices.append(nav, button('rewind',retry === stop.parent ? 'Попробовать другой ответ' : 'Вернуться к выбору ответа',() => navigate(retry)));
-    controls.append(button('finish','К списку ситуаций',leave));
+    appendNavigation();
     return review;
   }
 
@@ -322,7 +322,7 @@ function playAttentionPilot(ui) {
       guide.annotate(choices.querySelectorAll('.coded'));
       if (path.length > 2) controls.append(button('rewind','На шаг назад',() => navigate(data.parent)));
     }
-    controls.append(button('finish','К списку ситуаций',leave));
+    appendNavigation();
     return data.outcome ? outcome : question;
   }
 
@@ -346,11 +346,16 @@ function playAttentionPilot(ui) {
     return run;
   }
 
-  async function leave() {
+  function appendNavigation() {
+    controls.append(button('forward','Следующая случайная ситуация',() => leave(randomStoryUrl(selection)),'play'),
+      reviewerLink('К списку ситуаций'));
+  }
+
+  async function leave(url) {
     const task = begin();
     if (!motionAllowed()) task.abort();
     await moveTo([],speed,task);
-    if (run === task) ui.finishScene();
+    if (run === task) location.assign(url);
   }
 
   async function render(next, mode) {
@@ -391,11 +396,6 @@ function playAttentionPilot(ui) {
     busy = false;
   }
 
-  document.querySelector('.to-catalog').addEventListener('click', event => {
-    if (event.button || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
-    event.preventDefault();
-    leave();
-  });
   ui.reduced.addEventListener('change', () => { if (!motionAllowed()) run?.abort(); });
   window.addEventListener('popstate', () => {
     if (location.hash === '#end') ui.finishScene();

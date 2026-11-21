@@ -9,6 +9,7 @@ const currentFile = isAttentionPilot ? (personalRole ? './self.html' : './index.
 const selection = params.get('case') || (isAttentionPilot ? 'money' : null);
 const episode = [...scenarios,...healthScenes].find(item => item.id === selection);
 const rehearsal = {id:'dubl', title:'Дубль для своих', place:'Школьная музыкальная группа', actors:{witness:'Тимур', self:'Миша'}};
+const allStories = [rehearsal, ...scenarios, ...healthScenes];
 const activeStory = episode || rehearsal;
 const playerName = activeStory.actors[role];
 const originalSelected = selection === 'dubl' || (!selection && location.hash.length > 1);
@@ -16,13 +17,19 @@ const isCatalogue = !isAttentionPilot && !episode && !originalSelected;
 function focusLink(id, pointOfView) {
   return './focus.html?case='+encodeURIComponent(id)+'&role='+pointOfView;
 }
-const catalogueLink = () => {
-  const a = document.createElement('a');
-  a.href = currentFile;
-  a.className = 'to-catalog';
-  a.textContent = 'Все ситуации';
-  return a;
-};
+function randomStoryUrl(excludeId) {
+  const pool = allStories.filter(item => item.id !== excludeId);
+  return focusLink(pool[Math.floor(Math.random() * pool.length)].id, role);
+}
+
+// Turn off the temporary shortcuts after the editorial read-through.
+const reviewNavigationEnabled = true;
+function reviewerLink(label) {
+  if (!reviewNavigationEnabled) return document.createDocumentFragment();
+  const link = element('a','reviewer-link',label+' (для проверяющих)');
+  link.href = currentFile+'?view=cases';
+  return link;
+}
 
 const avatarSlots = {
   'Вера':0, 'Миша':1, 'Костя':2, 'Саша':3, 'Даня':4,
@@ -219,11 +226,11 @@ function makeTakePreview() {
     row.append(portrait(name),element('strong','',name),element('p','',text));
     return row;
   }
-  const original = bubble('Саша','Я в этот раз пас.');
+  const original = bubble('Саша','Я на подарок в этот раз не скидываюсь.');
   const reply = bubble('Даня','Ок, Саш, вычеркнул.');
   const words = reply.querySelector('p');
   words.setAttribute('aria-live','polite');
-  const swap = element('button','take-toggle','А если иначе?');
+  const swap = element('button','take-toggle','Сменить ответ Дани');
   swap.type = 'button';
   let changed = false;
   swap.onclick = () => {
@@ -231,49 +238,52 @@ function makeTakePreview() {
     preview.classList.toggle('take-changed', changed);
     if (changed) words.replaceChildren('Тогда с тебя ',element('mark','','двести'),'.');
     else words.textContent = 'Ок, Саш, вычеркнул.';
-    swap.textContent = changed ? 'Вернуть первый ответ' : 'А если иначе?';
+    swap.textContent = changed ? 'Вернуть первый ответ' : 'Сменить ответ Дани';
     if (words.animate && !matchMedia('(prefers-reduced-motion: reduce)').matches)
       words.animate([{opacity:.25,transform:'translateY(5px)'},{opacity:1,transform:'none'}],{duration:240});
   };
-  preview.append(element('p','preview-channel','Чат секции · собирают на подарок'),original,reply,swap);
+  preview.append(element('p','preview-channel','Пример из игры · чат секции'),original,reply,swap);
   return preview;
 }
 
 function showCatalogue(panel) {
   panel.querySelectorAll('.page').forEach(el => el.remove());
-  document.title = 'Стоп-кадр · '+selectedRole.textContent;
-  const archiveLink = element('a', 'to-catalog', 'Открыть первую версию');
-  archiveLink.href = personalRole ? './v1/self.html' : './v1/index.html';
-  panel.querySelector('.top').append(archiveLink);
   const section = element('section','catalogue');
-  const catalog = [rehearsal, ...scenarios, ...healthScenes];
+  const roles = panel.querySelector('.roles');
+  const masthead = panel.querySelector('.top');
   document.body.classList.add('catalog-home');
-  const hero = element('div','catalog-hero');
-  const copy = element('div','hero-copy');
-  copy.append(element('h1','','Заметь, что изменилось.'),
-    element('p','',personalRole ? 'Ты уже сказал «нет». Что будет дальше? Выбери школьную историю и попробуй разные ответы.' : 'Саша отказался скидываться на подарок. Измени следующую реплику и посмотри, в какой момент обычный сбор превращается в давление.'));
-  hero.append(copy,makeTakePreview());
+  const listOpen = reviewNavigationEnabled && params.get('view') === 'cases';
+  const home = element('a','wordmark','Стоп-кадр');
+  home.href = currentFile;
+  masthead.replaceChildren(home);
+  document.title = listOpen ? 'Выбор ситуации · Стоп-кадр' : 'Стоп-кадр · Игра в переписке';
   const article = element('a','cooper-link','Подробнее о цветах Купера');
   article.href = './cooper.html';
   article.target = '_blank';
   article.rel = 'noopener';
-  section.append(hero,article);
-  const header = element('header','catalog-heading');
-  header.append(element('h2','','Выбери ситуацию'),element('span','',catalog.length+' историй'));
-  section.append(header);
-  const guide = element('details','catalog-guide');
-  guide.append(element('summary','','Как играть'));
-  const steps = element('ol','');
-  for (const step of [
-    'Выбери роль вверху и открой любую историю ниже. Сообщения появятся сами.',
-    'На стоп-кадре нажми на один из ответов. Переписка продолжится, и ты увидишь, к чему привёл выбор.',
-    'Каждая история начинается с жёлтого. Цвет на кнопке показывает, какой уровень внимания ты выбираешь вместе с ответом.',
-    'После истории с давлением можно перемотать переписку к своим решениям, посмотреть детали и выбрать другой ответ.'
-  ]) steps.append(element('li','',step));
-  guide.append(steps);
-  section.append(guide);
+  if (!listOpen) {
+    masthead.append(reviewerLink('Выбрать ситуацию'));
+    const hero = element('div','catalog-hero');
+    const copy = element('div','hero-copy');
+    const title = element('h1','','Что ты ');
+    title.append(element('em','','ответишь?'));
+    copy.append(title,element('p','intro-copy','Это игра в переписке. Как понять, что шутка зашла слишком далеко? Что сказать, если на тебя давят или кому-то рядом нужна помощь? Здесь можно попробовать разные ответы.'),
+      element('p','how-to-play','Читай сообщения. Когда разговор остановится, выбери ответ и посмотри, что будет дальше. Потом можно отмотать переписку и попробовать ещё раз.'));
+    const start = element('button','start-game','Начать случайную ситуацию');
+    start.type = 'button';
+    start.onclick = () => location.assign(randomStoryUrl());
+    copy.append(element('p','role-prompt','С чьей стороны сыграешь?'), roles, start);
+    hero.append(copy,makeTakePreview());
+    section.append(hero,article);
+    panel.append(section);
+    return;
+  }
+  const title = element('h1','','Выбери ситуацию');
+  section.append(title,element('p','list-info',allStories.length+' историй · У каждой две роли'));
+  roles.querySelectorAll('a').forEach(link => { link.search = '?view=cases'; });
+  section.append(roles);
   const cards = element('div','case-grid');
-  catalog.forEach(item => {
+  allStories.forEach(item => {
     const card = element('a','case-card');
     card.href = focusLink(item.id,role);
     const health = healthScenes.includes(item);
@@ -285,7 +295,11 @@ function showCatalogue(panel) {
   const earlierDemo = element('a','','Предыдущее демо · три короткие ситуации');
   earlierDemo.href = './v2/index.html' + (personalRole ? '?role=self' : '');
   earlierDemo.className = "previous-demo";
-  section.append(earlierDemo);
+  const archiveLink = element('a','','Открыть первую версию');
+  archiveLink.href = personalRole ? './v1/self.html' : './v1/index.html';
+  const foot = element('footer','catalog-foot');
+  foot.append(article,earlierDemo,archiveLink);
+  section.append(foot);
   panel.append(section);
 }
 
@@ -297,5 +311,7 @@ function linkCurrentEpisode() {
     if (a.dataset.role === role) a.setAttribute('aria-current','page');
     else a.removeAttribute('aria-current');
   });
-  document.querySelector('.top').append(catalogueLink());
+  const home = element('a','scene-home','Стоп-кадр');
+  home.href = currentFile;
+  document.querySelector('.top').replaceChildren(home,reviewerLink('К списку ситуаций'));
 }

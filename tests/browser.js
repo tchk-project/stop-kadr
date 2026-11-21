@@ -51,13 +51,24 @@ async function exercise() {
   let endings=0, edges=0, reviews=0, events=0;
   const assets=new Set();
   const routes=new Set();
-  await openPage(root,'a.case-card');
-  check(doc().querySelectorAll('a.case-card').length===16,'На главной должны быть все 16 историй');
+  await openPage(root,'.start-game');
+  check(!find('a.case-card'),'Каталог открыт до выбора проверяющего');
+  const reviewer=find('.reviewer-link');
+  check(reviewer.textContent.includes('(для проверяющих)'),'Пометка входа в каталог');
   const swap=find('.take-toggle');
   swap.click();
   check(find('.take-preview mark')?.textContent==='двести','Демонстрация');
   swap.click();
   const article=find('.cooper-link').href;
+  find('.start-game').click();
+  await until(()=>buttons().length && find('.scene:not([aria-busy])'),'Случайный старт с главной');
+  const first=new URL(frame.contentWindow.location.href).searchParams.get('case');
+  named('Следующая случайная ситуация').click();
+  await until(()=>buttons().length && find('.scene:not([aria-busy])') &&
+    new URL(frame.contentWindow.location.href).searchParams.get('case')!==first,'Смена ситуации');
+  find('.playback-controls .reviewer-link').click();
+  await until(()=>find('a.case-card'),'Возврат в список из переписки');
+  check(doc().querySelectorAll('a.case-card').length===16,'В списке должны быть все 16 историй');
   await openPage(article,'.review-fragment button:not([hidden])');
   for(const b of doc().querySelectorAll('.review-fragment button')) {
     b.click();
@@ -68,6 +79,7 @@ async function exercise() {
   for (const role of ['witness','self']) {
     const catalog=new URL(role==='self'?'docs/self.html':'docs/index.html',root);
     catalog.search=root.search;
+    catalog.searchParams.set('view','cases');
     await openPage(catalog,'a.case-card');
     const links=[...doc().querySelectorAll('.case-card')].map(a=>[a.href,a.querySelector('.case-name').textContent]);
     const ids=new Set(links.map(([url])=>new URL(url).searchParams.get('case')));
