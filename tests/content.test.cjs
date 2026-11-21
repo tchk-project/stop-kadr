@@ -80,3 +80,15 @@ test('both players see the same files and hear the same voices in the shared sce
   }
   assert.deepEqual(project.self.otherContinuation.later.map(m=>m[1]),project.witness.otherContinuation.later.map(m=>m[1]));
 });
+
+test('every medical story links to an on-site first-aid article with official sources', () => {
+  for (const {id, article} of vm.runInContext('healthScenes', context)) {
+    assert.match(article, /^\.\/[a-z-]+\.html$/, id);
+    const html = read(article);
+    for (const label of ['Какие признаки заметить', 'Что делать', 'Что сказать диспетчеру', 'Официальные источники']) {
+      assert.ok(html.includes('<h2>' + label + '</h2>'), id + ': ' + label);
+    }
+    assert.ok(html.includes('103 или 112'), id);
+    assert.ok((html.match(/href="https:\/\//g) || []).length >= 2, id);
+  }
+});

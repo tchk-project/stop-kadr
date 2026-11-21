@@ -1103,8 +1103,8 @@ const scenarios = [
 
 // Medical stories share the catalogue and player, with their own decision trees.
 const healthScenes = [
-  {id:'speech',title:'Перед командным фото',place:'Спортзал',actors:{witness:'Вера',self:'Тренер'}},
-  {id:'vision',title:'Две буквы вместо одной',place:'У школьной афиши',actors:{witness:'Тимур',self:'Марина Сергеевна'}},
-  {id:'abdomen',title:'Десять минут до матча',place:'У раздевалки',actors:{witness:'Тимур',self:'Миша'}},
-  {id:'chest',title:'Последняя коробка',place:'После школьной ярмарки',actors:{witness:'Лера',self:'Папа'}}
+  {id:'speech',article:'./stroke.html',title:'Перед командным фото',place:'Спортзал',actors:{witness:'Вера',self:'Тренер'}},
+  {id:'vision',article:'./stroke.html',title:'Две буквы вместо одной',place:'У школьной афиши',actors:{witness:'Тимур',self:'Марина Сергеевна'}},
+  {id:'abdomen',article:'./abdominal-pain.html',title:'Десять минут до матча',place:'У раздевалки',actors:{witness:'Тимур',self:'Миша'}},
+  {id:'chest',article:'./heart-attack.html',title:'Последняя коробка',place:'После школьной ярмарки',actors:{witness:'Лера',self:'Папа'}}
 ];

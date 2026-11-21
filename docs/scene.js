@@ -104,6 +104,16 @@ function playScene() {
     <nav class="tools" aria-label="Управление сценой"><div class="playback-controls"></div></nav>
     <div class="sr" role="status"></div>`;
   panel.querySelectorAll('.page').forEach(el => el.remove());
+  if (episode?.article) {
+    const reading = document.createElement('p');
+    const link = document.createElement('a');
+    link.href = episode.article;
+    link.target = '_blank';
+    link.rel = 'noopener';
+    link.textContent = 'Медицинская памятка · признаки и первая помощь';
+    reading.append(link);
+    scene.querySelector('.tools').after(reading);
+  }
   panel.append(scene);
   const roleLine = scene.querySelector('.scene-role');
   const place = activeStory.place;
