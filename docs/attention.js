@@ -155,6 +155,8 @@ const attentionCues = {
   'start-1':['Я в этот раз пас','Саша отказался. В этот момент ещё неизвестно, как Даня отнесётся к его решению.'],
   'pressure-0':['Тогда с тебя двести','После отказа цена удвоилась. Именно ответ на «нет» превратил сбор в давление.'],
   'pressure-1':['Побудешь со мной','Саша назвал помощь, которая ему нужна.'],
+  'ignore-1':['Я пока у кабинета сижу','Саша всё ещё у кабинета. Он спрашивает, ждать ли тебя.'],
+  'check-2':['В открытой тренерской тренер и Вера','Тренер совсем рядом. Ты можешь точно объяснить ему, где Саша.'],
   'ignore-choice':['Закрою чат','Жёлтый → белый. У тебя уже есть два сигнала, но ты решил закрыть переписку. Ситуация у Саши от этого не изменилась.'],
   'silence-1':['ждать тебя или нет','Пока Миша молчал, Саша не знал, может ли на него рассчитывать.'],
   'back-in-choice':['Всё-таки отвечу','Белый → оранжевый. Ты вернулся к просьбе, которую пропустил.'],
@@ -181,4 +183,40 @@ function setAttentionMode(mode) {
   document.documentElement.dataset.code = mode;
   document.getElementById('mode-name').textContent = name+' · '+meaning;
   document.querySelector('meta[name="theme-color"]').content = chrome;
+}
+
+const attentionDecisions = {
+  ignore: {miss:true, signals:['pressure-0','pressure-1'],
+    effect:'Ты закрыл чат. Саша остался у кабинета и написал ещё раз, потому что не знал, придёшь ли ты.',
+    repair:'back-in', recovery:'Позже ты всё-таки ответил, спросил, куда подойти, и побыл рядом.'},
+  silence: {miss:true, signals:['ignore-1'],
+    effect:'Ты ушёл домой. Саша сам дождался тренера. До последнего он не знал, стоит ли ждать ещё и тебя.'},
+  pay: {miss:true, signals:['pressure-0','pressure-1'],
+    effect:'Ты предложил деньги. Даня продолжил требовать двести, а Саше пришлось второй раз просить тебя выйти вместе.'},
+  doubt: {miss:true, signals:['check-1','check-2'],
+    effect:'Ты решил, что Даня прикалывается. Саша всё ещё не мог выйти и был вынужден попросить о помощи ещё раз.',
+    repair:'late-call', recovery:'Потом ты показал тренеру сообщение и назвал место. Тренер подошёл к Саше.'},
+  check: {signals:['pressure-0','pressure-1'],
+    effect:'Ты согласился подождать и спросил, где Саша. Так ты узнал, что происходит у раздевалки.'},
+  call: {signals:['check-1','check-2'],
+    effect:'Ты назвал тренеру дверь, у которой стоит Саша. Тренер сразу понял, куда идти.'},
+  'send-vera': {signals:['check-1','check-2'],
+    effect:'Вера отвела тренера к нужной двери, а ты остался с Сашей на связи.'},
+  meet: {signals:['call-2'],
+    effect:'Саша уже вышел и попросил дождаться его у зала. Ты ответил, где будешь.'}
+};
+
+function pickAttentionTake(random = Math.random) {
+  return random() < 0.1 ? 'calm' : 'pressure';
+}
+
+function attentionStops(path) {
+  const decisions = path.filter(id => attentionDecisions[id]);
+  const missed = decisions.filter(id => attentionDecisions[id].miss);
+  return (missed.length ? missed : decisions).map(id => {
+    const detail = attentionDecisions[id];
+    const parent = attentionStory[id].parent;
+    return {...detail, id, parent, answer:attentionStory[parent].links.find(([target]) => target === id)[1],
+      recovery:path.includes(detail.repair) ? detail.recovery : ''};
+  });
 }

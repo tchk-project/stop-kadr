@@ -37,3 +37,22 @@ html[data-code=white] .top .to-catalog { color:var(--ink); border-color:var(--li
 .detail-current .detail-focus { outline-color:var(--ink); }
 .detail-flash { background:var(--signal); }
 @media(prefers-reduced-motion:reduce) { .screen-flash,.detail-flash { display:none; } }
+
+.mode-bar { flex-wrap:wrap; gap:6px 10px; }
+.tape-direction { margin-inline-start:auto; color:var(--ink); font-size:.82rem; font-weight:700; }
+.tape-direction:empty { display:none; }
+.mode-bar .tape-skip { min-height:32px; margin-inline-start:auto; padding:4px 8px; font-size:.76rem; background:var(--paper); color:var(--ink); }
+.tape-skip[hidden],.decision-review[hidden] { display:none; }
+.decision-review { padding:14px 16px; margin:12px 0; background:var(--paper); border:1px solid var(--line); border-inline-start:4px solid var(--ink); border-radius:12px; scroll-margin-top:100px; }
+.decision-review h2 { margin:0; }
+.decision-review p + p { margin-top:8px; }
+.signal-list { padding-inline-start:20px; margin:10px 0 14px; }
+.signal-list li + li { margin-top:7px; }
+.chosen-answer { font-weight:650; }
+.review-steps { display:flex; gap:8px; }
+.review-steps > button { flex:1; justify-content:center; }
+.review-steps button:disabled { opacity:.45; cursor:default; }
+.noticed mark { color:#50202a; background:#ffd7d9; padding-inline:2px; border-radius:3px; }
+.item.noticed .msg { outline:2px solid #ad4754; outline-offset:1px; }
+.signal-caption { margin:5px 4px 8px; color:#742e39; font-size:.88rem; }
+.calm-ending { margin-top:8px; }

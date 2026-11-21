@@ -68,7 +68,8 @@ function playScene() {
   panel.querySelectorAll('.page').forEach(el => el.remove());
   panel.append(scene);
   const roleLine = scene.querySelector('.scene-role');
-  roleLine.append(portrait(playerName), element('span', '', 'Ты — '+playerName+' · '+activeStory.place));
+  const place = isAttentionPilot ? 'Спортивная секция' : activeStory.place;
+  roleLine.append(portrait(playerName), element('span', '', 'Ты — '+playerName+' · '+place));
   document.title = activeStory.title + ' · Стоп-кадр';
   const heading = scene.querySelector('h1');
   const thread = scene.querySelector('.thread');
@@ -87,7 +88,7 @@ function playScene() {
   const hint = scene.querySelector('.choice-hint');
   const choices = scene.querySelector('.choices');
   const controls = scene.querySelector('.playback-controls');
-  controls.after(button('finish', 'Завершить', finishScene));
+  if (!isAttentionPilot) controls.after(button('finish', 'Завершить', finishScene));
   const status = scene.querySelector('[role=status]');
   function pauseMedia(except) {
     scene.querySelectorAll('audio, video').forEach(player => {
@@ -130,7 +131,7 @@ function playScene() {
     const path = pathFor(location);
     path.forEach((id, i) => {
       const data = pages.get(id);
-      if (i && (isAttentionPilot || forks.includes(id) || data.continuation || !data.lines.length)) {
+      if (i && (isAttentionPilot ? !data.continuation : forks.includes(id) || data.continuation || !data.lines.length)) {
         const decision = pages.get(path[i-1]).links.find(link => link.id === id);
         const marker = document.createElement('div');
         marker.className = 'choice-mark';
@@ -158,7 +159,7 @@ function playScene() {
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
   const motionAllowed = () => !reduced.matches && typeof Element.prototype.animate === 'function';
   const cues = isAttentionPilot ? attentionCues : sceneDetails[episode?.id || 'dubl']?.[role] || {};
-  const review = createDetailReview(scene, cues, makeRow, motionAllowed);
+  const review = !isAttentionPilot && createDetailReview(scene, cues, makeRow, motionAllowed);
 
   function makeRow(item) {
     const row = element('div', 'item');
@@ -199,27 +200,13 @@ function playScene() {
       const isRewind = data.review || Boolean(parents[id]);
       const container = isRewind ? controls : choices;
       const option = button(isRewind ? 'rewind' : 'forward', label, () => go(target));
-      if (isAttentionPilot) {
-        const next = pages.get(target);
-        if (next.continuation) option.classList.add('take');
-        else {
-          const code = attentionModes[next.mode];
-          option.dataset.code = next.mode;
-          option.classList.add('coded');
-          option.prepend(element('span','code-tag',code.name+' · '+code.meaning));
-        }
-      }
       container.append(option);
-    }
-    if (isAttentionPilot && data.outcome) {
-      const calm = pathFor(state).includes('calm');
-      controls.append(button('rewind', calm ? 'Сравнить с давлением' : 'Сравнить со спокойным дублем', () => go(calm ? 'pressure' : 'calm')));
     }
     const previous = pathFor(state).at(-2);
     if (previous && !data.links.some(link => link.id === previous)) {
       controls.append(button('rewind','На шаг назад', () => go(previous)));
     }
-    if (data.review || parents[id] || (isAttentionPilot && data.outcome)) controls.append(button('rewind','Перемотать в начало', () => go('start')));
+    if (data.review || parents[id]) controls.append(button('rewind','Перемотать в начало', () => go('start')));
   }
   function go(id) {
     if (busy) return;
@@ -294,14 +281,6 @@ function playScene() {
     followNew = interactive;
     busy = true;
     clearPrompt();
-    if (isAttentionPilot) {
-      const mode = pages.get(next.id).mode;
-      const changed = document.documentElement.dataset.code !== mode;
-      setAttentionMode(mode);
-      if (changed && interactive && motionAllowed()) {
-        flash.animate([{opacity:.85}, {opacity:0}], {duration:320, easing:'ease-out'});
-      }
-    }
     if (photo.open) photo.close();
     thread.getAnimations({subtree:true}).forEach(animation => animation.cancel());
     const items = messages(next);
@@ -382,6 +361,13 @@ function playScene() {
     }
     const next = locationState();
     render(next, interactive || next.id === 'start');
+  }
+  if (isAttentionPilot) {
+    playAttentionPilot({pages, pathFor, messages, makeRow, button, scene, heading, thread, typing,
+      flash, freeze, question, outcome, outcomeLabels, choices, controls, status, finishScene,
+      clearPrompt, flashFreeze, motionAllowed, reduced, setFollow: value => { followNew = value; },
+      shouldFollow: () => followNew});
+    return;
   }
   window.addEventListener('popstate', () => fromAddress(true));
   fromAddress(false);
