@@ -140,8 +140,29 @@ async function playAttentionPilot(ui) {
     return {label:name+' говорит', kind:'voice'};
   }
 
-  function showActivity(activity) {
+  function blockFor(title) {
+    const last = thread.lastElementChild;
+    if (last && last.dataset.channel === title) return last;
+    const block = element(title ? 'section' : 'div', 'thread');
+    block.dataset.channel = title;
+    if (title) {
+      block.classList.add(title.startsWith('Личная переписка') ? 'private-chat' : 'group-chat');
+      block.append(element('h2','chat-heading',title));
+    }
+    thread.append(block);
+    return block;
+  }
+
+  function showActivity(activity, channel) {
+    const previous = typing.closest('.thread');
     typing.hidden = !activity;
+    if (activity) {
+      const block = blockFor(channel);
+      if (typing.parentElement !== block) block.append(typing);
+    } else {
+      typing.remove();
+    }
+    if (previous && !previous.contains(typing) && !previous.querySelector('.item')) previous.remove();
     if (!activity) return;
     typing.dataset.kind = activity.kind;
     typing.querySelector('.typing-name').textContent = activity.label;
@@ -163,12 +184,13 @@ async function playAttentionPilot(ui) {
     while (common < items.length && common < rows.length &&
            items[common].key === rows[common].dataset.key) common++;
     if (common < rows.length) direction.textContent = '◀◀ Назад · 2,5×';
+    let reverseChannel = thread.lastElementChild?.dataset.channel || '';
     let reverseActivity = {label:'Перемотка назад', kind:'dots'};
     while (rows.length > common) {
       const row = rows.pop();
       if (!task.signal.aborted) {
         scrollTo(row);
-        showActivity(reverseActivity);
+        showActivity(reverseActivity, reverseChannel);
         await wait(Number(row.dataset.readingPause)/speed, task.signal);
         if (run !== task) return;
       }
@@ -183,8 +205,9 @@ async function playAttentionPilot(ui) {
       changeColour(code, !task.signal.aborted);
       if (!task.signal.aborted) {
         scrollTo(last);
+        reverseChannel = block.dataset.channel;
         reverseActivity = {label:row.dataset.activity, kind:row.dataset.kind};
-        showActivity(reverseActivity);
+        showActivity(reverseActivity, reverseChannel);
         await wait(Number(row.dataset.pause)/speed, task.signal);
         if (run !== task) return;
         showActivity();
@@ -204,13 +227,12 @@ async function playAttentionPilot(ui) {
       const {pause} = timing(item);
 
       if (!task.signal.aborted) {
-        showActivity(activity);
+        showActivity(activity, context.title);
         await wait(pause/rate, task.signal);
         if (run !== task) return;
       }
-      showActivity();
       changeColour(item.attention, !task.signal.aborted);
-      let block = thread.lastElementChild;
+      const block = blockFor(context.title);
       const row = makeRow(item, context.caption);
       row.dataset.attention = item.attention;
       if (item.reaction) guide.explainReaction(row);
@@ -218,21 +240,14 @@ async function playAttentionPilot(ui) {
       row.dataset.pause = pause;
       row.dataset.activity = activity.label;
       row.dataset.kind = activity.kind;
-      if (!block || block.dataset.channel !== context.title) {
-        block = element(context.title ? 'section' : 'div', 'thread');
-        block.dataset.channel = context.title;
-        if (context.title) {
-          block.classList.add(context.title.startsWith('Личная переписка') ? 'private-chat' : 'group-chat');
-          block.append(element('h2','chat-heading',context.title));
-        }
-        thread.append(block);
-      }
       block.append(row);
+      showActivity();
       if (!task.signal.aborted) scrollTo(row, rate === 1 ? 'smooth' : 'instant');
       await animateRow(row, false, rate, task);
       if (run !== task) return;
       if (!task.signal.aborted) {
-        showActivity(pending[index+1]?.activity || {label:'Пауза на чтение', kind:'dots'});
+        const next = pending[index+1];
+        showActivity(next?.activity || {label:'Пауза на чтение', kind:'dots'}, next?.context.title ?? context.title);
         await wait(Number(row.dataset.readingPause)/rate, task.signal);
         if (run !== task) return;
       }
@@ -349,6 +364,7 @@ async function playAttentionPilot(ui) {
     run = new AbortController();
     old?.abort();
     busy = true;
+    showActivity();
     ui.clearPrompt();
     clearSignals();
     review.replaceChildren();

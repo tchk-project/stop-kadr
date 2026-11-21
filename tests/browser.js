@@ -108,6 +108,17 @@ async function exercise() {
     report.textContent+='Плашка внимания · '+width+' × '+height+' пикселей\n';
   }
   frame.style.removeProperty('width');
+  if (!frame.contentWindow.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    await openPage(new URL('docs/focus.html?case=sticker&role=self#pressure',root),'.scene');
+    const inChat = () => find('#messages > .thread > .typing:not([hidden])');
+    await until(()=>inChat()?.textContent.includes('Даня выбирает стикер'),'Стикер внутри общего чата',false);
+    check(inChat().parentElement.dataset.channel === 'Общий чат класса','Канал стикера');
+    await until(()=>inChat()?.textContent.includes('Лера печатает сообщение'),'Лера набирает в личке',false);
+    const direct = inChat().parentElement;
+    check(direct.dataset.channel === 'Личная переписка с Даней' && !direct.querySelector('.item'),'Личка открылась до реплики');
+    await settled('#pressure');
+    check(direct.querySelector('[data-key="start-2"]') && !find('.typing:not([hidden])'),'Реплика появилась в том же блоке');
+  }
   const first=new URL(frame.contentWindow.location.href).searchParams.get('case');
   named('Следующая').click();
   await until(()=>buttons().length && find('.scene:not([aria-busy])') &&
