@@ -141,6 +141,15 @@ async function exercise() {
         async function walk(hash) {
           check(!seen.has(hash),'Повтор узла '+hash);
           seen.add(hash);
+          if (id === 'sticker' && role === 'witness' && ['#pressure','#focus','#observe'].includes(hash)) {
+            const blocks = [...doc().querySelectorAll('#messages > .thread')];
+            const titles = blocks.map(block => block.querySelector('.chat-heading')?.textContent);
+            const expected = ['Общий чат класса','Личная переписка с Лерой'];
+            if (hash !== '#pressure') expected.push('Общий чат класса');
+            check(JSON.stringify(titles) === JSON.stringify(expected),'Порядок окон переписки '+hash);
+            check(blocks[0].querySelector('audio') && blocks[1].querySelector('[data-key="pressure-2"]'),'Реплики в своих чатах');
+            if (blocks[2]) check(blocks[2].querySelector('[data-key="'+hash.slice(1)+'-0"]'),'Ответ Ани снова в общем');
+          }
           progress.textContent=role+' · '+title+' · '+hash+' · финалов '+endings;
           for(const el of doc().querySelectorAll('.thread img[src],.thread audio[src],.thread video[src],.thread source[src],.thread a[download]')) assets.add(el.src || el.href);
           check(!find('.coded[data-code="black"]'),'Чёрный появился на кнопке');

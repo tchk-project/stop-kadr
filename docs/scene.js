@@ -202,11 +202,11 @@ function playScene() {
   const cues = isAttentionPilot ? route.cues : sceneDetails[episode?.id || 'dubl']?.[role] || {};
   const review = !isAttentionPilot && createDetailReview(scene, cues, makeRow, motionAllowed);
 
-  function makeRow(item) {
+  function makeRow(item, caption = item.content.dataset.context) {
     const row = element('div', 'item');
     row.dataset.key = item.key;
     row.dataset.step = item.step;
-    if (item.content.dataset.context) row.append(element('p', 'chat-context', item.content.dataset.context));
+    if (caption) row.append(element('p', 'chat-context', caption));
     row.append(item.content);
     return row;
   }

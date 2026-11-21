@@ -1,9 +1,37 @@
 'use strict';
 
+// The scenario labels may include a time or a place alongside the chat name.
+// Keep those details on the message and use the channel alone to group the tape.
+function transcriptContext(label, speaker) {
+  const parts = label.split(' · ');
+  const aliases = {
+    'чат класса':'Общий чат класса', '«после отбоя»':'Чат «После отбоя»',
+    'лично саше':'Личная переписка с Сашей', 'лично мише':'Личная переписка с Мишей',
+    'сообщение ане':'Личная переписка с Аней', 'сообщение дане':'Личная переписка с Аней',
+    'личная переписка ани и тимура':playerName === 'Аня' ? 'Личная переписка с Тимуром' : 'Личная переписка с Аней'
+  };
+  for (const part of parts) {
+    const key = part.toLowerCase();
+    let title = aliases[key];
+    if (key === 'лично тебе' || key === 'личная переписка') {
+      title = {Саша:'Личная переписка с Сашей', Миша:'Личная переписка с Мишей'}[speaker] || 'Личная переписка';
+    }
+    if (!title && /^(?:(?:общий |текстовый )?чат |голосовой канал |личная переписка с )/.test(key)) {
+      title = part[0].toUpperCase() + part.slice(1);
+    }
+    if (title) {
+      const caption = parts.filter(text => text !== part && !(key === 'лично тебе' && text === speaker)).join(' · ');
+      return {title, caption};
+    }
+  }
+  return {title:'', caption:label};
+}
+
 async function playAttentionPilot(ui) {
   const {pages, pathFor, messages, makeRow, button, scene, heading, thread, typing, flash,
     freeze, question, outcome, outcomeLabels, choices, controls, status, motionAllowed} = ui;
   const {story,cues,decisions} = ui.route;
+  thread.className = 'transcript';
   const guide = attentionGuide(document.querySelector('.panel'));
   const speed = 2.5;
   const bar = document.querySelector('.mode-bar');
@@ -110,12 +138,13 @@ async function playAttentionPilot(ui) {
   }
 
   async function moveTo(items, rate, task, signals = []) {
+    const rows = [...thread.querySelectorAll('.item')];
     let common = 0;
-    while (common < items.length && common < thread.children.length &&
-           items[common].key === thread.children[common].dataset.key) common++;
-    if (common < thread.children.length) direction.textContent = '◀◀ Назад · 2,5×';
-    while (thread.children.length > common) {
-      const row = thread.lastElementChild;
+    while (common < items.length && common < rows.length &&
+           items[common].key === rows[common].dataset.key) common++;
+    if (common < rows.length) direction.textContent = '◀◀ Назад · 2,5×';
+    while (rows.length > common) {
+      const row = rows.pop();
       if (!task.signal.aborted) {
         scrollTo(row);
         await wait(Number(row.dataset.readingPause)/speed, task.signal);
@@ -123,8 +152,10 @@ async function playAttentionPilot(ui) {
       }
       await animateRow(row, true, speed, task);
       if (run !== task) return;
+      const block = row.parentElement;
       row.remove();
-      const last = thread.lastElementChild;
+      if (!block.querySelector('.item')) block.remove();
+      const last = rows.at(-1);
       const code = last?.dataset.attention || 'yellow';
       changeColour(code, !task.signal.aborted);
       if (!task.signal.aborted) {
@@ -146,13 +177,27 @@ async function playAttentionPilot(ui) {
       }
       typingAs('');
       changeColour(item.attention, !task.signal.aborted);
-      const row = makeRow(item);
+      let block = thread.lastElementChild;
+      const label = item.content.dataset.context;
+      const context = label
+        ? transcriptContext(label, item.content.querySelector('strong')?.textContent.split(' · ')[0])
+        : {title:block?.dataset.channel || '', caption:''};
+      const row = makeRow(item, context.caption);
       row.dataset.attention = item.attention;
       if (item.reaction) guide.explainReaction(row);
       row.dataset.readingPause = readingPause(row);
       row.dataset.pause = pause;
       row.dataset.speaker = speaker || '';
-      thread.append(row);
+      if (!block || block.dataset.channel !== context.title) {
+        block = element(context.title ? 'section' : 'div', 'thread');
+        block.dataset.channel = context.title;
+        if (context.title) {
+          block.classList.add(context.title.startsWith('Личная переписка') ? 'private-chat' : 'group-chat');
+          block.append(element('h2','chat-heading',context.title));
+        }
+        thread.append(block);
+      }
+      block.append(row);
       if (!task.signal.aborted) scrollTo(row, rate === 1 ? 'smooth' : 'instant');
       await animateRow(row, false, rate, task);
       if (run !== task) return;
@@ -309,7 +354,7 @@ async function playAttentionPilot(ui) {
     if (stop) {
       const end = items.findIndex(item => item.key === stop.id+'-choice')+1;
       const first = items.findIndex(item => stop.signals.includes(item.key));
-      if (thread.children.length > first && first >= 0) {
+      if (first >= 0 && thread.querySelectorAll('.item').length > first) {
         await moveTo(items.slice(0,first),speed,task);
         if (run !== task) return;
       }
