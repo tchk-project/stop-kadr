@@ -2,16 +2,20 @@
 
 const isAttentionPilot = document.body?.hasAttribute('data-attention-pilot') === true;
 const selectedRole = document.querySelector('.roles a[aria-current="page"]');
-const role = isAttentionPilot ? 'witness' : selectedRole.dataset.role;
+const params = new URLSearchParams(location.search);
+const role = isAttentionPilot ? (params.get('role') === 'self' ? 'self' : 'witness') : selectedRole.dataset.role;
 const personalRole = role === 'self';
-const currentFile = isAttentionPilot ? './index.html' : selectedRole.getAttribute('href');
-const selection = isAttentionPilot ? 'money' : new URLSearchParams(location.search).get('case');
+const currentFile = isAttentionPilot ? (personalRole ? './self.html' : './index.html') : selectedRole.getAttribute('href');
+const selection = params.get('case') || (isAttentionPilot ? 'money' : null);
 const episode = scenarios.find(item => item.id === selection);
 const rehearsal = {id:'dubl', title:'Дубль для своих', place:'Школьная музыкальная группа', actors:{witness:'Тимур', self:'Миша'}};
 const activeStory = episode || rehearsal;
 const playerName = activeStory.actors[role];
 const originalSelected = selection === 'dubl' || (!selection && location.hash.length > 1);
-const isCatalogue = !episode && !originalSelected;
+const isCatalogue = !isAttentionPilot && !episode && !originalSelected;
+function focusLink(id, pointOfView) {
+  return './focus.html?case='+encodeURIComponent(id)+'&role='+pointOfView;
+}
 const catalogueLink = () => {
   const a = document.createElement('a');
   a.href = currentFile;
@@ -110,6 +114,14 @@ function bubbleFromPair([who, words, context, reactions]) {
     transcript.append(element('summary', '', 'Текст голосового'), element('p', '', words.transcript));
     media.append(audio);
     if (!words.live) media.append(transcript);
+  } else if (words.kind === 'video') {
+    const video = element('video');
+    video.controls = video.playsInline = true;
+    video.preload = 'none';
+    video.src = words.src;
+    video.poster = words.poster;
+    video.setAttribute('aria-label',words.caption);
+    media.append(video);
   } else if (words.kind === 'sticker') {
     const image = element('img');
     image.src = words.src;
@@ -199,6 +211,34 @@ function loadEpisode(pages, item) {
   });
 }
 
+function makeTakePreview() {
+  const preview = element('section','take-preview');
+  preview.setAttribute('aria-label','Два ответа на одну реплику');
+  function bubble(name, text) {
+    const row = element('div','preview-row');
+    row.append(portrait(name),element('strong','',name),element('p','',text));
+    return row;
+  }
+  const original = bubble('Саша','Я в этот раз пас.');
+  const reply = bubble('Даня','Ок, Саш, вычеркнул.');
+  const words = reply.querySelector('p');
+  words.setAttribute('aria-live','polite');
+  const swap = element('button','take-toggle','А если иначе?');
+  swap.type = 'button';
+  let changed = false;
+  swap.onclick = () => {
+    changed = !changed;
+    preview.classList.toggle('take-changed', changed);
+    if (changed) words.replaceChildren('Тогда с тебя ',element('mark','','двести'),'.');
+    else words.textContent = 'Ок, Саш, вычеркнул.';
+    swap.textContent = changed ? 'Вернуть первый ответ' : 'А если иначе?';
+    if (words.animate && !matchMedia('(prefers-reduced-motion: reduce)').matches)
+      words.animate([{opacity:.25,transform:'translateY(5px)'},{opacity:1,transform:'none'}],{duration:240});
+  };
+  preview.append(element('p','preview-channel','Чат секции · собирают на подарок'),original,reply,swap);
+  return preview;
+}
+
 function showCatalogue(panel) {
   panel.querySelectorAll('.page').forEach(el => el.remove());
   document.title = 'Стоп-кадр · '+selectedRole.textContent;
@@ -206,37 +246,39 @@ function showCatalogue(panel) {
   archiveLink.href = personalRole ? './v1/self.html' : './v1/index.html';
   panel.querySelector('.top').append(archiveLink);
   const section = element('section','catalogue');
-  const demo = element('a','demo-entry');
-  demo.href = './focus.html';
-  demo.append(element('strong','','Играть в «Сбор после уроков»'), element('span','','Цвета внимания · переписка за Мишу'));
-  section.append(demo);
   const catalog = [rehearsal, ...scenarios];
-  const heading = personalRole ? 'Что делать, если на меня давят?' : 'Как помочь, если на кого-то давят?';
-  const intro = personalRole
-    ? 'Это игра про школьные переписки. Здесь давят на тебя. Можно попробовать разные ответы, попросить поддержки и посмотреть, что будет дальше.'
-    : 'Это игра про школьные переписки. Представь: весь чат смеётся над голосовым, а его автор замолчал. Как понять, что с ним, и чем помочь? Здесь можно попробовать разные ответы.';
-  section.append(element('p','small',catalog.length+' школьных историй'), element('h1','',heading),
-    element('p','catalog-intro',intro));
-  const guide = element('div','catalog-guide');
-  guide.append(element('h2','','Как играть'));
+  document.body.classList.add('catalog-home');
+  const hero = element('div','catalog-hero');
+  const copy = element('div','hero-copy');
+  copy.append(element('h1','','Заметь, что изменилось.'),
+    element('p','',personalRole ? 'Ты уже сказал «нет». Что будет дальше? Выбери школьную историю и попробуй разные ответы.' : 'Саша отказался скидываться на подарок. Измени следующую реплику и посмотри, в какой момент обычный сбор превращается в давление.'));
+  hero.append(copy,makeTakePreview());
+  section.append(hero);
+  const header = element('header','catalog-heading');
+  header.append(element('h2','','Выбери ситуацию'),element('span','',catalog.length+' историй'));
+  section.append(header);
+  const guide = element('details','catalog-guide');
+  guide.append(element('summary','','Как играть'));
   const steps = element('ol','');
   for (const step of [
     'Выбери роль вверху и открой любую историю ниже. Сообщения появятся сами.',
     'На стоп-кадре нажми на один из ответов. Переписка продолжится, и ты увидишь, к чему привёл выбор.',
-    'В конце нажми «Разобрать детали», чтобы узнать, какие слова и поступки стоило заметить. Хочешь попробовать иначе — вернись на шаг назад.'
+    'Жёлтый — наблюдаешь, оранжевый — присматриваешься, красный — зовёшь на помощь. Белый появляется, если очевидец отмахнулся от замеченного.',
+    'После истории с давлением можно перемотать переписку к своим решениям, посмотреть детали и выбрать другой ответ.'
   ]) steps.append(element('li','',step));
   guide.append(steps);
   section.append(guide);
   const cards = element('div','case-grid');
   catalog.forEach(item => {
     const card = element('a','case-card');
-    card.href = currentFile+'?case='+item.id+'#start';
+    card.href = focusLink(item.id,role);
     card.append(element('span','case-place',item.place), element('span','case-name',item.title));
     cards.append(card);
   });
   section.append(cards);
   const earlierDemo = element('a','','Предыдущее демо · три короткие ситуации');
   earlierDemo.href = './v2/index.html' + (personalRole ? '?role=self' : '');
+  earlierDemo.className = "previous-demo";
   section.append(earlierDemo);
   panel.append(section);
 }
@@ -244,7 +286,9 @@ function showCatalogue(panel) {
 function linkCurrentEpisode() {
   const id = episode?.id || 'dubl';
   document.querySelectorAll('.roles a').forEach(a => {
-    a.href = a.getAttribute('href')+'?case='+id+'#start';
+    a.href = focusLink(id,a.dataset.role);
+    if (a.dataset.role === role) a.setAttribute('aria-current','page');
+    else a.removeAttribute('aria-current');
   });
   document.querySelector('.top').append(catalogueLink());
 }

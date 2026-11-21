@@ -169,10 +169,10 @@ const attentionCues = {
   'ask-1':['Даня понял','Саша сам объяснил, как воспринял ответ. Первое впечатление можно пересмотреть.']
 };
 
-function loadAttentionScene(pages) {
+function loadAttentionScene(pages, route, title) {
   pages.clear();
-  for (const [id, data] of Object.entries(attentionStory)) {
-    pages.set(id, {...data, title:'Сбор после уроков', lines:data.lines.map(bubbleFromPair),
+  for (const [id, data] of Object.entries(route.story)) {
+    pages.set(id, {...data, title, lines:data.lines.map(bubbleFromPair),
       links:(data.links || []).map(([id,label])=>({id,label})),
       outcome:data.outcome && {kind:data.outcome[0],headline:data.outcome[1]}});
   }
@@ -210,13 +210,13 @@ function pickAttentionTake(random = Math.random) {
   return random() < 0.1 ? 'calm' : 'pressure';
 }
 
-function attentionStops(path) {
-  const decisions = path.filter(id => attentionDecisions[id]);
-  const missed = decisions.filter(id => attentionDecisions[id].miss);
+function attentionStops(path, story = attentionStory, details = attentionDecisions) {
+  const decisions = path.filter(id => details[id]);
+  const missed = decisions.filter(id => details[id].miss);
   return (missed.length ? missed : decisions).map(id => {
-    const detail = attentionDecisions[id];
-    const parent = attentionStory[id].parent;
-    return {...detail, id, parent, answer:attentionStory[parent].links.find(([target]) => target === id)[1],
+    const detail = details[id];
+    const parent = story[id].parent;
+    return {...detail, id, parent, answer:story[parent].links.find(([target]) => target === id)[1],
       recovery:path.includes(detail.repair) ? detail.recovery : ''};
   });
 }

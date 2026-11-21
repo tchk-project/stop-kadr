@@ -3,6 +3,7 @@
 function playAttentionPilot(ui) {
   const {pages, pathFor, messages, makeRow, button, scene, heading, thread, typing, flash,
     freeze, question, outcome, outcomeLabels, choices, controls, status, motionAllowed} = ui;
+  const {story,cues,decisions} = ui.route;
   const speed = 2.5;
   const bar = document.querySelector('.mode-bar');
   const direction = element('span', 'tape-direction');
@@ -62,8 +63,9 @@ function playAttentionPilot(ui) {
   }
 
   function drawSignal(row, key) {
-    const [snippet, explanation] = attentionCues[key];
-    const words = row.querySelector('.msg p');
+    const [snippet, explanation] = cues[key];
+    const words = [...row.querySelectorAll('.msg p')].find(p => p.textContent.toLowerCase().includes(snippet.toLowerCase()));
+    if (!words) return;
     const text = words.textContent;
     const start = text.toLowerCase().indexOf(snippet.toLowerCase());
     if (start < 0 || row.classList.contains('noticed')) return;
@@ -85,7 +87,7 @@ function playAttentionPilot(ui) {
   function timing(item) {
     const who = item.content.querySelector('strong')?.textContent.split(' · ')[0];
     if (!who) return {pause:180};
-    const incoming = !['Ты','Ремарка','Система'].includes(who);
+    const incoming = !['Ты','Ремарка','Система'].includes(who) && !item.content.classList.contains('live-voice') && !item.content.classList.contains('video');
     const line = Number(item.key.slice(item.key.lastIndexOf('-')+1));
     const long = incoming && (line+pathFor({id:item.step}).length)%3 === 0;
     return {speaker:incoming ? who : '', pause:long ? 2150 : 420+Math.min(420, item.content.textContent.length*4)};
@@ -157,12 +159,55 @@ function playAttentionPilot(ui) {
     }
   }
 
+  const chosenMoments = new Map();
+  function momentPicker(stop) {
+    const key = stop.parent+'/'+stop.id;
+    const form = element('div','moment-picker');
+    const label = element('label','','Какая реплика привлекла твоё внимание?');
+    const input = element('select');
+    input.id = 'moment-line';
+    label.htmlFor = input.id;
+    const prompt = element('option','','Выбрать свой момент');
+    prompt.value = '';
+    input.append(prompt);
+    const items = messages({id:stop.parent});
+    for (const {key,content} of items) {
+      const speaker = content.querySelector('strong');
+      if (!speaker) continue;
+      const speech = content.querySelector('.chat-media .clip-caption, .chat-media p, p')?.textContent
+        || content.querySelector('img[alt]')?.alt || content.querySelector('video')?.getAttribute('aria-label');
+      if (!speech) continue;
+      const option = element('option','',speaker.textContent+' · '+speech);
+      option.value = key;
+      input.append(option);
+    }
+    const result = element('div','my-moment');
+    result.setAttribute('aria-live','polite');
+    function reflect() {
+      result.replaceChildren();
+      result.hidden = !input.value;
+      if (!input.value) return;
+      const row = thread.querySelector('[data-key="'+input.value+'"]');
+      row?.classList.add('picked-moment');
+      result.append(element('strong','','Мой момент'),element('blockquote','',input.selectedOptions[0].textContent),
+        element('p','','Мой следующий ход · '+stop.answer));
+    }
+    input.value = chosenMoments.get(key) || '';
+    input.onchange = () => {
+      thread.querySelector('.picked-moment')?.classList.remove('picked-moment');
+      chosenMoments.set(key,input.value);
+      reflect();
+    };
+    form.append(label,input,result);
+    reflect();
+    return form;
+  }
   function showReview(stops, index) {
     const stop = stops[index];
     const title = element('h2', '', 'Решение '+(index+1)+' из '+stops.length);
     const list = element('ul', 'signal-list');
     for (const key of stop.signals) {
-      const [quote, why] = attentionCues[key];
+      const [quote, why] = cues[key];
       const li = element('li');
       li.append(element('b', '', '«'+quote+'»'), ' — '+why);
       list.append(li);
@@ -172,6 +217,7 @@ function playAttentionPilot(ui) {
     review.append(title, list, element('p','chosen-answer','Твой ответ · '+stop.answer),
       element('p','',stop.effect));
     if (stop.recovery) review.append(element('p','recovery',stop.recovery));
+    review.append(momentPicker(stop));
     review.hidden = false;
     const nav = element('div','review-steps');
     const previous = button('rewind','Назад',() => navigate(view.id,index-1));
@@ -194,7 +240,7 @@ function playAttentionPilot(ui) {
       outcome.querySelector('.outcome-reason').textContent = data.note;
       outcome.hidden = false;
       if (path.includes('calm')) {
-        choices.append(element('p','calm-ending','В этот раз всё пошло хорошо.'),
+        choices.append(element('p','calm-ending',kind === 'positive' ? 'В этот раз всё пошло хорошо.' : 'Так закончился этот дубль.'),
           button('rewind','А если бы всё пошло не так спокойно…',() => navigate('pressure')));
       } else if (stops.length) {
         choices.append(button('inspect',stops[0].miss ? 'Что я мог сделать иначе?' : 'Какие детали мне помогли?',
@@ -219,12 +265,14 @@ function playAttentionPilot(ui) {
   }
 
   function begin() {
+    ui.pauseMedia();
     const old = run;
     run = new AbortController();
     old?.abort();
     busy = true;
     ui.clearPrompt();
     clearSignals();
+    thread.querySelector('.picked-moment')?.classList.remove('picked-moment');
     review.replaceChildren();
     review.hidden = true;
     skip.hidden = false;
@@ -247,7 +295,7 @@ function playAttentionPilot(ui) {
     view = next;
     const path = pathFor(next);
     const data = pages.get(next.id);
-    const stops = attentionStops(path);
+    const stops = attentionStops(path,story,decisions);
     const stop = Number.isInteger(next.index) && data.outcome && stops[next.index];
     if (!stop) view.index = undefined;
     const items = messages(next);

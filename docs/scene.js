@@ -1,7 +1,11 @@
 'use strict';
 
 const panel = document.querySelector('.panel');
-if (isCatalogue) {
+if (!isAttentionPilot && (episode || selection === 'dubl') && (!location.hash || location.hash === '#start')) {
+  location.replace(focusLink(selection,role));
+} else if (isAttentionPilot && !episode && selection !== 'dubl') {
+  location.replace(currentFile);
+} else if (isCatalogue) {
   showCatalogue(panel);
 } else {
   linkCurrentEpisode();
@@ -24,7 +28,8 @@ function playScene() {
       }))
     });
   }
-  if (isAttentionPilot) loadAttentionScene(pages);
+  const route = isAttentionPilot && buildAttentionRoute(selection,role);
+  if (route) loadAttentionScene(pages,route,activeStory.title);
   else if (episode) loadEpisode(pages, episode);
   const forks = isAttentionPilot ? [] : episode ? ['notice-0', 'notice-1'] : ['joke', 'permission', 'unclear'];
   const parents = {readrespect:'respect', cautious:'respect', group:'pressure', direct:'pressure', wait:'pressure'};
@@ -68,7 +73,7 @@ function playScene() {
   panel.querySelectorAll('.page').forEach(el => el.remove());
   panel.append(scene);
   const roleLine = scene.querySelector('.scene-role');
-  const place = isAttentionPilot ? 'Спортивная секция' : activeStory.place;
+  const place = activeStory.place;
   roleLine.append(portrait(playerName), element('span', '', 'Ты — '+playerName+' · '+place));
   document.title = activeStory.title + ' · Стоп-кадр';
   const heading = scene.querySelector('h1');
@@ -158,7 +163,7 @@ function playScene() {
   let busy = false;
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
   const motionAllowed = () => !reduced.matches && typeof Element.prototype.animate === 'function';
-  const cues = isAttentionPilot ? attentionCues : sceneDetails[episode?.id || 'dubl']?.[role] || {};
+  const cues = isAttentionPilot ? route.cues : sceneDetails[episode?.id || 'dubl']?.[role] || {};
   const review = !isAttentionPilot && createDetailReview(scene, cues, makeRow, motionAllowed);
 
   function makeRow(item) {
@@ -363,7 +368,7 @@ function playScene() {
     render(next, interactive || next.id === 'start');
   }
   if (isAttentionPilot) {
-    playAttentionPilot({pages, pathFor, messages, makeRow, button, scene, heading, thread, typing,
+    playAttentionPilot({route, pauseMedia, pages, pathFor, messages, makeRow, button, scene, heading, thread, typing,
       flash, freeze, question, outcome, outcomeLabels, choices, controls, status, finishScene,
       clearPrompt, flashFreeze, motionAllowed, reduced, setFollow: value => { followNew = value; },
       shouldFollow: () => followNew});
