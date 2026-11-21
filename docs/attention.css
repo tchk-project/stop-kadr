@@ -55,3 +55,19 @@ html[data-code=white] .top .to-catalog { color:var(--ink); border-color:var(--li
 html[data-code=black] .signal { color:white; }
 .reaction-label { display:block; width:fit-content; margin:7px 0; padding:3px 9px; border-radius:5px; background:#34383e; color:white; font-size:.84rem; }
 .reaction-hint,.reaction-record { color:#34383e; border-inline-start:3px solid #565a61; padding-inline-start:10px; }
+
+.scene-loader {
+  min-height:65vh; display:grid; place-content:center; justify-items:center; gap:12px;
+  color:var(--ink); font-weight:650;
+}
+.scene-loader[hidden], .scene-loader [hidden] { display:none; }
+.scene-loader::before {
+  content:""; width:24px; height:24px; border:3px solid var(--line); border-top-color:var(--ink);
+  border-radius:50%;
+}
+.scene-loader.load-failed::before { display:none; }
+.scene-opening .thread:empty { display:grid; min-height:3rem; }
+@media (prefers-reduced-motion:no-preference) {
+  .scene-loader::before { animation:scene-loading .85s linear infinite; }
+  @keyframes scene-loading { to { transform:rotate(1turn); } }
+}

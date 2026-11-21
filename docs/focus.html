@@ -4,10 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#59450a">
-  <title>Сбор после уроков · Цвет внимания · Стоп-кадр</title>
+  <title>Стоп-кадр</title>
+  <link rel="preload" href="./assets/avatars.webp" as="image">
   <link rel="stylesheet" href="./attention-colors.css?v=1">
 <link rel="stylesheet" href="./scene.css?v=demo-2">
-  <link rel="stylesheet" href="./attention.css?v=phone-1">
+  <link rel="stylesheet" href="./attention.css?v=start-1">
   <script src="./scenarios.js?v=health-2" defer></script>
   <script src="./catalog.js?v=phone-1" defer></script>
   <script src="./attention.js?v=reaction-1" defer></script>
@@ -18,13 +19,18 @@
   <script src="./attention-guide.js?v=reaction-1" defer></script>
   <script src="./health-paths.js?v=3" defer></script>
   <script src="./attention-catalog.js?v=health-1" defer></script>
-  <script src="./attention-player.js?v=review-1" defer></script>
-  <script src="./scene.js?v=ending-1" defer></script>
+  <script src="./attention-player.js?v=start-1" defer></script>
+  <script src="./scene.js?v=start-1" defer></script>
 <link rel="stylesheet" href="./studio.css?v=review-1">
 <link rel="stylesheet" href="./cooper.css?v=2">
 </head>
 <body data-attention-pilot>
-  <main class="panel">
+  <div class="scene-loader" role="status">
+    <p>Загружаем ситуацию…</p>
+    <a href="" hidden>Повторить загрузку</a>
+  </div>
+  <noscript><style>.scene-loader { display:none }</style>Чтобы читать переписку и выбирать ответы, включи JavaScript в браузере.</noscript>
+  <main class="panel" hidden>
     <header class="top">Стоп-кадр</header>
     <nav class="roles" aria-label="Точка зрения"><a href="./index.html" data-role="witness">Я очевидец</a><a href="./self.html" data-role="self">Давят на меня</a></nav>
     <aside class="mode-bar" aria-label="Мой режим внимания">
@@ -32,7 +38,19 @@
       <div><small>Мой режим внимания</small><strong id="mode-name">Жёлтый · спокойно замечаю, что вокруг</strong></div>
       <a class="cooper-link" href="./cooper.html" target="_blank" rel="noopener">Подробнее о цветах Купера</a>
     </aside>
-    <noscript>Чтобы читать переписку и выбирать ответы, включи JavaScript в браузере.</noscript>
+
   </main>
+  <script>
+    function showLoadingError() {
+      const loader = document.querySelector('.scene-loader');
+      loader.classList.add('load-failed');
+      loader.querySelector('p').textContent = 'Не удалось загрузить ситуацию.';
+      loader.querySelector('a').hidden = false;
+      loader.querySelector('a').href = location.href.split('#')[0];
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!document.querySelector('.scene-loader').hasAttribute('data-started')) showLoadingError();
+    });
+  </script>
 </body>
 </html>

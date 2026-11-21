@@ -1,6 +1,6 @@
 'use strict';
 
-function playAttentionPilot(ui) {
+async function playAttentionPilot(ui) {
   const {pages, pathFor, messages, makeRow, button, scene, heading, thread, typing, flash,
     freeze, question, outcome, outcomeLabels, choices, controls, status, motionAllowed} = ui;
   const {story,cues,decisions} = ui.route;
@@ -50,8 +50,8 @@ function playAttentionPilot(ui) {
     });
   }
 
-  function scrollTo(el) {
-    if (el && ui.shouldFollow()) el.scrollIntoView({block:'nearest', behavior:'instant'});
+  function scrollTo(el, behavior = 'instant') {
+    if (el && ui.shouldFollow()) el.scrollIntoView({block:'nearest', behavior});
   }
 
   function changeColour(code, animated) {
@@ -148,7 +148,7 @@ function playAttentionPilot(ui) {
       row.dataset.pause = pause;
       row.dataset.speaker = speaker || '';
       thread.append(row);
-      if (!task.signal.aborted) scrollTo(row);
+      if (!task.signal.aborted) scrollTo(row, rate === 1 ? 'smooth' : 'instant');
       await animateRow(row, false, rate, task);
       if (run !== task) return;
       if (signals.includes(item.key)) {
@@ -325,11 +325,26 @@ function playAttentionPilot(ui) {
   }
 
   ui.reduced.addEventListener('change', () => { if (!motionAllowed()) run?.abort(); });
+  // Reveal the prepared shell with an empty thread before starting any dialogue timers.
+  skip.hidden = true;
+  review.hidden = true;
+  scene.setAttribute('aria-busy','true');
+  scene.classList.add('scene-opening');
+  const panel = scene.closest('.panel');
+  panel.hidden = false;
+  document.querySelector('.scene-loader').hidden = true;
+  await afterPaint();
+  while (document.hidden) {
+    await new Promise(resolve => document.addEventListener('visibilitychange',resolve,{once:true}));
+    await afterPaint();
+  }
   window.addEventListener('popstate', () => {
     if (location.hash === '#end') ui.finishScene();
     else render(readView(), 'travel');
   });
   if (location.hash === '#end') { ui.finishScene(); return; }
-  const opening = !location.hash || location.hash === '#start';
-  render(readView(), opening ? 'conversation' : 'restore');
+  const next = readView();
+  const opening = pages.get(next.id).parent === 'start';
+  await render(next, opening ? 'conversation' : 'restore');
+  scene.classList.remove('scene-opening');
 }

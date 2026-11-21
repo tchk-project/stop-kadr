@@ -14,12 +14,12 @@ const buttons = () => [...doc().querySelectorAll('button.action.coded')];
 const tick = () => new Promise(resolve => setTimeout(resolve,20));
 
 function check(ok,message) { if (!ok) throw Error(message); }
-async function until(test,label) {
+async function until(test,label,skipPlayback=true) {
   const limit=Date.now()+40000;
   do {
     if (test()) return;
     const skip=find('.tape-skip:not([hidden])');
-    if (skip) skip.click();
+    if (skipPlayback && skip) skip.click();
     await tick();
   } while (Date.now()<limit);
   throw Error(label+' · '+frame.contentWindow.location.href);
@@ -77,7 +77,28 @@ async function exercise() {
   swap.click();
   check(phone.dataset.code==='yellow' && phone.textContent===initial,'Возврат первого ответа и цвета');
   const article=find('.cooper-link').href;
+  const loaded = new Promise(resolve => frame.addEventListener('load',resolve,{once:true}));
   named('Начать').click();
+  await loaded;
+  check(find('.scene-loader:not([hidden])') && find('.panel[hidden]') && !find('.thread .item'),'Загрузчик до показа сцены');
+  await new Promise((resolve,reject) => {
+    const observer = new MutationObserver(() => {
+      observer.disconnect();
+      clearTimeout(timeout);
+      resolve();
+    });
+    const timeout = setTimeout(() => {
+      observer.disconnect();
+      reject(Error('Подготовленный экран не показан'));
+    },40000);
+    observer.observe(find('.panel'),{attributes:true,attributeFilter:['hidden']});
+  });
+  check(find('.scene-loader[hidden]') && !find('.thread .item'),'Экран до первой реплики');
+  if (!frame.contentWindow.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    await until(()=>find('.thread .item'),'Первая реплика',false);
+    check(doc().querySelectorAll('.thread .item').length===1,'Поочерёдное появление реплик');
+  }
+  report.textContent+='Старт ситуации · загрузка, пустая переписка, первая реплика\n';
   await until(()=>buttons().length && find('.scene:not([aria-busy])'),'Случайный старт с главной');
   const first=new URL(frame.contentWindow.location.href).searchParams.get('case');
   named('Следующая').click();

@@ -9,9 +9,31 @@ if (!isAttentionPilot && healthScenes.includes(episode)) {
   location.replace(currentFile);
 } else if (isCatalogue) {
   showCatalogue(panel);
+} else if (isAttentionPilot) {
+  launchAttentionScene().catch(error => {
+    console.error(error);
+    panel.hidden = true;
+    document.querySelector('.scene-loader').hidden = false;
+    showLoadingError();
+  });
 } else {
   linkCurrentEpisode();
   playScene();
+}
+
+function afterPaint() {
+  return new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+}
+
+async function launchAttentionScene() {
+  const loader = document.querySelector('.scene-loader');
+  loader.dataset.started = '';
+  if (document.readyState !== 'complete') {
+    await new Promise(resolve => window.addEventListener('load',resolve,{once:true}));
+  }
+  await afterPaint();
+  linkCurrentEpisode();
+  await playScene();
 }
 
 function playScene() {
@@ -388,11 +410,10 @@ function playScene() {
     render(next, interactive || next.id === 'start');
   }
   if (isAttentionPilot) {
-    playAttentionPilot({route, pauseMedia, pages, pathFor, messages, makeRow, button, scene, heading, thread, typing,
+    return playAttentionPilot({route, pauseMedia, pages, pathFor, messages, makeRow, button, scene, heading, thread, typing,
       flash, freeze, question, outcome, outcomeLabels, choices, controls, status, finishScene,
       showOutcome, clearPrompt, flashFreeze, motionAllowed, reduced, setFollow: value => { followNew = value; },
       shouldFollow: () => followNew});
-    return;
   }
   window.addEventListener('popstate', () => fromAddress(true));
   fromAddress(false);
