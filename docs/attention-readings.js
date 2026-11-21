@@ -175,5 +175,5 @@ function addReadingChoices(id, role, route) {
   const quietLabel = id === 'project' ? (self ? 'Проверю, что имя есть на экране, и сам расскажу про один график.' : 'Открою новый файл и проверю с Тимуром, что его имя на экране.') : item.calm;
   story.calm.links.push(['calm-watch',quietLabel]);
   story['calm-watch'] = {...story[original],mode:'orange'};
-  return route;
+  return addReactionScene(id,role,route);
 }

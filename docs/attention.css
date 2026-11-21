@@ -56,3 +56,7 @@ html[data-code=white] .top .to-catalog { color:var(--ink); border-color:var(--li
 .item.noticed .msg { outline:2px solid #ad4754; outline-offset:1px; }
 .signal-caption { margin:5px 4px 8px; color:#742e39; font-size:.88rem; }
 .calm-ending { margin-top:8px; }
+[data-code=black] { --zone:#e1e2e5; --tint:#f0f0f2; --line:#999ca2; --ink:#34383e; --signal:#35383d; --paper:#fcfcfd; --symbol:"▪"; }
+html[data-code=black] .signal { color:white; }
+.reaction-label { display:block; width:fit-content; margin:7px 0; padding:3px 9px; border-radius:5px; background:#34383e; color:white; font-size:.84rem; }
+.reaction-hint,.reaction-record { color:#34383e; border-inline-start:3px solid #565a61; padding-inline-start:10px; }

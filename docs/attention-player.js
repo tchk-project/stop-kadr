@@ -56,8 +56,9 @@ function playAttentionPilot(ui) {
 
   function changeColour(code, animated) {
     if (document.documentElement.dataset.code === code) return;
+    const leavingReaction = document.documentElement.dataset.code === 'black';
     setAttentionMode(code);
-    if (animated) {
+    if (animated && code !== 'black' && !leavingReaction) {
       flash.getAnimations().forEach(a => a.cancel());
       flash.animate([{opacity:.85}, {opacity:0}], {duration:280, easing:'ease-out'});
     }
@@ -120,7 +121,7 @@ function playAttentionPilot(ui) {
       if (run !== task) return;
       row.remove();
       const last = thread.lastElementChild;
-      const code = last ? pages.get(last.dataset.step).mode : 'yellow';
+      const code = last?.dataset.attention || 'yellow';
       changeColour(code, !task.signal.aborted);
       if (!task.signal.aborted) {
         scrollTo(last);
@@ -133,14 +134,17 @@ function playAttentionPilot(ui) {
     if (common < items.length) direction.textContent = rate === speed ? '▶▶ Вперёд · 2,5×' : '';
     for (const item of items.slice(common)) {
       const {speaker, pause} = timing(item);
-      changeColour(item.attention, !task.signal.aborted);
+
       if (!task.signal.aborted) {
         typingAs(speaker);
         await wait(pause/rate, task.signal);
         if (run !== task) return;
       }
       typingAs('');
+      changeColour(item.attention, !task.signal.aborted);
       const row = makeRow(item);
+      row.dataset.attention = item.attention;
+      if (item.reaction) guide.explainReaction(row);
       row.dataset.pause = pause;
       row.dataset.speaker = speaker || '';
       thread.append(row);
@@ -228,7 +232,7 @@ function playAttentionPilot(ui) {
       const row = thread.querySelector('[data-key="'+key+'"]');
       if (row) drawSignal(row,key);
     }
-    review.append(title, list, element('p','chosen-answer',transitionLabel(story[stop.parent].mode,story[stop.id].mode)+' · '+stop.answer),
+    review.append(title, list, element('p','chosen-answer',transitionLabel(attentionAtLine(story[stop.parent],story[stop.parent].lines.length-1),story[stop.id].mode)+' · '+stop.answer),
       element('p','',stop.effect));
     if (stop.recovery) review.append(element('p','recovery',stop.recovery));
     review.append(momentPicker(stop));
@@ -260,11 +264,16 @@ function playAttentionPilot(ui) {
       const parent = story[node.parent];
       const answer = parent.links.find(([id]) => id === key)[1];
       const item = element('li');
-      item.append(element('strong','',transitionLabel(parent.mode,node.mode)),element('p','',answer));
+      item.append(element('strong','',transitionLabel(attentionAtLine(parent,parent.lines.length-1),node.mode)),element('p','',answer));
       const signals = decisions[key]?.signals;
       const quote = signals?.length && cues[signals[signals.length-1]]?.[0];
       if (quote) item.append(element('small','','Перед этим в истории: «'+quote+'»'));
       list.append(item);
+      if (node.reaction) {
+        const event = element('li','reaction-record');
+        event.append(element('strong','','Что со мной произошло'),element('p','','Чёрный · '+node.reaction.summary));
+        list.append(event);
+      }
     }
     detail.append(list);
     return detail;
@@ -299,7 +308,7 @@ function playAttentionPilot(ui) {
         const code = attentionModes[next.mode];
         option.dataset.code = next.mode;
         option.classList.add('coded');
-        option.prepend(element('span','code-tag',transitionLabel(data.mode,next.mode)+' · '+code.meaning));
+        option.prepend(element('span','code-tag',transitionLabel(attentionAtLine(data,data.lines.length-1),next.mode)+' · '+code.meaning));
         choices.append(option);
       }
       guide.annotate(choices.querySelectorAll('.coded'));

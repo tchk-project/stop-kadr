@@ -6,7 +6,7 @@ const vm = require('node:vm');
 
 const docs = join(__dirname,'../docs');
 const context = vm.createContext({});
-for (const file of ['scenarios','attention','attention-takes','attention-paths','attention-readings','attention-catalog']) {
+for (const file of ['scenarios','attention','attention-takes','attention-paths','attention-reactions','attention-readings','attention-catalog']) {
   vm.runInContext(readFileSync(join(docs,file+'.js'),'utf8'),context);
 }
 const {ids,build,stops,modes} = vm.runInContext(
@@ -74,3 +74,28 @@ for (const id of ids) for (const role of ['witness','self']) {
     }
   });
 }
+
+test('four paired pressure scenes, with an involuntary event only in first person',() => {
+  const affected=[];
+  for (const id of ids) {
+    const own=build(id,'self'), witness=build(id,'witness');
+    assert.ok(Object.values(witness.story).every(n=>!n.reaction && n.mode!=='black'));
+    const nodes=Object.entries(own.story).filter(([,n])=>n.reaction);
+    assert.ok(Object.values(own.story).every(n=>n.mode!=='black'));
+    if (!nodes.length) continue;
+    affected.push(id);
+    assert.equal(nodes.length,1);
+    const [key,n]=nodes[0];
+    assert.equal(n.parent,'pressure');
+    assert.equal(context.attentionAtLine(n,n.reaction.index-1),n.mode);
+    assert.equal(context.attentionAtLine(n,n.reaction.index),'black');
+    assert.equal(context.attentionAtLine(n,n.reaction.until-1),'black');
+    assert.equal(context.attentionAtLine(n,n.lines.length-1),n.mode);
+    assert.equal(n.links.length,2);
+    for (const [next] of n.links) {
+      const path=['start','pressure',key,next];
+      assert.ok(stops(path,own.story,own.decisions).every(s=>!s.miss && s.answer!==n.reaction.summary));
+    }
+  }
+  assert.deepEqual(affected.sort(),['money','stairs','team','voice']);
+});

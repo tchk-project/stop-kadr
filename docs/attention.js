@@ -4,6 +4,7 @@ const attentionModes = {
   yellow: {name:'Жёлтый', meaning:'спокойно замечаю, что вокруг', chrome:'#59450a'},
   orange: {name:'Оранжевый', meaning:'слежу за конкретным сигналом', chrome:'#773c1b'},
   red:    {name:'Красный', meaning:'вижу угрозу прямо сейчас', chrome:'#792c39'},
+  black:  {name:'Чёрный', meaning:'я замер', chrome:'#34383e'},
   white:  {name:'Белый', meaning:'переключаю внимание на своё', chrome:'#f8f9fa'}
 };
 
@@ -168,6 +169,10 @@ const attentionCues = {
   'calm-0':['вычеркнул','В этом дубле Даня принял отказ и перешёл к общему сбору.'],
   'ask-1':['Даня понял','Саша сам объяснил, как воспринял ответ. Первое впечатление можно пересмотреть.']
 };
+
+function attentionAtLine(node,index) {
+  return node.reaction && index >= node.reaction.index && index < node.reaction.until ? 'black' : node.mode;
+}
 
 function loadAttentionScene(pages, route, title) {
   pages.clear();

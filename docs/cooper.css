@@ -24,3 +24,7 @@
 .attention-trail summary { cursor:pointer; font-weight:620; }
 .attention-trail ol { margin:8px 0; padding-left:23px; }
 .attention-trail li + li { margin-top:8px; }
+.review-fragment button,.review-fragment mark { background:#ffdf77; color:#382d12; }
+.review-fragment button { border:1px solid #a57a1c; border-radius:.35em; padding:.12em .45em; margin:0 .15em; font:600 .85em/1.4 system-ui,sans-serif; cursor:pointer; }
+.review-fragment button:focus-visible { outline:2px solid #315954; outline-offset:2px; }
+.review-fragment mark { box-decoration-break:clone; -webkit-box-decoration-break:clone; }

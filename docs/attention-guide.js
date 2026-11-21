@@ -50,6 +50,16 @@ function attentionGuide(panel) {
       for (const el of bubbles.splice(0)) if (observer) observer.unobserve(el);
     },
     dismissIntro() { if (intro) { remember('yellow'); if (observer) observer.unobserve(intro); intro.remove(); intro = null; } },
+    explainReaction(row) {
+      const label = element('strong','reaction-label','Чёрный · я замер');
+      row.append(label);
+      mergeSaved();
+      if (known.has('black')) return;
+      const tip = element('p','reaction-hint','Иногда от неожиданности замираешь. Это случается само, даже если ты заранее заметил, к чему всё идёт.');
+      row.append(tip);
+      bubbles.push(tip);
+      onDisplay(tip,'black');
+    },
     annotate(options) {
       mergeSaved();
       const shown = new Set();

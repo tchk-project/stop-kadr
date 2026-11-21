@@ -143,7 +143,8 @@ function playScene() {
         marker.append(element('p', '', data.continuation ? 'Возможное продолжение · '+data.continuation : 'Твой выбор · '+decision.label));
         if (forks.includes(id) && data.note) marker.append(element('p', 'choice-comment', data.note));
         if (isAttentionPilot && !data.continuation) {
-          const before = pages.get(path[i-1]).mode;
+          const parent = pages.get(path[i-1]);
+          const before = attentionAtLine(parent,parent.lines.length-1);
           const label = before === data.mode ? attentionModes[data.mode].name : attentionModes[before].name+' → '+attentionModes[data.mode].name;
           marker.prepend(element('p','mode-change',label));
         }
@@ -152,7 +153,9 @@ function playScene() {
       data.lines.forEach((line, index) => {
         const content = line.cloneNode(true);
         addAvatar(content);
-        result.push({step:id, key:id+'-'+index, content, attention:data.mode});
+        const reaction = data.reaction?.index === index;
+        result.push({step:id, key:id+'-'+index, content, reaction,
+          attention:isAttentionPilot ? attentionAtLine(data,index) : data.mode});
       });
     });
     return result;
