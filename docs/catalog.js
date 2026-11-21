@@ -7,7 +7,7 @@ const role = isAttentionPilot ? (params.get('role') === 'self' ? 'self' : 'witne
 const personalRole = role === 'self';
 const currentFile = isAttentionPilot ? (personalRole ? './self.html' : './index.html') : selectedRole.getAttribute('href');
 const selection = params.get('case') || (isAttentionPilot ? 'money' : null);
-const episode = scenarios.find(item => item.id === selection);
+const episode = [...scenarios,...healthScenes].find(item => item.id === selection);
 const rehearsal = {id:'dubl', title:'Дубль для своих', place:'Школьная музыкальная группа', actors:{witness:'Тимур', self:'Миша'}};
 const activeStory = episode || rehearsal;
 const playerName = activeStory.actors[role];
@@ -246,7 +246,7 @@ function showCatalogue(panel) {
   archiveLink.href = personalRole ? './v1/self.html' : './v1/index.html';
   panel.querySelector('.top').append(archiveLink);
   const section = element('section','catalogue');
-  const catalog = [rehearsal, ...scenarios];
+  const catalog = [rehearsal, ...scenarios, ...healthScenes];
   document.body.classList.add('catalog-home');
   const hero = element('div','catalog-hero');
   const copy = element('div','hero-copy');
@@ -276,7 +276,9 @@ function showCatalogue(panel) {
   catalog.forEach(item => {
     const card = element('a','case-card');
     card.href = focusLink(item.id,role);
-    card.append(element('span','case-place',item.place), element('span','case-name',item.title));
+    const health = healthScenes.includes(item);
+    const context = health ? item.place+' · '+(personalRole ? 'Симптомы у меня' : 'Я очевидец') : item.place;
+    card.append(element('span','case-place',context), element('span','case-name',item.title));
     cards.append(card);
   });
   section.append(cards);
@@ -291,6 +293,7 @@ function linkCurrentEpisode() {
   const id = episode?.id || 'dubl';
   document.querySelectorAll('.roles a').forEach(a => {
     a.href = focusLink(id,a.dataset.role);
+    if (healthScenes.includes(episode) && a.dataset.role === 'self') a.textContent = 'Симптомы у меня';
     if (a.dataset.role === role) a.setAttribute('aria-current','page');
     else a.removeAttribute('aria-current');
   });

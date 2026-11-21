@@ -1100,3 +1100,9 @@ const scenarios = [
     }
   }
 ];
+
+// Medical stories share the catalogue and player, with their own decision trees.
+const healthScenes = [
+  {id:'speech',title:'Перед командным фото',place:'Спортзал',actors:{witness:'Вера',self:'Тренер'}},
+  {id:'vision',title:'Две буквы вместо одной',place:'У школьной афиши',actors:{witness:'Тимур',self:'Марина Сергеевна'}}
+];

@@ -1,7 +1,9 @@
 'use strict';
 
 const panel = document.querySelector('.panel');
-if (!isAttentionPilot && (episode || selection === 'dubl') && (!location.hash || location.hash === '#start')) {
+if (!isAttentionPilot && healthScenes.includes(episode)) {
+  location.replace(focusLink(selection,role)+location.hash);
+} else if (!isAttentionPilot && (episode || selection === 'dubl') && (!location.hash || location.hash === '#start')) {
   location.replace(focusLink(selection,role));
 } else if (isAttentionPilot && !episode && selection !== 'dubl') {
   location.replace(currentFile);

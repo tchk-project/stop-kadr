@@ -6,7 +6,7 @@ const vm = require('node:vm');
 
 const docs = join(__dirname,'../docs');
 const context = vm.createContext({});
-for (const file of ['scenarios','attention','attention-takes','attention-paths','attention-reactions','attention-readings','attention-catalog']) {
+for (const file of ['scenarios','attention','attention-takes','attention-paths','attention-reactions','attention-readings','health-paths','attention-catalog']) {
   vm.runInContext(readFileSync(join(docs,file+'.js'),'utf8'),context);
 }
 const {ids,build,stops,modes} = vm.runInContext(
@@ -99,3 +99,32 @@ test('four paired pressure scenes, with an involuntary event only in first perso
   }
   assert.deepEqual(affected.sort(),['money','stairs','team','voice']);
 });
+
+for (const id of ['speech','vision']) for (const role of ['witness','self']) {
+  test(id+' / '+role+' — urgent call, review and recovery after symptoms improve',() => {
+    const {story,cues,decisions}=build(id,role);
+    const visited=new Set();
+    function visit(key,path) {
+      assert.ok(!visited.has(key));
+      visited.add(key);
+      const node=story[key];
+      for(const [next,label] of node.links || []) {
+        assert.equal(story[next].parent,key);
+        assert.ok(label);
+        visit(next,[...path,next]);
+      }
+      if (!node.outcome || path.includes('calm')) return;
+      assert.ok(path.some(k=>['call','delegate','call-now'].includes(k)));
+      assert.match(node.note,/103 или 112/);
+      for(const stop of stops(path,story,decisions)) for (const cue of stop.signals) {
+        const at=cue.lastIndexOf('-'), parent=cue.slice(0,at);
+        assert.ok(path.indexOf(parent)<path.indexOf(stop.id));
+        assert.ok(story[parent].lines[Number(cue.slice(at+1))][1].includes(cues[cue][0]));
+      }
+    }
+    visit('start',['start']);
+    assert.equal(visited.size,Object.keys(story).length);
+    assert.ok(decisions.wait.miss && decisions.wait.repair==='call-now');
+    assert.equal(story['call-now'].mode,'red');
+  });
+}

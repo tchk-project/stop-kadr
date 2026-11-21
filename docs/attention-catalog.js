@@ -53,6 +53,7 @@ const focusActionModes = {
 };
 
 function buildAttentionRoute(id, role) {
+  if (healthScenes.some(scene => scene.id === id)) return buildHealthRoute(id,role);
   if (id === 'money' && role === 'witness') {
     const story = Object.fromEntries(Object.entries(attentionStory).map(([key,node]) =>
       [key,{...node,links:node.links?.map(link => [...link])}]));
