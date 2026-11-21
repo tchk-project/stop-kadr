@@ -21,7 +21,11 @@
   color:var(--ink-print); margin:0 0 20px; font:700 clamp(2.75rem,6vw,5.3rem)/.96 Georgia,"Times New Roman",serif;
   letter-spacing:-.06em;
 }
-.hero-copy h1 em { color:var(--blue-print); }
+.catalog-home .hero-copy h1 {
+  font:700 clamp(2.25rem,5vw,4rem)/1.16 system-ui,sans-serif;
+  letter-spacing:normal;
+}
+.hero-copy h1 em { color:var(--blue-print); font-style:normal; }
 .intro-copy { max-width:42ch; font-size:clamp(1.08rem,2vw,1.3rem); line-height:1.46; }
 .how-to-play { max-width:47ch; margin:12px 0 20px; }
 .role-prompt { font-weight:700; }
