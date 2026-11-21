@@ -2,9 +2,7 @@
 .reading main { max-width:73ch; margin:auto; padding:clamp(18px,5vw,52px) 20px 70px; }
 .reading h1 { font-size:clamp(2rem,5vw,3.4rem); line-height:1.06; letter-spacing:-.045em; }
 .reading article { overflow-wrap:anywhere; }
-.reading aside { border-left:4px solid #b78735; padding:12px 17px; background:#fffaeb; }
 .reading a { color:#25574c; }
-.reading .omission { color:#655944; }
 .cooper-link { font-size:.78rem; color:#285651; text-decoration:underline; background:transparent; border:0; padding:6px 4px; }
 .catalog-home .cooper-link { display:inline-block; margin:8px 0; }
 .mode-bar .cooper-link { color:var(--ink); margin-inline-start:auto; }
@@ -24,10 +22,6 @@
 .attention-trail summary { cursor:pointer; font-weight:620; }
 .attention-trail ol { margin:8px 0; padding-left:23px; }
 .attention-trail li + li { margin-top:8px; }
-.review-fragment button,.review-fragment mark { background:#ffdf77; color:#382d12; }
-.review-fragment button { border:1px solid #a57a1c; border-radius:.35em; padding:.12em .45em; margin:0 .15em; font:600 .85em/1.4 system-ui,sans-serif; cursor:pointer; }
-.review-fragment button:focus-visible { outline:2px solid #315954; outline-offset:2px; }
-.review-fragment mark { box-decoration-break:clone; -webkit-box-decoration-break:clone; }
 
 .reading-sources { margin-top:2rem; padding-top:.75rem; border-top:1px solid #c7ccc4; color:#58635e; font-size:.85rem; }
 .reading-sources summary { cursor:pointer; width:fit-content; padding:.4rem 0; }

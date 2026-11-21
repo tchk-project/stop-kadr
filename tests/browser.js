@@ -115,13 +115,9 @@ async function exercise() {
   find('.playback-controls .reviewer-link').click();
   await until(()=>find('a.case-card'),'Возврат в список из переписки');
   check(doc().querySelectorAll('a.case-card').length===16,'В списке должны быть все 16 историй');
-  await openPage(article,'.review-fragment button:not([hidden])');
-  for(const b of doc().querySelectorAll('.review-fragment button')) {
-    b.click();
-    check(!doc().getElementById(b.getAttribute('aria-controls')).hidden,'Текст фрагмента');
-    b.click();
-    check(doc().getElementById(b.getAttribute('aria-controls')).hidden,'Закрытие фрагмента');
-  }
+  await openPage(article,'article h1');
+  check(!find('article button, article mark, article [hidden], article aside'),'Статья открыта для чтения целиком');
+  check(find('article').innerText.includes('Все помнят сцену'),'Пример виден в тексте');
   for (const role of ['witness','self']) {
     const catalog=new URL(role==='self'?'docs/self.html':'docs/index.html',root);
     catalog.search=root.search;
