@@ -107,7 +107,9 @@ function playScene() {
   panel.append(scene);
   const roleLine = scene.querySelector('.scene-role');
   const place = activeStory.place;
-  roleLine.append(portrait(playerName), element('span', '', 'Ты — '+playerName+' · '+place));
+  const playerPortrait = portrait(playerName);
+  if (playerPortrait) roleLine.append(playerPortrait);
+  roleLine.append(element('span', '', 'Ты — '+playerName+' · '+place));
   document.title = activeStory.title + ' · Стоп-кадр';
   const heading = scene.querySelector('h1');
   const thread = scene.querySelector('.thread');

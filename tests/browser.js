@@ -120,7 +120,7 @@ async function exercise() {
     check(direct.querySelector('[data-key="start-2"]') && !find('.typing:not([hidden])'),'Реплика появилась в том же блоке');
   }
   const first=new URL(frame.contentWindow.location.href).searchParams.get('case');
-  named('Следующая').click();
+  named('Следующая история').click();
   await until(()=>buttons().length && find('.scene:not([aria-busy])') &&
     new URL(frame.contentWindow.location.href).searchParams.get('case')!==first,'Смена ситуации');
   find('.playback-controls .reviewer-link').click();
@@ -128,6 +128,7 @@ async function exercise() {
   check(doc().querySelectorAll('a.case-card').length===16,'В списке должны быть все 16 историй');
   await openPage(article,'article h1');
   check(!find('article button, article mark, article [hidden], article aside'),'Статья открыта для чтения целиком');
+  check(find('#black').textContent.includes('Игра не считает это ошибкой'),'Игровое пояснение о замирании');
   check(find('article').innerText.includes('Все помнят сцену'),'Пример виден в тексте');
   for (const role of ['witness','self']) {
     const catalog=new URL(role==='self'?'docs/self.html':'docs/index.html',root);
@@ -161,8 +162,24 @@ async function exercise() {
             check(blocks[0].querySelector('audio') && blocks[1].querySelector('[data-key="pressure-2"]'),'Реплики в своих чатах');
             if (blocks[2]) check(blocks[2].querySelector('[data-key="'+hash.slice(1)+'-0"]'),'Ответ Ани снова в общем');
           }
+          check(!find('.scene-role').textContent.includes('null'),'Пустой портрет в подписи роли');
+          if (id === 'dance' && role === 'witness' && ['#observe','#focus'].includes(hash)) {
+            const row=find('[data-key="'+hash.slice(1)+'-1"]');
+            check(row.closest('.thread').dataset.channel === '' && row.closest('.thread').textContent.includes('У стола'),'Очная реплика у стола');
+          }
+          if (id === 'team' && role === 'self' && hash === '#pressure-act-1') {
+            check(find('[data-key="pressure-act-1-2"]').closest('.thread').dataset.channel === '', 'Посадка в автобус после лички');
+          }
+          if (id === 'sticker' && /^#(?:observe|focus)-(?:watch|ease)$/.test(hash)) {
+            check(find('.outcome').dataset.kind === 'mixed','Клей найден, просьба про стикеры остаётся открытой');
+          }
+          if (role === 'self' && ['chest','abdomen'].includes(id) && hash.endsWith('-report')) {
+            const key=hash.slice(1);
+            check(find('[data-key="'+key+'-0"] .msg').classList.contains('you'),'Игрок описывает свои ощущения');
+            check(!find('[data-key="'+key+'-1"] .msg').classList.contains('you'),'Помощник сам отвечает диспетчеру');
+          }
           progress.textContent=role+' · '+title+' · '+hash+' · финалов '+endings;
-          for(const el of doc().querySelectorAll('.thread img[src],.thread audio[src],.thread video[src],.thread source[src],.thread a[download]')) assets.add(el.src || el.href);
+          for(const el of doc().querySelectorAll('.thread img[src],.thread audio[src],.thread video[src],.thread source[src],.thread a.file-card')) assets.add(el.src || el.href);
           check(!find('.coded[data-code="black"]'),'Чёрный появился на кнопке');
           const outcome=find('.outcome:not([hidden])');
           const expectedTheme=outcome && ['positive','negative'].includes(outcome.dataset.kind) ? outcome.dataset.kind : undefined;

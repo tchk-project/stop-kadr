@@ -377,14 +377,24 @@ async function playAttentionPilot(ui) {
   }
 
   function appendNavigation() {
-    controls.append(button('forward','Следующая',() => leave(randomStoryUrl(selection)),'play'),
+    controls.append(button('forward','Следующая история',() => leave(randomStoryUrl(selection)),'play'),
       reviewerLink('К списку ситуаций'));
   }
 
   async function leave(url) {
     const task = begin();
-    if (!motionAllowed()) task.abort();
-    await moveTo([],speed,task);
+    if (motionAllowed()) {
+      direction.textContent = '◀◀ Следующая история';
+      const tail = [...thread.querySelectorAll('.item')].slice(-3).reverse();
+      for (const row of tail) {
+        await animateRow(row,true,speed,task);
+        if (run !== task) return;
+        if (task.signal.aborted) break;
+        const block = row.parentElement;
+        row.remove();
+        if (!block.querySelector('.item')) block.remove();
+      }
+    }
     if (run === task) location.assign(url);
   }
 

@@ -96,8 +96,8 @@ function buildAttentionRoute(id, role) {
     if (decision) decisions[key] = decision;
   }
   function actions(parent, branch, modes) {
-    branch.actions.forEach(([label,lines,note,,headline],index) => {
-      add(parent,parent+'-act-'+index,label,{mode:modes[index],lines,outcome:['positive',headline],note},
+    branch.actions.forEach(([label,lines,note,,headline,kind = 'positive'],index) => {
+      add(parent,parent+'-act-'+index,label,{mode:modes[index],lines,outcome:[kind,headline],note},
         parent === 'pressure' ? {signals,effect:note} : null);
     });
   }
@@ -135,8 +135,8 @@ function buildAttentionRoute(id, role) {
     const [label,who,words,headline] = p.stay;
     add('ignore','stay',label,{mode:'white',lines:[[who,words,stayContext]],outcome:['mixed',headline],note:stayEffect},
       {miss:true,signals:[cue],effect:stayEffect});
-    const [help,answer,speaker,reply,result] = p.help;
-    add('ignore','rejoin',help,{mode:id==='stairs'?'red':'orange',lines:[['Ты',answer,helpContext],[speaker,reply]],outcome:['positive',result],note:helpEffect});
+    const [help,answer,speaker,reply,result,kind = 'positive'] = p.help;
+    add('ignore','rejoin',help,{mode:id==='stairs'?'red':'orange',lines:[['Ты',answer,helpContext],[speaker,reply]],outcome:[kind,result],note:helpEffect});
   }
 
   if (id === 'project') {

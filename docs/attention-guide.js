@@ -55,7 +55,7 @@ function attentionGuide(panel) {
       row.append(label);
       mergeSaved();
       if (known.has('black')) return;
-      const tip = element('p','reaction-hint','Иногда от неожиданности замираешь. Это случается само, даже если ты заранее заметил, к чему всё идёт.');
+      const tip = element('p','reaction-hint','Иногда от неожиданности замираешь. Это случается само. В игре такая реакция не считается ошибкой.');
       row.append(tip);
       bubbles.push(tip);
       onDisplay(tip,'black');
