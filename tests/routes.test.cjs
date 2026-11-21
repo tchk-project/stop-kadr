@@ -100,8 +100,8 @@ test('four paired pressure scenes, with an involuntary event only in first perso
   assert.deepEqual(affected.sort(),['money','stairs','team','voice']);
 });
 
-for (const id of ['speech','vision']) for (const role of ['witness','self']) {
-  test(id+' / '+role+' — urgent call, review and recovery after symptoms improve',() => {
+for (const id of vm.runInContext('healthScenes.map(scene => scene.id)',context)) for (const role of ['witness','self']) {
+  test(id+' / '+role+' — urgent call, review and recovery after waiting',() => {
     const {story,cues,decisions}=build(id,role);
     const visited=new Set();
     function visit(key,path) {

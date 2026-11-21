@@ -290,8 +290,9 @@ function playAttentionPilot(ui) {
       outcome.hidden = false;
       choices.append(attentionTrail(path));
       if (healthScenes.includes(episode)) {
-        const source = element('a','cooper-link','О признаках инсульта и первой помощи · НМИЦ ТПМ Минздрава России');
-        source.href = 'https://gnicpm.ru/articles/paczientam-articles/pervaya-pomoshh-pri-ostrom-narushenii-mozgovogo-krovoobrashheniya.html';
+        const [label,href] = episode.source || ['О признаках инсульта и первой помощи · НМИЦ ТПМ Минздрава России','https://gnicpm.ru/articles/paczientam-articles/pervaya-pomoshh-pri-ostrom-narushenii-mozgovogo-krovoobrashheniya.html'];
+        const source = element('a','cooper-link',label);
+        source.href = href;
         source.target = '_blank';
         source.rel = 'noopener';
         choices.append(source);

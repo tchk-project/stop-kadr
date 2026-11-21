@@ -67,7 +67,7 @@ async function exercise() {
     await openPage(catalog,'a.case-card');
     const links=[...doc().querySelectorAll('.case-card')].map(a=>[a.href,a.querySelector('.case-name').textContent]);
     const ids=new Set(links.map(([url])=>new URL(url).searchParams.get('case')));
-    check(links.length===14 && ids.size===14 && ids.has('speech') && ids.has('vision'),'Состав каталога: '+role);
+    check(links.length===16 && ids.size===16 && ['speech','vision','abdomen','chest'].every(id=>ids.has(id)),'Состав каталога: '+role);
     for (const [url,title] of links) {
       const id=new URL(url).searchParams.get('case');
       const seen=new Set();
