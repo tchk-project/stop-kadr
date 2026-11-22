@@ -54,7 +54,7 @@ remarka-u-lestnitsy-vsyo-eschyo:
   speaker: Ремарка
   channel: scene
   caption: У лестницы
-  text: У лестницы всё ещё никто из взрослых. Саша снова просит пропустить его.
+  text: С порога класса видно, что у лестницы [[всё ещё нет взрослого]]. Саша снова просит пропустить его.
 timur-kost-dezhurnaya-tebya-vidit:
   speaker: Тимур
   channel: scene
@@ -68,7 +68,7 @@ timur-marina-sergeevna-k-lestnitse:
 ty-marina-sergeevna-sashe-u:
   speaker: Ты
   channel: scene
-  caption: В коридоре у лестницы
+  caption: У двери класса
   text: Марина Сергеевна, Саше у лестницы угрожают. Подойдите!
 marina-sergeevna-slyshu-idu:
   speaker: Марина Сергеевна
@@ -177,7 +177,8 @@ timur-konechno-ya-sam-slyshal:
   text: Конечно. Я сам слышал, как он тебе угрожал.
 remarka-na-etom-dubl-zakanchivaetsya:
   speaker: Ремарка
-  text: На этом дубль заканчивается.
+  channel: scene
+  text: Вы с Тимуром остаётесь вместе до звонка. Проход свободен.
 ty-tim-podozhdi-u-tebya:
   speaker: Ты
   text: Тим, подожди. У тебя атлас с собой?
@@ -225,3 +226,24 @@ sasha-asks-teacher-to-stay:
 teacher-offers-seat:
   speaker: Марина Сергеевна
   text: Конечно, Саш. Давай здесь сядем.
+kostya-goes-to-class:
+  speaker: Ремарка
+  channel: scene
+  caption: У кабинета географии
+  text: Ты поднимаешься к кабинету географии, достаёшь из рюкзака атлас и находишь нужную карту.
+kostya-hears-no-answer:
+  speaker: Ремарка
+  channel: scene
+  caption: В классе
+  text: Из класса ты слышишь голос Тимура, но ответа дежурной не слышно. [[Учитель географии здесь]], у доски.
+kostya-tells-geography-teacher:
+  speaker: Ты
+  channel: scene
+  caption: В классе
+  text: У лестницы Лёша загородил Саше дорогу и грозит ударить. Тимур звал дежурную. Вы подойдёте?
+teacher-goes-to-stairs:
+  speaker: Учитель географии
+  text: Да, сейчас подойду. Кость, побудь пока здесь.
+kostya-sees-teacher-at-stairs:
+  speaker: Ремарка
+  text: Из кабинета ты видишь, как учитель подошёл к лестнице. Лёша отступил, и Саша прошёл к Тимуру.

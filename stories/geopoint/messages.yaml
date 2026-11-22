@@ -157,7 +157,8 @@ sistema-peredacha-geopozitsii-zavershena:
   text: Передача геопозиции завершена.
 remarka-na-etom-dubl-zakanchivaetsya:
   speaker: Ремарка
-  text: На этом дубль заканчивается.
+  channel: scene
+  text: Ты убираешь телефон. Передача геопозиции пока включена.
 lyosha-ok-togda-do-zavtra:
   speaker: Лёша
   channel: lichnaya-perepiska-s-lyoshey
@@ -202,3 +203,16 @@ anya-arranges-call:
 timur-agrees-to-call:
   speaker: Тимур
   text: Давай. Я дома буду.
+anya-pocket-phone:
+  speaker: Ремарка
+  text: Ты убираешь телефон в карман. Когда подъезжает твой автобус, ты садишься у окна.
+timur-works-on-problem:
+  speaker: Ремарка
+  text: Ты откладываешь телефон, открываешь тетрадь и ещё раз считаешь. На полях записываешь ответ, чтобы потом сверить с Аней.
+timur-updates-anya:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-aney
+  text: Ань, он только что написал, что сел в автобус.
+anya-acknowledges-update:
+  speaker: Аня
+  text: Спасибо, Тим. Тогда до вечера. Не забуду про задачку!

@@ -7,7 +7,9 @@ const colourHelp = {
   red:'Угроза уже рядом. Можно отойти к людям и позвать на помощь.'
 };
 
-function attentionGuide(panel, storageKey = 'stop-kadr.cooper.seen.v1') {
+function attentionGuide(panel, storageKey = 'stop-kadr.cooper.seen.v1', story, role) {
+  const medical = Boolean(story?.article);
+  const observation = medical ? 'Можно заметить, как человек себя чувствует и что меняется.' : colourHelp.yellow;
   const known = new Set();
   function mergeSaved() {
     try {
@@ -40,7 +42,7 @@ function attentionGuide(panel, storageKey = 'stop-kadr.cooper.seen.v1') {
   if (!known.has('yellow')) {
     intro = element('details','colour-intro');
     const summary = element('summary','','Жёлтый · замечаю, что вокруг');
-    intro.append(summary, element('p','',colourHelp.yellow),
+    intro.append(summary, element('p','',observation),
       element('p','','Цвет на кнопке показывает, куда будет направлено внимание твоего героя.'));
     panel.querySelector('.scene-role').after(intro);
     onDisplay(summary,'yellow');
@@ -62,14 +64,25 @@ function attentionGuide(panel, storageKey = 'stop-kadr.cooper.seen.v1') {
       row.append(tip);
       onDisplay(tip,'black');
     },
-    annotate(container) {
+    annotate(container, currentMode) {
       const colours = new Set(Array.from(container.querySelectorAll('.coded'), option => option.dataset.code));
+      let explanations = colourHelp;
+      if (medical) {
+        const beforeCall = currentMode !== 'red' && colours.has('red');
+        const callHelp = story.emergencyHelp?.[role] || (role === 'self'
+          ? 'Сразу позвони в скорую по номеру 103 или 112 или попроси человека рядом позвонить.'
+          : 'Останься рядом и сразу вызови скорую по номеру 103 или 112.');
+        explanations = {...colourHelp,
+          yellow:beforeCall ? 'В этом ответе звонок откладывается. С такими признаками помощь нужна сразу.' : observation,
+          red:beforeCall ? callHelp : 'Диспетчер уже на связи. Сейчас важно сообщить, что произошло и когда.'
+        };
+      }
       const help = element('details','colour-help');
       help.append(element('summary','','Что означают цвета ответов?'));
       for (const colour of colours) {
         const entry = element('p');
         entry.dataset.code = colour;
-        entry.append(levelTitle(colour),colourHelp[colour]);
+        entry.append(levelTitle(colour),explanations[colour]);
         help.append(entry);
       }
       container.append(help);

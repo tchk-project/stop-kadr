@@ -4,7 +4,9 @@ const Drafts = (() => {
   const format = 'stop-kadr-draft/1';
   const clone = value => JSON.parse(JSON.stringify(value));
   const id = prefix => prefix+'-'+crypto.randomUUID();
-  const plain = text => (text || '').replace(/\[\[([^\]]+)\]\]/g,'$1');
+  const mark = /\[\[([^\[\]]+)\]\]/;
+  const plain = text => (text || '').replace(mark,'$1');
+  const quote = text => mark.exec(text)?.[1] || '';
   const words = m => m.text ?? m.media?.transcript ?? m.media?.caption ?? m.media?.alt ?? '';
   const mediaName = {voice:'Голосовое',sticker:'Стикер',image:'Изображение',video:'Видео',document:'Документ'};
   const levels = {white:'Белый',yellow:'Жёлтый',orange:'Оранжевый',red:'Красный'};
@@ -30,6 +32,19 @@ const Drafts = (() => {
     const path=[], seen=new Set();
     while (step && !seen.has(step)) { path.push(step);seen.add(step);step=parents.get(step); }
     return path.reverse();
+  }
+  function cueWords(data, route, ref) {
+    const [step,key]=ref.split('/');
+    if(key!=='@choice')return words(data.messages[key] || {});
+    const parent=pathTo(route,step).at(-2);
+    return route.scenes[parent]?.choices?.[step] || '';
+  }
+  function markText(text, phrase) {
+    if(text.includes('[[') || text.includes(']]'))throw Error('Для выделения фразы используй отдельное поле.');
+    if(!phrase)return text;
+    if(!text.includes(phrase))throw Error('Указанной фразы нет в новом тексте. Выбери фразу из текста выше.');
+    if(/[\[\]]/.test(phrase))throw Error('Выбери фразу без квадратных скобок.');
+    return text.replace(phrase,()=> '[['+phrase+']]');
   }
   function uses(data, key) {
     const found=[];
@@ -67,18 +82,35 @@ const Drafts = (() => {
       const route=data.routes[role];
       if(Object.values(meta.roles[role]).some(s=>!s.trim()))errors.push({role,meta:true,message:'Заполни имя героя, форму имени и вступление.'});
       for(const [step,n] of Object.entries(route.scenes)){
-        const add=message=>errors.push({role,step,message});
+        const add=(message,where)=>errors.push({role,step,message,...where});
+        function checkMark(text,ref,where) {
+          const reason=route.cues[ref], linked=Object.hasOwn(route.cues,ref);
+          const rest=text.replace(mark,'');
+          if(rest.includes('[[') || rest.includes(']]') || (linked && !quote(text).trim())){
+            add(where.choice?'Снова выдели фразу для разбора в ответе «'+plain(text)+'».':
+              'Снова выдели фразу для разбора в реплике «'+plain(text)+'».',where);
+          }else if(linked && (typeof reason!=='string' || !reason.trim())){
+            add('Заполни пояснение к фразе «'+quote(text)+'».',where);
+          }
+        }
         if(!n.messages.length)add('Добавь первую реплику.');
         const choices=Object.values(n.choices || {});
         if(!choices.length && !n.outcome)add('Здесь история обрывается. Добавь ответ игрока или финал.');
         if(choices.length && step!=='start' && !n.question?.trim())add('Напиши вопрос перед вариантами ответа.');
-        if(choices.some(s=>!s.trim()))add('Подпиши все варианты ответа.');
+        for(const [target,label] of Object.entries(n.choices || {})){
+          if(!label.trim())add('Подпиши вариант ответа.',{choice:target});
+          checkMark(label,target+'/@choice',{choice:target});
+        }
         if(n.outcome && (!n.outcome[1]?.trim() || !n.note?.trim()))add('Заполни заголовок финала и пояснение.');
         if(n.review && (!n.review.effect?.trim() || !n.review.signals.length))add('Выбери деталь для разбора и напиши пояснение.');
+        if(n.review){
+          const previous=pathTo(route,step).slice(0,-1);
+          if(n.review.signals.some(ref=>!previous.includes(ref.split('/')[0])))add('Выбери для разбора фразу, которую игрок уже встретил на этом пути.');
+        }
         for(const k of n.messages){
           const m=data.messages[k];
-          if(!m?.speaker || (!m.media && !m.text?.trim()))add('У реплики отсутствует автор или текст.');
-          if(route.cues[step+'/'+k] && !/\[\[.+?\]\]/s.test(words(m)))add('Снова выдели фразу для разбора в изменённой реплике.');
+          if(!m.speaker.trim() || !words(m).trim())add('Заполни автора и текст реплики или описание вложения.',{line:k});
+          checkMark(words(m),step+'/'+k,{line:k});
         }
       }
     }
@@ -120,6 +152,36 @@ const Drafts = (() => {
     }
     return work;
   }
+  function pruneUnused(d) {
+    if(!d.files)return;
+    const {data}=d.work, used=new Set();
+    for(const role of roles) for(const scene of Object.values(data.routes[role].scenes)){
+      for(const key of scene.messages)used.add(key);
+    }
+    for(const [key,{media}] of Object.entries(data.messages)){
+      if(!used.has(key) && media && !d.base?.data.messages[key] &&
+         Object.values(media).some(path=>typeof path==='string' && Object.hasOwn(d.files,path))){
+        delete data.messages[key];
+      }
+    }
+    const files={};
+    for(const work of [d.work,d.base]){
+      if(!work)continue;
+      for(const {media} of Object.values(work.data.messages)){
+        if(!media)continue;
+        for(const prop of ['src','file','poster','html','captions']){
+          const path=media[prop];
+          if(Object.hasOwn(d.files,path))files[path]=d.files[path];
+        }
+      }
+    }
+    if(Object.keys(files).length)d.files=files;
+    else delete d.files;
+  }
+  function pack(d){
+    const {format,base,work,checked,view,files}=d;
+    return JSON.stringify({format,base,work,checked,view,files},null,2);
+  }
   function unpack(raw) {
     try {
       const f=JSON.parse(raw,(k,v)=>{if(['__proto__','constructor','prototype'].includes(k))throw Error();return v});
@@ -136,8 +198,8 @@ const Drafts = (() => {
       }
       if(f.checked && typeof f.checked==='object')d.checked=f.checked;
       if(roles.includes(f.view?.role)&&Object.hasOwn(d.work.data.routes[f.view.role].scenes,f.view.step))d.view=f.view;
-      return d;
+      pruneUnused(d);return d;
     }catch{throw Error('Этот файл не удалось открыть. Выбери файл черновика «Стоп-кадра».');}
   }
-  return {roles,format,clone,id,plain,words,mediaName,levels,endings,blank,draft,pathTo,uses,detach,stamp,isChecked,issues,verifyWork,unpack};
+  return {roles,format,clone,id,plain,quote,words,cueWords,markText,mediaName,levels,endings,blank,draft,pathTo,uses,detach,stamp,isChecked,issues,verifyWork,pruneUnused,pack,unpack};
 })();

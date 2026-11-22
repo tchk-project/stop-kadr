@@ -22,15 +22,24 @@ function prepareRoute(data, role) {
     const lines = messages.map(id => {
       const msg = data.messages[id];
       const ref = step+'/'+id;
-      const phrase = msg.text ?? msg.media.transcript ?? msg.media.caption;
-      const parts = phrase && splitHighlight(phrase);
+      const media = msg.media;
+      const phrase = msg.text ?? media?.transcript ?? media?.caption ?? media?.alt ?? '';
+      const parts = splitHighlight(phrase);
       if (explanations[ref]) cues[ref] = [parts.quote, explanations[ref]];
-      return {...msg, id, ref, parts, channel:msg.channel && data.channels[msg.channel]};
+      const line = {...msg, id, ref, parts, channel:msg.channel && data.channels[msg.channel]};
+      // An image description used for a cue needs a visible phrase for the replay.
+      if (parts.quote && media?.alt === phrase && media.caption == null && media.transcript == null) {
+        line.media = {...media, alt:parts.text, caption:parts.text};
+      }
+      return line;
     });
     const links = Object.entries(choices).map(([target, label]) => {
       const parts = splitHighlight(label);
       const key = target+'/@choice';
-      if (explanations[key]) cues[key] = [parts.quote, explanations[key]];
+      if (explanations[key]) {
+        cues[key] = [parts.quote, explanations[key]];
+        return [target,parts.text,parts];
+      }
       return [target,parts.text];
     });
     story[step] = {...scene, parent:parents.get(step), lines, links};
@@ -67,12 +76,24 @@ function pickAttentionTake(random = Math.random) {
 }
 
 function attentionStops(path, story, details) {
-  const decisions = path.filter(id => details[id]);
-  const missed = decisions.filter(id => details[id].miss);
-  return (missed.length ? missed : decisions).map(id => {
+  const stops = [];
+  let current;
+  for (let index = 2; index < path.length; index++) {
+    const id = path[index];
+    const parent = path[index-1];
+    const links = story[parent].links;
     const detail = details[id];
-    const parent = path[path.indexOf(id)-1];
-    return {...detail, id, parent, answer:story[parent].links.find(([target]) => target === id)[1],
-      recovery:path.includes(detail.repair) ? detail.recovery : ''};
-  });
+    if (links.length > 1) {
+      current = undefined;
+      if (!detail) continue;
+      const answer = links.find(([target]) => target === id)[1];
+      current = {...detail, id, parent, answer, continuation:[],
+        recovery:path.includes(detail.repair) ? detail.recovery : ''};
+      stops.push(current);
+    } else if (current && detail) {
+      current.continuation.push({answer:links[0][1], effect:detail.effect});
+    }
+  }
+  const missed = stops.filter(stop => stop.miss);
+  return missed.length ? missed : stops;
 }

@@ -125,7 +125,7 @@ misha-tim-stoy-uspel-ler:
   channel: chat-proekta
 anya-teper-troe-timur-tozhe:
   speaker: Аня
-  text: Теперь трое. [[Тимур тоже на титульном]].
+  text: С доски теперь всех троих видно. [[Тимур тоже на титульном]].
 marina-sergeevna-vizhu-tryoh-avtorov:
   speaker: Марина Сергеевна
   channel: scene
@@ -180,7 +180,8 @@ marina-sergeevna-da-pokazhesh-kakie:
   text: Да. Покажешь, какие слайды твои?
 remarka-na-etom-dubl-zakanchivaetsya:
   speaker: Ремарка
-  text: На этом дубль заканчивается.
+  channel: scene
+  text: На защиту вышла следующая группа. В файле для сдачи твоё имя уже есть.
 ty-teper-vizhu-svoyo-imya:
   speaker: Ты
   text: Теперь вижу своё имя. Ань, давай ты первый покажешь, а второй я?
@@ -215,3 +216,16 @@ misha-sends-submission:
 timur-checks-title:
   speaker: Ремарка
   text: Ты открываешь файл. На первом слайде твоё имя рядом с именами Миши и Ани.
+timur-checks-credit:
+  speaker: Ты
+  channel: scene
+  caption: В классе
+  text: Ань, на экране точно видно моё имя? С моего места буквы мелкие.
+anya-reads-credit:
+  speaker: Аня
+  text: Да, вижу. Миша, Аня, Тимур. Про графики решим, когда дойдём до них.
+lera-checks-projector:
+  speaker: Ремарка
+  channel: scene
+  caption: Перед защитой
+  text: 'На ноутбуке открыты оба файла. Ты выводишь новый файл на экран. На стене видны имена Миши, Ани и Тимура.'

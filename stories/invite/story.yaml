@@ -28,3 +28,6 @@ channels:
   lichnaya-perepiska-s-veroy:
     kind: private
     title: Личная переписка с Верой
+  scene:
+    kind: scene
+    title: ''

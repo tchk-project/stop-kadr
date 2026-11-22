@@ -73,7 +73,7 @@ scenes:
     question: Что тебе сейчас подходит?
     choices:
       follow-up: Попросить Тимура пойти с тобой к учительнице
-      pause: Закончить этот дубль здесь
+      pause: Останусь с Тимуром до звонка. Рассказывать пока не хочу.
     review:
       signals:
       - pressure/remarka-lyosha-vstayot-poperyok-prohoda-2
@@ -98,9 +98,9 @@ scenes:
     messages:
     - remarka-na-etom-dubl-zakanchivaetsya
     outcome:
-    - mixed
+    - positive
     - Проход свободен. Тимур остался с тобой
-    note: Ты попробовал объясниться. Лёша продолжал преграждать дорогу. Тимур позвал дежурную, и ты смог пройти. Даже после этого тебе всё ещё хотелось побыть с другом.
+    note: Можно просто побыть с Тимуром. Дежурная уже освободила проход, и друг остался с тобой. Расскажешь ли ты ещё кому-нибудь про угрозу Лёши и когда, решаешь ты.
     review:
       signals:
       - alternative/ty-tim-mozhno-s-toboy
@@ -113,13 +113,12 @@ scenes:
     continuation: true
     question: Как продолжишь?
     choices:
-      calm-end: Посмотреть, что будет дальше
+      calm-end: Пойду с Тимуром на географию.
       ask: Догнать Тимура
-      calm-watch: Я прошёл. По дороге оглянусь, где Лёша.
+      calm-watch: Оглянусь с площадки. Лёша остался у окна?
   calm-end:
     mode: yellow
     messages:
-    - remarka-sasha-oglyadyvaetsya
     - timur-sash-u-nas-na
     - sasha-aga-geografiya
     outcome:
@@ -155,11 +154,11 @@ scenes:
     outcome:
     - positive
     - Саша в классе вместе с ребятами и дежурной
-    note: Саша уже в классе. Между ним и Лёшей у двери стоит дежурная.
+    note: Дежурная сказала, что останется здесь, и попросила Тимура прикрыть дверь. Ты можешь побыть в классе.
     review:
       signals:
       - observe/remarka-ty-othodish-ot-lestnitsy
-      effect: Саша уже в классе. Между ним и Лёшей у двери стоит дежурная.
+      effect: Дежурная сказала, что останется здесь, и попросила Тимура прикрыть дверь. Ты можешь побыть в классе.
   observe-watch:
     mode: orange
     messages:
@@ -196,11 +195,11 @@ scenes:
     outcome:
     - positive
     - Саша в классе вместе с ребятами и дежурной
-    note: Саша уже в классе. Между ним и Лёшей у двери стоит дежурная.
+    note: Дежурная сказала, что останется здесь, и попросила Тимура прикрыть дверь. Ты можешь побыть в классе.
     review:
       signals:
       - focus/remarka-ty-othodish-ot-lestnitsy
-      effect: Саша уже в классе. Между ним и Лёшей у двери стоит дежурная.
+      effect: Дежурная сказала, что останется здесь, и попросила Тимура прикрыть дверь. Ты можешь побыть в классе.
   focus-watch:
     mode: orange
     messages:
@@ -218,12 +217,10 @@ scenes:
     mode: orange
     messages:
     - remarka-sasha-oglyadyvaetsya
-    - timur-sash-u-nas-na
-    - sasha-aga-geografiya
     outcome:
     - positive
-    - Ребята разошлись перед уроком
-    note: Когда Саша сказал, что идёт на урок, Лёша освободил проход.
+    - Саша увидел Лёшу у окна и пошёл на урок
+    note: С площадки Саша сам увидел, что Лёша остался с ребятами.
   pressure-act-0-next-0:
     mode: orange
     messages:
@@ -253,5 +250,5 @@ cues:
   pressure/lyosha-eschyo-shag-udaryu: Лёша преградил проход и прямо пригрозил ударить.
   pressure-act-0/marina-sergeevna-sash-ya-pobudu: Ты успел окликнуть дежурную у лестницы. Когда от хлопка ты замер, она уже была рядом и осталась с тобой.
   alternative/ty-tim-mozhno-s-toboy: Проход уже свободен. Саша сам попросил Тимура побыть рядом до звонка.
-  observe/remarka-ty-othodish-ot-lestnitsy: Саша уже в классе. Между ним и Лёшей у двери стоит дежурная.
-  focus/remarka-ty-othodish-ot-lestnitsy: Саша уже в классе. Между ним и Лёшей у двери стоит дежурная.
+  observe/remarka-ty-othodish-ot-lestnitsy: Ты уже в кабинете с ребятами. С места, куда ты отошёл, видно дежурную в дверях.
+  focus/remarka-ty-othodish-ot-lestnitsy: Ты уже в кабинете с ребятами. С места, куда ты отошёл, видно дежурную в дверях.

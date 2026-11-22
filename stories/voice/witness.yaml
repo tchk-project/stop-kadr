@@ -60,20 +60,47 @@ scenes:
     - danya-o-sasha-tozhe-zatsenil
     - sistema-misha-pokinul-golosovoy-kanal
     - misha-sash-hot-ty-to-zachem
-    outcome:
-    - negative
-    - Миша вышел из голосового канала
-    note: 'Ты хотел разрядить обстановку. Даня решил, что ты смеёшься вместе с ним. Теперь шутка про «ключик» появилась и в текстовом чате. Мише можно ответить в личке: «Слышал. Зря я подхватил. Хочешь, сыграем в другом канале?»'
+    question: Миша написал тебе лично. Что ты сделаешь?
+    choices:
+      apologise: Отвечу Мише в личке, что зря подхватил шутку.
+      leave-message: Сейчас вернусь к раунду и оставлю сообщение без ответа.
     review:
       signals:
       - pressure/misha-dan-hvatit-menya-peredraznivat
-      effect: 'Ты хотел разрядить обстановку. Даня решил, что ты смеёшься вместе с ним. Теперь шутка про «ключик» появилась и в текстовом чате. Мише можно ответить в личке: «Слышал. Зря я подхватил. Хочешь, сыграем в другом канале?»'
+      effect: Ты повторил шутку в тексте после Мишиной просьбы остановиться. Миша вышел из голоса и спросил тебя об этом в личке.
       miss: true
+      repair: apologise
+      recovery: Ты ответил Мише лично и признал, что зря поддержал шутку. Миша сказал, что сейчас играть не хочет.
+  apologise:
+    mode: orange
+    messages:
+    - sasha-apologises-for-echo
+    - misha-asks-for-time
+    outcome:
+    - open
+    - Миша прочитал извинение и отложил игру
+    note: Ты признал свою часть в шутке. Миша уже вышел из голоса. В личке он сам решил, когда готов снова играть.
+    review:
+      signals:
+      - alternative/misha-sash-hot-ty-to-zachem
+      effect: Миша прочитал твоё извинение. На предложение доиграть он ответил, что сейчас не хочет.
+  leave-message:
+    mode: yellow
+    messages:
+    - sasha-leaves-message-unanswered
+    outcome:
+    - negative
+    - Миша вышел из голоса. Его вопрос пока без ответа
+    note: Даня подхватил твою шутку в тексте. Миша вышел из голосового канала и написал тебе лично. В этом раунде ответа от тебя он не получил.
+    review:
+      signals:
+      - alternative/misha-sash-hot-ty-to-zachem
+      effect: Ты вернулся к раунду без Миши. Его личное сообщение осталось без ответа.
   ignore:
     mode: white
     messages:
     - misha-sash-ty-v-tekste
-    question: Теперь ты знаешь ещё кое-что. Что сделаешь?
+    question: Миша спрашивает, будешь ли ты в тексте. Что ответишь?
     choices:
       stay: Переключиться на раунд и не отвечать.
       rejoin: Договориться о команде через текст.
@@ -81,7 +108,7 @@ scenes:
       miss: true
       signals:
       - pressure/misha-dan-hvatit-menya-peredraznivat
-      effect: 'После твоего решения разговор продолжился: «Саш, ты в тексте? В голос я больше не зайду.»'
+      effect: Миша сам сообщил, что в голосовой канал не вернётся. В тексте он всё ещё может с тобой договориться.
       repair: rejoin
       recovery: Миша выбрал текстовый чат.
   stay:
@@ -114,9 +141,9 @@ scenes:
     continuation: true
     question: Как продолжишь?
     choices:
-      calm-end: Посмотреть, что будет дальше
+      calm-end: Пойду в следующую комнату с командой.
       ask: Уточнить свой ход
-      calm-watch: Может, Даня и правда не расслышал. Послушаю следующую реплику.
+      calm-watch: Прислушаюсь, снова ли Даня попросит Мишу повторить это слово.
   calm-end:
     mode: yellow
     messages:
@@ -155,11 +182,11 @@ scenes:
     outcome:
     - positive
     - Команда продолжила игру
-    note: Даня прямо откликнулся на просьбу. Лёша вернулся к игре.
+    note: Команда прошла через дверь в следующую комнату. За этот ход Даня больше не повторял Мишино слово.
     review:
       signals:
       - observe/danya-ladno-mish-uslyshal-vsyo
-      effect: Даня прямо откликнулся на просьбу. Лёша вернулся к игре.
+      effect: Команда прошла через дверь в следующую комнату. За этот ход Даня больше не повторял Мишино слово.
   observe-watch:
     mode: orange
     messages:
@@ -194,11 +221,11 @@ scenes:
     outcome:
     - positive
     - Команда продолжила игру
-    note: Даня прямо откликнулся на просьбу. Лёша вернулся к игре.
+    note: Команда прошла через дверь в следующую комнату. За этот ход Даня больше не повторял Мишино слово.
     review:
       signals:
       - focus/danya-ladno-mish-uslyshal-vsyo
-      effect: Даня прямо откликнулся на просьбу. Лёша вернулся к игре.
+      effect: Команда прошла через дверь в следующую комнату. За этот ход Даня больше не повторял Мишино слово.
   focus-watch:
     mode: orange
     messages:
@@ -215,12 +242,12 @@ scenes:
   calm-watch:
     mode: orange
     messages:
-    - misha-otkryl-zahodim
+    - sasha-listens-at-door
     - sistema-komanda-pereshla-na-sleduyuschiy
     outcome:
     - positive
-    - Команда вернулась к игре
-    note: Даня уточнил слово один раз и вернулся к игре. Команда прошла через дверь.
+    - Даня заговорил про ход Миши в игре
+    note: На этот раз Даня ответил на то, что сделал Миша в игре. Повторять слово никто не попросил.
   pressure-act-1-next-0:
     mode: orange
     messages:
@@ -246,8 +273,9 @@ scenes:
       - pressure-act-1/moderator-igry-ya-v-komnate
       effect: 'Ты выключаешь микрофон. Чуть позже Миша сам пишет в командный чат: «Я этот раунд пропущу».'
 cues:
+  alternative/misha-sash-hot-ty-to-zachem: Миша спрашивает тебя о твоей шутке. Он уже просил перестать.
   pressure/misha-dan-hvatit-menya-peredraznivat: В голосовом слышна просьба Миши. Ребятам уже известно, хочет ли он продолжать эту шутку.
   pressure-act-1/moderator-igry-ya-v-komnate: Ты позвал модератора в нужную комнату. По тишине в наушниках ты мог понять только то, что ответа пока нет.
-  ignore/misha-sash-ty-v-tekste: Теперь к тебе обратились напрямую.
-  observe/danya-ladno-mish-uslyshal-vsyo: Даня прямо откликнулся на просьбу. Лёша вернулся к игре.
-  focus/danya-ladno-mish-uslyshal-vsyo: Даня прямо откликнулся на просьбу. Лёша вернулся к игре.
+  ignore/misha-sash-ty-v-tekste: Миша оставил открытым текстовый канал для игры вдвоём.
+  observe/danya-ladno-mish-uslyshal-vsyo: Ты слышал, что Даня пообещал больше не повторять слово Миши, а Лёша заговорил о двери.
+  focus/danya-ladno-mish-uslyshal-vsyo: Ты слышал, что Даня пообещал больше не повторять слово Миши, а Лёша заговорил о двери.

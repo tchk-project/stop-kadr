@@ -62,21 +62,36 @@ scenes:
     - vera-a-uzhe-pozvali-ya
     - timur-ya-dumal-dezhurnaya-uzhe
     - remarka-u-lestnitsy-vsyo-eschyo
-    outcome:
-    - negative
-    - У лестницы всё ещё нет взрослого
-    note: В чате каждый мог решить, что взрослого уже позвал кто-то другой. До Саши помощь не дошла. С безопасного места можно окликнуть конкретного взрослого и назвать лестницу, у которой угрожают.
+    question: Ты у двери класса. Кого можно позвать прямо отсюда?
+    choices:
+      call-after-chat: Окликну Марину Сергеевну с порога. Она дежурит у соседней двери.
     review:
       signals:
       - pressure/remarka-lyosha-vstayot-poperyok-prohoda
       - pressure/lyosha-eschyo-shag-udaryu
-      effect: В чате каждый мог решить, что взрослого уже позвал кто-то другой. До Саши помощь не дошла. С безопасного места можно окликнуть конкретного взрослого и назвать лестницу, у которой угрожают.
+      effect: Вера в другом конце школы, а Тимур думал, что дежурную уже позвали. Ты всё ещё видишь Сашу у лестницы.
       miss: true
+      repair: call-after-chat
+      recovery: После сообщения в чат ты окликнул дежурную с порога. Она подошла к лестнице, и Саша смог пройти.
+  call-after-chat:
+    mode: red
+    messages:
+    - ty-marina-sergeevna-sashe-u
+    - marina-sergeevna-slyshu-idu
+    - remarka-dezhurnaya-podhodit-lyosha-othodit
+    outcome:
+    - positive
+    - Дежурная подошла к лестнице, и Лёша освободил проход
+    note: В чате ещё не знали, кто позвал взрослого. С порога ты обратился к Марине Сергеевне по имени и назвал лестницу. Ты видел, как она подошла к Саше.
+    review:
+      signals:
+      - alternative/remarka-u-lestnitsy-vsyo-eschyo
+      effect: Дежурная отозвалась на твой оклик. Когда она подошла, Лёша отступил.
   ignore:
     mode: white
     messages:
     - timur-kost-dezhurnaya-tebya-vidit
-    question: Теперь ты знаешь ещё кое-что. Что сделаешь?
+    question: Тимур просит окликнуть дежурную. Что сделаешь от двери класса?
     choices:
       stay: Пройти в класс. Кто ближе, тот позовёт.
       rejoin: Окликнуть дежурную от двери кабинета.
@@ -85,22 +100,38 @@ scenes:
       signals:
       - pressure/remarka-lyosha-vstayot-poperyok-prohoda
       - pressure/lyosha-eschyo-shag-udaryu
-      effect: 'После твоего решения разговор продолжился: «Кость, дежурная тебя видит! Позови её, он Сашу не пускает.»'
+      effect: Тимур ещё видит, как Лёша закрывает Саше проход. С порога кабинета можно окликнуть дежурную.
       repair: rejoin
       recovery: Дежурная услышала, куда идти.
   stay:
     mode: white
     messages:
     - timur-marina-sergeevna-k-lestnitse
-    outcome:
-    - mixed
-    - Дежурную окликнул Тимур
-    note: Костя прошёл дальше. Тимур сам позвал дежурную. Пока не видно, услышала ли она и что сделал Лёша.
+    - kostya-hears-no-answer
+    question: Ты в классе. Как позвать помощь, если ответа дежурной пока не слышно?
+    choices:
+      tell-teacher: Скажу учителю у доски, где Саша и чем ему угрожали.
     review:
       miss: true
       signals:
       - ignore/timur-kost-dezhurnaya-tebya-vidit
       effect: Костя прошёл дальше. Тимур сам позвал дежурную. Пока не видно, услышала ли она и что сделал Лёша.
+      repair: tell-teacher
+      recovery: Из класса ты рассказал о Саше учителю географии. Учитель пошёл к лестнице.
+  tell-teacher:
+    mode: red
+    messages:
+    - kostya-tells-geography-teacher
+    - teacher-goes-to-stairs
+    - kostya-sees-teacher-at-stairs
+    outcome:
+    - positive
+    - Учитель географии подошёл к Саше
+    note: Ты остался в классе и рассказал другому взрослому, что слышал у лестницы. С порога ты видел, как учитель подошёл и Саша смог пройти.
+    review:
+      signals:
+      - stay/kostya-hears-no-answer
+      effect: Учитель ответил тебе в классе. Ты увидел, как у лестницы освободился проход.
   rejoin:
     mode: red
     messages:
@@ -118,9 +149,9 @@ scenes:
     continuation: true
     question: Как продолжишь?
     choices:
-      calm-end: Посмотреть, что будет дальше
+      calm-end: Послушаю, о чём ребята говорят по дороге.
       ask: Спросить Сашу, пойдёт ли он с тобой
-      calm-watch: Саша прошёл. Ещё немного присмотрюсь к тому, что происходит у лестницы.
+      calm-watch: Пойду на географию. Надо найти в атласе карту к уроку.
   calm-end:
     mode: yellow
     messages:
@@ -160,11 +191,11 @@ scenes:
     outcome:
     - positive
     - Саша в классе вместе с ребятами и дежурной
-    note: Саша уже в классе. Между ним и Лёшей у двери стоит дежурная.
+    note: Дежурная решила остаться в классе и попросила Тимура прикрыть дверь. Саша был рядом с ребятами.
     review:
       signals:
       - observe/remarka-sasha-othodit-ot-lestnitsy
-      effect: Саша уже в классе. Между ним и Лёшей у двери стоит дежурная.
+      effect: Дежурная решила остаться в классе и попросила Тимура прикрыть дверь. Саша был рядом с ребятами.
   observe-watch:
     mode: orange
     messages:
@@ -200,11 +231,11 @@ scenes:
     outcome:
     - positive
     - Саша в классе вместе с ребятами и дежурной
-    note: Саша уже в классе. Между ним и Лёшей у двери стоит дежурная.
+    note: Дежурная решила остаться в классе и попросила Тимура прикрыть дверь. Саша был рядом с ребятами.
     review:
       signals:
       - focus/remarka-sasha-othodit-ot-lestnitsy
-      effect: Саша уже в классе. Между ним и Лёшей у двери стоит дежурная.
+      effect: Дежурная решила остаться в классе и попросила Тимура прикрыть дверь. Саша был рядом с ребятами.
   focus-watch:
     mode: orange
     messages:
@@ -219,14 +250,13 @@ scenes:
       - focus/remarka-sasha-othodit-ot-lestnitsy
       effect: Ты рассказал, что сам слышал у лестницы. Дежурная взялась позвать классного руководителя.
   calm-watch:
-    mode: orange
+    mode: white
     messages:
-    - timur-sash-u-nas-na
-    - sasha-aga-geografiya
+    - kostya-goes-to-class
     outcome:
     - positive
-    - Ребята разошлись перед уроком
-    note: Когда Саша сказал, что идёт на урок, Лёша освободил проход.
+    - Костя приготовился к уроку
+    note: Саша уже прошёл к лестнице, а Лёша остался у окна. Костя занялся своим атласом.
   pressure-act-0-next-0:
     mode: orange
     messages:
@@ -252,9 +282,11 @@ scenes:
       - pressure-act-0/marina-sergeevna-sash-ya-pobudu
       effect: Ты проходишь в класс. С порога видишь, как Саша и дежурная садятся на скамейку.
 cues:
+  alternative/remarka-u-lestnitsy-vsyo-eschyo: В чате ещё никто не подтвердил, что позвал дежурную.
+  stay/kostya-hears-no-answer: Рядом с тобой ещё один взрослый, которого можно позвать прямо из класса.
   pressure/remarka-lyosha-vstayot-poperyok-prohoda: Дежурная у соседней двери. Ей можно сказать, где нужна помощь.
   pressure/lyosha-eschyo-shag-udaryu: Лёша преградил проход и прямо пригрозил ударить.
   pressure-act-0/marina-sergeevna-sash-ya-pobudu: Дежурная пришла, когда ты её позвал. Ты мог видеть, что Саша остановился, и оставить ему время ответить.
-  ignore/timur-kost-dezhurnaya-tebya-vidit: Теперь к тебе обратились напрямую.
-  observe/remarka-sasha-othodit-ot-lestnitsy: Саша уже в классе. Между ним и Лёшей у двери стоит дежурная.
-  focus/remarka-sasha-othodit-ot-lestnitsy: Саша уже в классе. Между ним и Лёшей у двери стоит дежурная.
+  ignore/timur-kost-dezhurnaya-tebya-vidit: Тимур назвал дежурную у двери, которая сейчас видит Костю.
+  observe/remarka-sasha-othodit-ot-lestnitsy: Ты видел, как Саша вошёл в класс и дежурная заняла место у двери.
+  focus/remarka-sasha-othodit-ot-lestnitsy: Ты видел, как Саша вошёл в класс и дежурная заняла место у двери.

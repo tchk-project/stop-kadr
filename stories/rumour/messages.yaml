@@ -133,7 +133,8 @@ vera-ya-tut-hochesh-zavtra:
   text: Я тоже тут. Хочешь, завтра до тренировки вместе дойдём?
 remarka-na-etom-dubl-zakanchivaetsya:
   speaker: Ремарка
-  text: На этом дубль заканчивается.
+  channel: scene
+  text: Ты закрываешь чат команды на сегодня. Сообщение Веры останется в переписке.
 vera-stop-v-skrine-tol-ko:
   speaker: Вера
   channel: lichnaya-perepiska-s-veroy
@@ -175,3 +176,14 @@ anya-asks-coach-about-dms:
 coach-confirms-contact:
   speaker: Тренер
   text: Да, Ань. Пиши прямо мне.
+anya-takes-time:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-veroy
+  text: Вер, спасибо. Я пока телефон отложу.
+vera-agrees-to-pause:
+  speaker: Вера
+  text: Хорошо. Спишемся, когда захочешь.
+timur-asks-forwarding:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-kostey
+  text: Кость, а кому ты уже переслал?

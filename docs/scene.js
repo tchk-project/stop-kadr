@@ -29,7 +29,7 @@ async function launchAttentionScene() {
     const script = document.createElement('script');
     script.onload = resolve;
     script.onerror = () => reject(new Error('Не удалось загрузить историю '+episode.id));
-    script.src = './game/stories/'+episode.id+'.js?v=review-3';
+    script.src = './game/stories/'+episode.id+'.js?v=audit-4';
     document.head.append(script);
   });
   if (document.readyState !== 'complete') {
@@ -43,7 +43,7 @@ async function launchAttentionScene() {
 function playScene() {
   const route = prepareRoute(storyData,role);
   const pages = new Map(Object.entries(route.story).map(([id,data]) => [id,{
-    ...data, title:activeStory.title, links:data.links.map(([id,label]) => ({id,label})),
+    ...data, title:activeStory.title, links:data.links.map(([id,label,parts]) => ({id,label,parts})),
     outcome:data.outcome && {kind:data.outcome[0],headline:data.outcome[1]}
   }]));
   const shapes = {
@@ -147,7 +147,11 @@ function playScene() {
         const decision = pages.get(path[i-1]).links.find(link => link.id === id);
         const marker = document.createElement('div');
         marker.className = 'choice-mark';
-        marker.append(element('p', '', data.continuation ? 'Возможное продолжение · '+data.continuation : 'Твой выбор · '+decision.label));
+        const answer = element('p', '', 'Твой выбор · ');
+        const parts = decision.parts;
+        if (parts?.quote) answer.append(parts.before, element('span','cue-words',parts.quote), parts.after);
+        else answer.append(decision.label);
+        marker.append(answer);
         const parent = pages.get(path[i-1]);
         const before = attentionAtLine(parent,parent.lines.length-1);
         const label = before === data.mode ? attentionModes[data.mode].name : attentionModes[before].name+' → '+attentionModes[data.mode].name;

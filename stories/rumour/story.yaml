@@ -37,3 +37,6 @@ channels:
   lichnaya-perepiska-s-timurom:
     kind: private
     title: Личная переписка с Тимуром
+  scene:
+    kind: scene
+    title: ''

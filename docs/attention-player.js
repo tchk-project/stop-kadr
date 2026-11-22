@@ -5,8 +5,9 @@ async function playAttentionPilot(ui) {
     freeze, question, outcome, choices, controls, status, motionAllowed} = ui;
   const {story,cues,decisions} = ui.route;
   thread.className = 'chat-transcript';
-  const guide = attentionGuide(document.querySelector('.panel'), document.body.hasAttribute('data-preview') ? 'stop-kadr.editor.preview.cooper' : undefined);
-  const speed = 4;
+  const preview = document.body.hasAttribute('data-preview');
+  const guide = attentionGuide(document.querySelector('.panel'), preview ? 'stop-kadr.editor.preview.cooper' : undefined, activeStory, role);
+  const speed = 3;
   const bar = document.querySelector('.mode-bar');
   const levelBadge = [bar.querySelector('.signal'), bar.querySelector('.level-name')];
   const dropFrames = [
@@ -17,7 +18,10 @@ async function playAttentionPilot(ui) {
   const direction = element('span', 'tape-direction');
   direction.setAttribute('role', 'status');
   const skip = button('dismiss', 'Показать сразу', () => {
-    if (busy) run?.abort();
+    if (busy) {
+      skipped = true;
+      run?.abort();
+    } else if (skipReadsNew) readFirstNew();
     else focusForReading(promptTarget);
   }, 'play');
   skip.classList.add('tape-skip');
@@ -26,23 +30,24 @@ async function playAttentionPilot(ui) {
   storyExit.title = 'Перейти к выбору истории';
   const playback = element('nav','tape-controls');
   playback.setAttribute('aria-label','Управление показом');
+  playback.tabIndex = -1;
   playback.append(direction, skip, storyExit);
   bar.append(playback);
   const jump = button('forward','К ответам',() => focusForReading(promptTarget),'play');
   jump.classList.add('prompt-jump');
   jump.hidden = true;
   bar.after(jump);
-  const readNew = button('rewind','Прочитать новые сообщения',() => {
+  function readFirstNew() {
     if (!firstNew) return;
     firstNew.append(jump);
     focusForReading(firstNew);
     updateJump();
-  });
+  }
+  const readNew = button('rewind','Прочитать новые сообщения',readFirstNew);
   readNew.classList.add('read-new');
   readNew.hidden = true;
   freeze.before(readNew);
   const review = element('section', 'decision-review');
-  review.tabIndex = -1;
   review.setAttribute('aria-label', 'Разбор решений');
   choices.before(review);
   const frames = [{opacity:0, transform:'translateY(6px)'}, {opacity:1, transform:'translateY(0)'}];
@@ -50,7 +55,9 @@ async function playAttentionPilot(ui) {
   let view;
   let promptTarget;
   let firstNew;
+  let skipReadsNew = false;
   let busy = false;
+  let skipped = false;
   skip.addEventListener('blur', () => { if (!busy) skip.hidden = true; });
   heading.textContent = pages.get('start').title;
 
@@ -254,6 +261,10 @@ async function playAttentionPilot(ui) {
       if (!instant) await animateRow(row, true, speed, task);
       if (run !== task) return;
       const block = row.parentElement;
+      if (row.contains(document.activeElement)) {
+        playback.focus({preventScroll:true});
+        ui.setFollow(true);
+      }
       row.remove();
       if (!block.querySelector('.item')) block.remove();
       const last = rows.at(-1);
@@ -325,6 +336,7 @@ async function playAttentionPilot(ui) {
   function showReview(stops, index) {
     const stop = stops[index];
     const title = element('h2', '', stops.length === 1 ? 'Остановка на твоём выборе' : 'Остановка '+(index+1)+' из '+stops.length);
+    title.tabIndex = -1;
     const list = element('ul', 'signal-list');
     for (const key of stop.signals) {
       const [quote, why] = cues[key];
@@ -337,6 +349,14 @@ async function playAttentionPilot(ui) {
     review.append(title, list, element('p','chosen-answer','Твой ответ · '+stop.answer),
       element('p','',stop.effect));
     if (stop.recovery) review.append(recoveryNote(stop,view.path));
+    else if (stop.continuation.length) {
+      const later = element('details','review-continuation');
+      later.append(element('summary','','Что произошло дальше'));
+      for (const {answer,effect} of stop.continuation) {
+        later.append(element('p','chosen-answer',answer), element('p','',effect));
+      }
+      review.append(later);
+    }
     review.hidden = false;
     if (stops.length > 1) {
       const nav = element('div','review-steps');
@@ -347,13 +367,11 @@ async function playAttentionPilot(ui) {
       nav.append(previous,next);
       review.append(nav);
     }
-    let retry = stop.parent;
-    while (pages.get(retry).links.length < 2 && pages.get(retry).parent) retry = pages.get(retry).parent;
-    const replay = button('rewind',retry === stop.parent ? 'Попробовать другой ответ' : 'Вернуться к выбору ответа',() => navigate(retry));
+    const replay = button('rewind','Попробовать другой ответ',() => navigate(stop.parent));
     replay.classList.add('review-primary');
     choices.append(replay);
     appendNextStory();
-    return review;
+    return title;
   }
 
   function recoveryNote(stop, path) {
@@ -417,6 +435,11 @@ async function playAttentionPilot(ui) {
       const name = {Папа:'папа Леры', Тренер:'тренер'}[other.name] || other.name;
       controls.append(button('dismiss','Посмотреть глазами '+other.viewpoint,() => leave(replayUrl,'Теперь ты — '+name),'play'));
       appendNextStory();
+      if (!preview) {
+        const reader = element('a','story-reader','Читать этот момент текстом');
+        reader.href = './read-story.html?case='+encodeURIComponent(activeStory.id)+'#'+role+'-'+view.id;
+        controls.append(reader);
+      }
     } else {
       freeze.hidden = false;
       question.textContent = data.question || (document.body.hasAttribute('data-preview') && !data.links.length ? 'Продолжение ещё не написано.' : '');
@@ -428,10 +451,14 @@ async function playAttentionPilot(ui) {
         const next = pages.get(id);
         option.dataset.code = next.mode;
         option.classList.add('coded');
-        option.append(element('span','code-tag',transitionLabel(attentionAtLine(data,data.lines.length-1),next.mode)));
+        const tag = element('span','code-tag');
+        const colour = element('span','',attentionModes[next.mode].name);
+        colour.setAttribute('aria-hidden','true');
+        tag.append(colour,element('span','sr',transitionLabel(attentionAtLine(data,data.lines.length-1),next.mode)));
+        option.append(tag);
         choices.append(option);
       }
-      guide.annotate(choices);
+      guide.annotate(choices, data.mode);
       if (path.length > 2) controls.append(button('rewind','На шаг назад',() => navigate(data.parent)));
       appendNextStory();
     }
@@ -449,6 +476,13 @@ async function playAttentionPilot(ui) {
     }, {once:true});
     old?.abort();
     busy = true;
+    skipped = false;
+    const focused = document.activeElement;
+    const replacingFocus = focused.closest('.choices,.playback-controls,.decision-review,.question,.outcome,.read-new,.prompt-jump');
+    skipReadsNew = false;
+    skip.lastChild.textContent = 'Показать сразу';
+    skip.hidden = false;
+    if (replacingFocus) playback.focus({preventScroll:true});
     promptTarget = null;
     firstNew = null;
     readNew.hidden = true;
@@ -460,11 +494,9 @@ async function playAttentionPilot(ui) {
     clearSignals();
     review.replaceChildren();
     review.hidden = true;
-    skip.lastChild.textContent = 'Показать сразу';
-    skip.hidden = false;
     direction.textContent = '';
     scene.setAttribute('aria-busy','true');
-    ui.setFollow(document.activeElement === document.body);
+    ui.setFollow(Boolean(replacingFocus) || focused === document.body);
     return run;
   }
 
@@ -497,6 +529,7 @@ async function playAttentionPilot(ui) {
 
   async function render(next, mode) {
     const opening = !view;
+    const switchingStops = view?.id === next.id && view.index != null && next.index != null;
     const task = begin();
     if (opening) ui.setFollow(false);
     view = next;
@@ -510,7 +543,7 @@ async function playAttentionPilot(ui) {
     if (stop) {
       const end = items.findIndex(item => item.key === stop.id+'-choice')+1;
       const first = items.findIndex(item => stop.signals.includes(item.ref));
-      if (first >= 0 && thread.querySelectorAll('.item').length > first) {
+      if (!switchingStops && first >= 0 && thread.querySelectorAll('.item').length > first) {
         await moveTo(items.slice(0,first),speed,task);
         if (run !== task) return;
       }
@@ -529,15 +562,16 @@ async function playAttentionPilot(ui) {
     const canRead = !stop && Boolean(firstNew);
     readNew.hidden = !canRead;
     jump.lastChild.textContent = stop ? 'К разбору' : data.outcome ? 'К итогу' : 'К ответам';
-    skip.hidden = document.activeElement !== skip;
-    if (!skip.hidden) skip.lastChild.textContent = jump.lastChild.textContent;
     const announcement = stop ? review.querySelector('h2').textContent : data.outcome ? data.outcome.headline : 'Стоп-кадр. '+data.question;
     status.textContent = (canRead ? 'Появились новые сообщения. ' : '')+announcement;
-    if (!opening && mode !== 'restore' && ui.shouldFollow()) {
+    const skippedToReview = stop && skipped && document.activeElement === skip;
+    if (!opening && mode !== 'restore' && (ui.shouldFollow() || skippedToReview)) {
       const target = canRead ? readNew : promptTarget;
-      scrollTo(target);
-      target.focus({preventScroll:true});
+      focusForReading(target);
     }
+    skip.hidden = document.activeElement !== skip;
+    skipReadsNew = !opening && canRead;
+    if (!skip.hidden) skip.lastChild.textContent = skipReadsNew ? readNew.textContent : jump.lastChild.textContent;
     updateJump();
     if (!task.signal.aborted && !stop && data.question) ui.flashFreeze();
     scene.removeAttribute('aria-busy');

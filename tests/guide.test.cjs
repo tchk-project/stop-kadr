@@ -2,9 +2,10 @@ const {test} = require('node:test');
 const assert = require('node:assert/strict');
 const {readFileSync} = require('node:fs');
 const vm = require('node:vm');
+const {build,catalog} = require('./game-helper.cjs');
 const source = readFileSync(__dirname+'/../docs/attention-guide.js','utf8');
 
-function lesson(storage) {
+function lesson(storage, story, perspective) {
   const observed = new Set();
   function node(tag, className, textContent) {
     return {
@@ -27,7 +28,7 @@ function lesson(storage) {
   const context = vm.createContext({localStorage:storage,IntersectionObserver:Observer,element:node,
     attentionModes:{white:{name:'Белый'},yellow:{name:'Жёлтый'},orange:{name:'Оранжевый'},red:{name:'Красный'},black:{name:'Чёрный'}}});
   vm.runInContext(source,context);
-  const guide = context.attentionGuide(panel);
+  const guide = context.attentionGuide(panel, undefined, story, perspective);
   function options(...colours) {
     const el = node('nav','choices');
     for (const colour of colours) {
@@ -73,4 +74,38 @@ test('blocked storage still permits dismissing the intro and reading a spontaneo
   const repeat = node();
   guide.explainReaction(repeat);
   assert.deepEqual(repeat.children.map(el => el.textContent),['Чёрный · я замер']);
+});
+
+test('medical colour help follows all eight roles before and after the call', () => {
+  const characters = {
+    speech:{witness:'Сашу', self:'Вере'},
+    vision:{witness:'Веру', self:'Тимура'},
+    chest:{witness:'папы', self:'Леру'},
+    abdomen:{witness:'Мише', self:'Тимура'}
+  };
+  for (const [id, people] of Object.entries(characters)) {
+    const meta = catalog.find(entry => entry.id === id);
+    for (const [role, person] of Object.entries(people)) {
+      const {story} = build(id, role);
+      const {guide,options} = lesson({getItem:() => '["yellow"]'}, meta, role);
+      function explanation(step, colour) {
+        const node = story[step];
+        const container = options(...node.links.map(([next]) => story[next].mode));
+        guide.annotate(container, node.mode);
+        const paragraphs = container.children.at(-1).children;
+        return paragraphs.find(el => el.dataset.code === colour).children[1];
+      }
+      for (const step of ['pressure','wait']) {
+        const help = explanation(step, 'red');
+        assert.ok(help.includes(person), id+'/'+role+'/'+step);
+        assert.match(help, /103|112/);
+        assert.match(help, /скорую/);
+      }
+      assert.match(explanation('pressure','yellow'), /помощь нужна сразу/);
+      assert.doesNotMatch(explanation('calm','yellow'), /скору|диспетчер|звонок/i);
+      for (const step of ['call','call-now']) {
+        assert.match(explanation(step,'red'), /Диспетчер уже на связи/);
+      }
+    }
+  }
 });

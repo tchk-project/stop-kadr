@@ -76,7 +76,7 @@ scenes:
     mode: white
     messages:
     - anya-ler-menya-uzhe-vtoroy
-    question: Теперь ты знаешь ещё кое-что. Что сделаешь?
+    question: Аню снова добавили в беседу. Как ответишь на её просьбу?
     choices:
       stay: Отложить ответ до конца матча.
       rejoin: Ответить в турнирном чате по просьбе Ани.
@@ -85,7 +85,7 @@ scenes:
       signals:
       - pressure/anya-ya-sama-vyshla-ot
       - pressure/kostya-an-nas-pyatero-na
-      effect: 'После твоего решения разговор продолжился: «Лер, меня уже второй раз вернули. Ты можешь им сказать, что я точно не играю?»'
+      effect: Аню снова вернули в беседу, и она попросила тебя передать ребятам её ответ.
       repair: rejoin
       recovery: Костя ищет другого игрока.
   stay:
@@ -118,9 +118,9 @@ scenes:
     continuation: true
     question: Как продолжишь?
     choices:
-      calm-end: Посмотреть, что будет дальше
+      calm-end: Дочитаю, кто захочет сыграть.
       ask: Предложить себя на турнир
-      calm-watch: Дочитаю, кто сыграет шестым.
+      calm-watch: Состав посмотрю утром. Пора спать.
   calm-end:
     mode: yellow
     messages:
@@ -159,13 +159,13 @@ scenes:
     outcome:
     - positive
     - Аня закончила разговор о турнире
-    note: Костя увидел прошлую просьбу. Место в составе он предложил другому игроку.
+    note: В чате появилось сообщение о выходе Ани. Лера не стала звать её обратно.
     review:
       signals:
       - observe/kostya-an-vizhu-vcherashnee-bol-she
-      effect: Костя увидел прошлую просьбу. Место в составе он предложил другому игроку.
+      effect: В чате появилось сообщение о выходе Ани. Лера не стала звать её обратно.
   observe-watch:
-    mode: orange
+    mode: yellow
     messages:
     - sistema-anya-vyshla-iz-besedy
     - lera-wishes-good-luck
@@ -173,11 +173,11 @@ scenes:
     outcome:
     - positive
     - Лера пожелала Ане удачи в личке
-    note: Аня вышла из игры и сама закончила личный разговор, когда захотела спать.
+    note: Аня вышла из беседы. Лере она ответила в личке и сама попрощалась, когда захотела спать.
     review:
       signals:
       - observe/kostya-an-vizhu-vcherashnee-bol-she
-      effect: Аня вышла из игры и сама закончила личный разговор, когда захотела спать.
+      effect: Аня вышла из беседы. Лере она ответила в личке и сама попрощалась, когда захотела спать.
   focus:
     mode: orange
     messages:
@@ -199,13 +199,13 @@ scenes:
     outcome:
     - positive
     - Аня закончила разговор о турнире
-    note: Костя увидел прошлую просьбу. Место в составе он предложил другому игроку.
+    note: В чате появилось сообщение о выходе Ани. Лера не стала звать её обратно.
     review:
       signals:
       - focus/kostya-an-vizhu-vcherashnee-bol-she
-      effect: Костя увидел прошлую просьбу. Место в составе он предложил другому игроку.
+      effect: В чате появилось сообщение о выходе Ани. Лера не стала звать её обратно.
   focus-watch:
-    mode: orange
+    mode: yellow
     messages:
     - sistema-anya-vyshla-iz-besedy
     - lera-wishes-good-luck
@@ -213,23 +213,22 @@ scenes:
     outcome:
     - positive
     - Лера пожелала Ане удачи в личке
-    note: Аня вышла из игры и сама закончила личный разговор, когда захотела спать.
+    note: Аня вышла из беседы. Лере она ответила в личке и сама попрощалась, когда захотела спать.
     review:
       signals:
       - focus/kostya-an-vizhu-vcherashnee-bol-she
-      effect: Аня вышла из игры и сама закончила личный разговор, когда захотела спать.
+      effect: Аня вышла из беседы. Лере она ответила в личке и сама попрощалась, когда захотела спать.
   calm-watch:
-    mode: orange
+    mode: white
     messages:
-    - sistema-anya-vyshla-iz-besedy
-    - danya-ya-s-vami-kuda
+    - lera-switches-off
     outcome:
     - positive
-    - Аня вышла из беседы
-    note: Костя принял объяснение. На турнир можно позвать тех, кто сам хочет сыграть.
+    - Лера отложила телефон до утра
+    note: Костя уже ответил, что поищет другого игрока. Лера могла заняться своим вечером.
 cues:
   pressure/anya-ya-sama-vyshla-ot: Аня объяснила, что вышла сама.
   pressure/kostya-an-nas-pyatero-na: После её просьбы Костя снова добавил Аню ради команды.
-  ignore/anya-ler-menya-uzhe-vtoroy: Теперь к тебе обратились напрямую.
-  observe/kostya-an-vizhu-vcherashnee-bol-she: Костя увидел прошлую просьбу. Место в составе он предложил другому игроку.
-  focus/kostya-an-vizhu-vcherashnee-bol-she: Костя увидел прошлую просьбу. Место в составе он предложил другому игроку.
+  ignore/anya-ler-menya-uzhe-vtoroy: Аня сама попросила передать команде, что играть не будет.
+  observe/kostya-an-vizhu-vcherashnee-bol-she: Костя признал, что Аня уже просила её не добавлять, и сообщил, что позвал Даню.
+  focus/kostya-an-vizhu-vcherashnee-bol-she: Костя признал, что Аня уже просила её не добавлять, и сообщил, что позвал Даню.
