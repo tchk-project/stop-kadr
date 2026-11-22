@@ -81,14 +81,14 @@ vera-an-mne-vot-takoy:
     kind: image
     src: ./assets/chat-fragment.webp
     alt: 'Фрагмент переписки. Аня: «С ними я точно больше не пойду». 18:42. Соседние сообщения обрезаны.'
-    caption: Ань, мне вот такой кусок прислали. Тут про нашу команду?
+    caption: Ань, мне прислали [[одну фразу без соседних сообщений]]. Тут про нашу команду?
 ty-ya-vpervye-vizhu-etot:
   speaker: Ты
   text: Я впервые вижу этот скрин.
 ty-tim-mne-uzhe-pishut:
   speaker: Ты
   channel: lichnaya-perepiska-s-timurom
-  text: Тим, мне уже пишут гадости. У меня скрин с одной фразой. Ты знаешь, где его выложили?
+  text: Тим, [[мне уже пишут гадости]]. У меня скрин с одной фразой. Ты знаешь, где его выложили?
 vera-ya-uzhe-reshila-chto:
   speaker: Вера
   channel: lichnaya-perepiska-s-veroy

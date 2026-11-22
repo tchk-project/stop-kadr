@@ -171,7 +171,7 @@ scenes:
     - До кабинета ребята идут вместе
     note: Разойтись после спора удалось. Теперь можно вместе дойти до кабинета.
   observe:
-    mode: orange
+    mode: red
     messages:
     - ty-sash-syuda-mozhno-dver
     - remarka-sasha-othodit-ot-lestnitsy
@@ -183,7 +183,7 @@ scenes:
       signals:
       - pressure/remarka-lyosha-vstayot-poperyok-prohoda
       - pressure/lyosha-eschyo-shag-udaryu
-      effect: Саша уже в классе. Между ним и Лёшей у двери стоит дежурная.
+      effect: Ты показал Саше, куда можно уйти от Лёши. Он вошёл в открытый класс, и дежурная встала в дверях.
   observe-ease:
     mode: yellow
     messages:

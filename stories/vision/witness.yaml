@@ -48,9 +48,9 @@ scenes:
       signals:
       - pressure/marina-sergeevna-stranno-vot-tol-ko
       miss: true
-      effect: Внезапное двоение и потеря равновесия могут быть признаками инсульта даже при обычной речи. Каждый из этих признаков сам по себе требует срочной оценки. Ожидание отложило вызов.
+      effect: Марина Сергеевна сказала, что буквы больше не двоятся. Пока вы ждали, никто не позвонил в скорую.
       repair: call-now
-      recovery: После этого скорую всё-таки вызвали.
+      recovery: Ты набрал 112 и передал слова Марины Сергеевны о том, что двоение уже прошло.
   call:
     mode: red
     messages:
@@ -64,7 +64,7 @@ scenes:
     review:
       signals:
       - pressure/marina-sergeevna-stranno-vot-tol-ko
-      effect: Вызов 112 принят. Внезапное двоение и потеря равновесия могут быть признаками инсульта даже при обычной речи. Каждый из этих признаков сам по себе требует срочной оценки.
+      effect: Диспетчер записал адрес школы. Он услышал, что Марина Сергеевна сказала про двоение и как она у тебя на глазах пошатнулась.
   call-time:
     mode: red
     messages:
@@ -77,7 +77,7 @@ scenes:
     review:
       signals:
       - call/dispetcher-zapisal-adres-shkoly-i
-      effect: Диспетчер получил время, которое участники действительно помнят.
+      effect: Диспетчер узнал, что в 12:25 вы ещё вешали афишу, а сразу после этого Марина Сергеевна пошатнулась.
   delegate:
     mode: red
     messages:
@@ -86,17 +86,17 @@ scenes:
     - vera-u-uchitel-nitsy-vnezapno-dvoitsya
     - remarka-dispetcheru-nazyvayut-gorod-ulitsu
     - dispetcher-zapisal-adres-shkoly-i
-    question: Как поможешь передать время звонящему?
+    question: Что подскажешь Вере?
     choices:
-      delegate-time: Напомню, когда всё было как обычно.
+      delegate-time: Скажу ей, когда мы с Мариной Сергеевной вешали афишу.
     review:
       signals:
       - pressure/marina-sergeevna-stranno-vot-tol-ko
-      effect: Рядом с тобой набрали 112. Внезапное двоение и потеря равновесия могут быть признаками инсульта даже при обычной речи. Каждый из этих признаков сам по себе требует срочной оценки.
+      effect: Вера дозвонилась до диспетчера и назвала адрес школы. Ты остался у скамьи с Мариной Сергеевной.
   delegate-time:
     mode: red
     messages:
-    - ty-my-kak-raz-veshali
+    - timur-tells-vera-time
     - vera-v-12-25-my-veshali
     - dispetcher-brigada-napravlena-ostavaytes-na
     outcome:
@@ -106,7 +106,7 @@ scenes:
     review:
       signals:
       - delegate/dispetcher-zapisal-adres-shkoly-i
-      effect: Диспетчер получил время, которое участники действительно помнят.
+      effect: Вера передала диспетчеру время с твоих слов. Диспетчер подтвердил, что бригаду направили.
   call-now:
     mode: red
     messages:
@@ -121,7 +121,7 @@ scenes:
     review:
       signals:
       - wait/remarka-marina-sergeevna-sidit-na
-      effect: Вызов 112 принят. Внезапное двоение и потеря равновесия могут быть признаками инсульта даже при обычной речи. Каждый из этих признаков сам по себе требует срочной оценки.
+      effect: Диспетчер узнал от тебя и о внезапной потере равновесия, и о том, что, по словам Марины Сергеевны, двоение прошло.
   call-now-time:
     mode: red
     messages:
@@ -134,7 +134,7 @@ scenes:
     review:
       signals:
       - call-now/dispetcher-zapisal-adres-shkoly-i
-      effect: Диспетчер получил время, которое участники действительно помнят.
+      effect: Диспетчер узнал, что в 12:25 вы ещё вешали афишу, а сразу после этого Марина Сергеевна пошатнулась.
 cues:
   pressure/marina-sergeevna-stranno-vot-tol-ko: Внезапное двоение и потеря равновесия могут быть признаками инсульта даже при обычной речи. Каждый из этих признаков сам по себе требует срочной оценки.
   wait/remarka-marina-sergeevna-sidit-na: Даже если симптомы прошли или ослабли, вызов скорой по-прежнему нужен немедленно.

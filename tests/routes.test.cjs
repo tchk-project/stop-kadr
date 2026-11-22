@@ -21,8 +21,11 @@ function assertVisibleCue(story,cues,path,stop,ref) {
 for (const id of ids) for (const role of ['witness','self']) {
   test(id+' / '+role+' — both takes, all endings, visible signals and retry points',() => {
     const {story,cues,decisions} = build(id,role);
-    // The same external event can follow different conscious readings of it.
-    assert.notEqual(story.observe.mode,story.focus.mode);
+    // During a physical threat, both ways out respond to the same immediate danger.
+    const sameThreat = id === 'stairs' || (id === 'dance' && role === 'self');
+    const comparison = sameThreat ? 'alternative' : 'observe';
+    assert.notEqual(story[comparison].mode,story.focus.mode);
+    if (sameThreat) assert.equal(story.observe.mode,story.focus.mode);
     const dialogue = lines => lines.map(({parts,speaker,media})=>[speaker,parts?.text,media?.src]);
     assert.notEqual(decisions.observe.effect,decisions.focus.effect);
     for (const key of ['observe','focus']) {

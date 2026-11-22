@@ -135,7 +135,7 @@ scenes:
     - До кабинета ребята идут вместе
     note: Разойтись после спора удалось. Теперь можно вместе дойти до кабинета.
   observe:
-    mode: orange
+    mode: red
     messages:
     - remarka-ty-othodish-ot-lestnitsy
     question: Ты в классе с ребятами. Чего тебе хочется?
@@ -146,7 +146,7 @@ scenes:
       signals:
       - pressure/remarka-lyosha-vstayot-poperyok-prohoda-2
       - pressure/lyosha-eschyo-shag-udaryu
-      effect: Саша уже в классе. Между ним и Лёшей у двери стоит дежурная.
+      effect: Лёша пригрозил ударить. Ты отошёл от лестницы в класс, и дежурная встала у двери.
   observe-ease:
     mode: yellow
     messages:
@@ -177,8 +177,8 @@ scenes:
     messages:
     - sasha-invites-timur
     - timur-agrees-to-come
-    - timur-enters-with-sasha
     - remarka-ty-othodish-ot-lestnitsy
+    - timur-enters-with-sasha
     question: Ты в классе с ребятами. Чего тебе хочется?
     choices:
       focus-ease: Мы в классе, здесь есть взрослый. Можно выдохнуть.

@@ -219,3 +219,58 @@ test('Lera only witnesses Anya leave the chat and say good night privately', () 
     assert.doesNotMatch(end.note,/вышла из игры/);
   }
 });
+
+test('help during the restraint or threat has one level until release or reaching the classroom', () => {
+  for (const [id,role] of [['dance','self'],['stairs','self'],['stairs','witness']]) {
+    const {story, decisions, cues} = build(id,role);
+    for (const first of ['observe','focus']) {
+      assert.equal(story[first].mode,'red');
+      assert.ok(decisions[first].signals.some(ref =>
+        /запястье|ударю/.test(cues[ref][0])));
+      for (const [safe] of story[first].links) {
+        assert.ok(['orange','yellow'].includes(story[safe].mode));
+        assert.ok(decisions[safe].signals.some(ref =>
+          /отпускает|встаёт в дверях/.test(cues[ref][0])));
+      }
+    }
+  }
+  const dance = build('dance','self').story;
+  assert.ok(dance.alternative.lines.some(line => /отпускает твою руку/.test(line.parts.text)));
+  assert.equal(dance['follow-up'].mode,'orange');
+});
+
+test('Misha sees the same independent poll closure during the break or after rehearsal', () => {
+  const {story,decisions} = build('dubl','self');
+  const common = Array.from(story.observe.lines, row=>row.id);
+  assert.deepEqual(Array.from(story.alternative.lines.slice(1,-1), row=>row.id),common);
+  assert.deepEqual(Array.from(story.observe.lines,row=>row.speaker),['Вера','Костя','Система']);
+  assert.match(story.observe.lines[0].parts.text,/Миша.*первый дубль только для нас/);
+  assert.match(story.observe.lines.at(-1).parts.text,/Костя закрыл опрос/);
+  assert.match(story.alternative.lines[0].parts.text,/Через полчаса репетиция заканчивается/);
+  assert.match(decisions.observe.effect,/сразу, в перерыве/);
+  assert.match(story.pause.outcome[1],/Опрос закрыт/);
+  assert.ok(story['follow-up'].lines.every(line => !/закры(вай|ть|л).*опрос/.test(line.parts.text)));
+});
+
+test('Anya can review the missing context and abuse before asking for votes', () => {
+  const {story,cues,decisions} = build('rumour','self');
+  const poll = decisions.alternative.signals;
+  assert.deepEqual(Array.from(poll,ref=>cues[ref][0]),['одну фразу без соседних сообщений','мне уже пишут гадости']);
+  assert.ok(story.start.lines.some(row => row.ref === poll[0] && row.media?.kind === 'image'));
+  assert.ok(story.pressure.lines.some(row => row.ref === poll[1] && row.speaker === 'Ты'));
+  const coachRoutes = Object.entries(decisions)
+    .filter(([,choice]) => choice.signals.some(ref => cues[ref][0] === 'Он ведёт чат'))
+    .map(([step]) => step);
+  assert.deepEqual(coachRoutes.sort(),['pressure-act-0','pressure-act-1']);
+});
+
+test('Misha can play from the gym or explain why he missed the warm-up', () => {
+  const {story} = build('locker','self');
+  assert.match(story.alternative.lines.at(-1).parts.text,/заходишь в зал.*разминка уже закончилась/);
+  const pause = story.alternative.links.find(([id])=>id==='pause')[1];
+  assert.match(pause,/Присоединюсь к игре.*если захочу/);
+  assert.doesNotMatch(pause,/переоденусь/);
+  assert.match(story.pause.lines.at(-1).parts.text,/пас.*игру/);
+  assert.equal(story['follow-up'].lines[0].speaker,'Ты');
+  assert.match(story['follow-up'].lines[0].parts.text,/Даня взял рюкзак/);
+});

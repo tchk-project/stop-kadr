@@ -166,6 +166,27 @@ class BrowserReliabilityTest(unittest.TestCase):
         expect(self.page.locator(".action.coded").first).to_be_visible()
         self.assertIn("role=self", self.page.url)
 
+    def test_link_to_a_story_keeps_its_explicit_role(self):
+        for role, person, entry in (("self", "Саша", ""), ("witness", "Миша", "self.html")):
+            self.page.goto(self.base + entry + "?case=money&role=" + role + "#pressure")
+            expect(self.page.locator(".coded").first).to_be_visible()
+            expect(self.page).to_have_url(re.compile(r"focus\.html\?case=money&role="+role+r"[^#]*#pressure$"))
+            expect(self.page.locator("main")).to_contain_text("Ты — " + person)
+
+    def test_recordings_have_distinct_names_in_player_and_reader(self):
+        for story, label in (("sticker", "Голосовое"), ("voice", "Реплика в голосовом канале")):
+            self.page.goto(self.base + "focus.html?case=" + story + "&role=witness#pressure")
+            rows = self.page.locator(".voice .play-audio")
+            expect(rows.first).to_be_visible()
+            names = [button.get_attribute("aria-label") for button in rows.all()]
+            self.assertGreater(len(names), 1)
+            self.assertEqual(len(set(names)), len(names))
+            self.assertTrue(all(label in name for name in names))
+            rows.first.press("Enter")
+            expect(self.page.locator("audio").first).to_have_attribute("aria-label", names[0].removeprefix("Прослушать · "))
+            self.page.goto(self.base + "read-story.html?case=" + story + "#witness-start")
+            expect(self.page.locator("#witness-start em").first).to_have_text(label + " · ")
+
     def test_saved_ending_retry(self):
         url = self.base + "focus.html?case=money&role=witness#focus-ease"
         self.retry("**/game/stories/money.js*", url=url)

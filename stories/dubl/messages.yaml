@@ -120,17 +120,25 @@ remarka-ty-vyklyuchaesh-zvuk-u:
   text: Ты выключаешь звук у чата и идёшь к Вере.
 remarka-ty-ubiraesh-telefon-cherez:
   speaker: Ремарка
-  text: Ты убираешь телефон. Через полчаса репетиция заканчивается. На экране [[всё тот же опрос]].
+  text: Ты убираешь телефон. Через полчаса репетиция заканчивается. Ты открываешь чат и читаешь сообщения с перерыва.
 vera-mish-ya-u-kabineta:
   speaker: Вера
   channel: lichnaya-perepiska-s-veroy
   text: Миш, я у кабинета музыки. Хочешь, зайди.
-ty-ver-mozhesh-zakryt-opros:
+misha-asks-about-school-chat:
   speaker: Ты
-  text: Вер, можешь закрыть опрос? Я уже отвечал.
-vera-vizhu-ego-seychas-zakroyu:
+  channel: lichnaya-perepiska-s-veroy
+  text: Вер, а пока я играл, в школьный что-нибудь кинули?
+vera-checks-school-chat:
   speaker: Вера
-  text: Вижу его. Сейчас закрою.
+  text: Сейчас гляну. Нет, после расписания там ничего нового.
+vera-reminds-kostya:
+  speaker: Вера
+  channel: chat-shkol-noy-gruppy
+  text: Кость, Миша же написал, что первый дубль только для нас. Зачем тогда опрос?
+kostya-withdraws-poll:
+  speaker: Костя
+  text: И правда. Миш, прости. Первый оставим тут, опрос сейчас сниму.
 remarka-na-etom-dubl-zakanchivaetsya:
   speaker: Ремарка
   channel: scene

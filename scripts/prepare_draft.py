@@ -57,6 +57,9 @@ def write_sources(folder, work, files):
             name = match[2]
             dest = folder / "media" / name
             if src in files:
+                if files[src] in ("data:", "data:,") or re.fullmatch(
+                        r"data:(?:image/(?:png|jpeg|webp)|audio/(?:mpeg|ogg)|application/octet-stream)?;base64,", files[src]):
+                    raise ValueError(f"Пустое вложение {name}. Откройте черновик в редакторе и замените файл.")
                 encoded = re.fullmatch(r"data:(?:image/(?:png|jpeg|webp)|audio/(?:mpeg|ogg));base64,([A-Za-z0-9+/]+=*)", files[src])
                 if not encoded:
                     raise ValueError("Неподдерживаемое вложение")
@@ -85,6 +88,14 @@ def prepare(package, destination=None):
     published = current(sid)
     if base != published:
         raise ValueError("Опубликованная история изменилась или имя занято. Сверьте версии перед переносом.")
+    # Older editors left the text and uploads of deleted branches in the message dictionary.
+    data = work["data"]
+    used = {key for role in game.ROLES for scene in data["routes"][role]["scenes"].values()
+            for key in scene["messages"]}
+    original_messages = base["data"]["messages"] if base else {}
+    messages = {key: message if key in used else original_messages[key]
+                for key, message in data["messages"].items() if key in used or key in original_messages}
+    work = {**work, "data": {**data, "messages": messages}}
     if destination and (destination.exists() or destination.resolve().is_relative_to(game.ROOT.resolve())):
         raise ValueError("Выберите новую пустую папку за пределами проекта.")
     with tempfile.TemporaryDirectory() as scratch:

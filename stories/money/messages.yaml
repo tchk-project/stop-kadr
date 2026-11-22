@@ -150,10 +150,11 @@ trener-pro-podarok-uvidel-sash:
   speaker: Тренер
   channel: lichnaya-perepiska-s-trenerom
   caption: После звонка
-  text: Саш, видел, что Даня про двести написал. Я у твоего кабинета. Хочешь, вместе выйдем?
-sasha-da-ya-s-vami:
+  text: Саш, видел, что Даня про двести написал. [[Я у твоего кабинета]]. Хочешь, вместе выйдем? Могу и подождать тут с тобой.
+sasha-accepts-walk:
   speaker: Ты
-  text: Да, я с вами пойду. [[Уже вижу вас]].
+  channel: lichnaya-perepiska-s-trenerom
+  text: Да, пойдёмте вместе. Я сейчас рюкзак возьму.
 remarka-trener-i-sasha-vmeste:
   speaker: Ремарка
   channel: scene
@@ -289,18 +290,17 @@ remarka-sasha-podoshel-k-mishe:
   channel: scene
   caption: У крыльца
   text: Ты ждёшь у крыльца. Саша выходит с тренером и подходит к тебе.
-sasha-vstretish-u-kryltsa:
+sasha-asks-coach-to-wait:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-trenerom
+  text: Давайте пока здесь. Я Мишу хочу дождаться.
+coach-waits-with-sasha:
+  speaker: Тренер
+  text: Хорошо, я с тобой.
+sasha-asks-misha-to-come:
   speaker: Ты
   channel: lichnaya-perepiska-s-mishey
-  text: Миш, я с тренером до крыльца дойду. Встретишь там?
-misha-zhdu-u-kryltsa:
-  speaker: Миша
-  text: Ага, жду у крыльца.
-remarka-misha-zhdyot-u-kryltsa:
-  speaker: Ремарка
-  channel: scene
-  caption: У крыльца
-  text: Вы с тренером выходите из школы. Миша машет тебе с крыльца.
+  text: Миш, зайдёшь за мной в класс? Я здесь с тренером.
 vera-kuplyu-otkrytku:
   speaker: Вера
   channel: chat-sektsii
@@ -339,9 +339,6 @@ sasha-rereads-threat:
   speaker: Ремарка
   channel: chat-sektsii
   text: Ты листаешь чат до сообщения про двести. Даня его оставил как есть.
-sasha-private-agreement:
-  speaker: Ты
-  text: Да. [[Я вас у двери вижу]]. Рюкзак возьму и подойду.
 misha-asks-meeting-place:
   speaker: Ты
   channel: lichnaya-perepiska-s-sashey
@@ -359,18 +356,14 @@ sasha-walk-in-silence:
   channel: scene
   caption: У выхода из школы
   text: Ты идёшь рядом с тренером до крыльца. Он придерживает дверь, пока ты поправляешь рюкзак.
-sasha-picks-time-with-misha:
-  speaker: Ты
-  channel: lichnaya-perepiska-s-mishey
-  text: Миш, я уже с тренером. Мы сейчас выходим. Ещё можешь у крыльца подождать?
-misha-can-wait:
+misha-comes-to-class:
   speaker: Миша
-  text: Могу. Как выйдешь, помашу тебе.
-sasha-sees-misha:
+  text: Да, сейчас подойду.
+misha-joins-sasha-and-coach:
   speaker: Ремарка
   channel: scene
-  caption: У крыльца
-  text: У крыльца Миша поднимает руку. Тренер ждёт, пока ты подойдёшь к другу.
+  caption: В классе
+  text: Тренер садится рядом с тобой. Через пару минут Миша заглядывает в дверь и машет вам.
 sasha-waits-in-class:
   speaker: Ремарка
   channel: scene
