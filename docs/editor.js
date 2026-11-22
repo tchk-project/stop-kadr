@@ -14,6 +14,20 @@ function button(text,act,cls=''){
   const b=el('button',text,cls);b.type='button';b.addEventListener('click',act);return b;
 }
 function actions(...nodes){const box=el('div',null,'actions');box.append(...nodes);return box;}
+function withHelp(label, topic, title, explanation){
+  const wrap=el('div',null,'help-row'), hint=el('p',explanation,'help-text');
+  hint.hidden=true;
+  hint.id='help-'+topic;
+  const toggle=button('?',()=>{
+    hint.hidden=!hint.hidden;
+    toggle.setAttribute('aria-expanded',String(!hint.hidden));
+  },'help-toggle');
+  toggle.setAttribute('aria-label','Справка. '+title);
+  toggle.setAttribute('aria-controls',hint.id);
+  toggle.setAttribute('aria-expanded','false');
+  wrap.append(label,toggle,hint);
+  return wrap;
+}
 function notice(text){const n=document.querySelector('#feedback');n.textContent=text;clearTimeout(noticeTimer);noticeTimer=setTimeout(()=>n.textContent='',5500);}
 function download(name,content,type){
   const url=URL.createObjectURL(new Blob([content],{type})), a=el('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1500);
@@ -89,7 +103,8 @@ function home(){
     library.forEach(x=>grid.append(card(x.work.meta.title,'Продолжить · '+new Date(x.time).toLocaleString('ru-RU'),()=>openDraft(clone(x)))));app.append(grid);}
   const cast=el('details',null,'cast-home');
   cast.append(el('summary','Кто есть кто'),characters());
-  app.append(el('h2','Какую историю хочешь проверить?'),cast);
+  app.append(withHelp(el('h2','Какую историю хочешь проверить?'),'home','Работа с историями',
+    'Выбери историю из игры — редактор создаст твою копию. Чтобы продолжить позже, открой её в «Моих черновиках». Если тебе уже прислали файл, нажми «Открыть файл черновика».'),cast);
   const grid=el('div',null,'shelf');
   allStories.forEach(m=>grid.append(card(m.title,m.place,()=>{
     const existing=library.find(x=>x.base?.meta.id===m.id);if(existing)openDraft(clone(existing));else editPublished(m);
@@ -333,11 +348,11 @@ function render(){
   const {role,step,r,n}=current(),data=d.work.data;
   app.replaceChildren();app.append(button('← Все истории',home,'quiet'));
   const head=el('div',null,'workhead'),title=el('div');
-  title.append(el('h1',d.work.meta.title),el('small',conflict?'Черновик в памяти · скачай файл для сохранения':'Черновик сохранён в этом браузере. Можно закрыть редактор и вернуться позже.'));
+  title.append(el('h1',d.work.meta.title),withHelp(el('small',conflict?'Черновик в памяти · скачай файл для сохранения':'Черновик сохранён в этом браузере. Можно закрыть редактор и вернуться позже.'),'draft','Сохранение и передача','После правки нажми «Сохранить». Чтобы другой человек увидел изменения, скачай файл и отправь ему. Он сможет открыть файл в своём редакторе. Публикация в игре — отдельный шаг.'));
   head.append(title,actions(button('Скачать для передачи',exportDraft),button('Проверить в игре',showPreview,'primary')));app.append(head);
   const layout=el('div',null,'layout'),rail=el('aside',null,'rail'),article=el('article');layout.append(rail,article);app.append(layout);
-  const rl=el('label','Чьими глазами читаем?'),select=el('select');roles.forEach(k=>select.add(new Option(roleLabel(k),k)));select.value=role;
-  select.onchange=()=>go('start',select.value);rl.append(select);rail.append(rl,button('Кто есть кто',openCharacters,'quiet'));
+  const rl=el('label','Чьими глазами читаем?'),select=el('select');rl.htmlFor=select.id='read-as';roles.forEach(k=>select.add(new Option(roleLabel(k),k)));select.value=role;
+  select.onchange=()=>go('start',select.value);rail.append(withHelp(rl,'role','Выбор героя','Участник переживает ситуацию сам. Очевидец видит её со стороны и может вмешаться. Выбери имя, чтобы прочитать историю с начала глазами этого героя.'),select,button('Кто есть кто',openCharacters,'quiet'));
   const routeStamp=Object.keys(r.scenes).filter(k=>Drafts.isChecked(d,role,k)).length;
   rail.append(el('p','Проверено фрагментов: '+routeStamp+' из '+Object.keys(r.scenes).length,'where'),button('Следующий непроверенный',nextUnread));
   const tools=el('details');tools.append(el('summary','Действия с историей'));
@@ -348,7 +363,7 @@ function render(){
   tools.append(menu);rail.append(tools);
   const path=Drafts.pathTo(r,step),head2=el('div',null,'scenehead');
   if(path.length>1)head2.append(button('← К другим ответам',()=>go(path.at(-2)), 'quiet'));
-  const name=el('h2',heading(r,step));name.tabIndex=-1;head2.append(name,el('small','Уровень · '+Drafts.levels[n.mode]));
+  const name=el('h2',heading(r,step));name.tabIndex=-1;head2.append(name,withHelp(el('small','Уровень · '+Drafts.levels[n.mode]),'level','Уровни внимания','Здесь указан уровень в начале фрагмента. На карточке ответа видно, как он изменится. Например, переход с жёлтого на оранжевый означает, что герой заметил конкретный повод насторожиться.'));
   head2.append(actions(button('Изменить фрагмент',sceneForm,'quiet'),el('span',stateText(role,step),'tag')));article.append(head2);
   if(step==='start')article.append(el('p',d.work.meta.roles[role].intro));
   if(path.length>1){
@@ -392,7 +407,8 @@ function render(){
     const end=el('div',null,'endpoint');end.append(el('small',Drafts.endings[n.outcome[0]]),el('h2',n.outcome[1]),el('p',n.note),button('Изменить финал',ending));end.append(button('Продолжить после финала',()=>commit(()=>{delete n.outcome;delete n.note;}),'quiet'));opts.append(end);
   }else{
     const keys=Object.entries(n.choices||{});
-    if(keys.length)opts.append(el('h2',n.question||(step==='start'?'Два продолжения истории':'Что выберет игрок?')));
+    opts.append(withHelp(el('h2',n.question||(step==='start'?'Два продолжения истории':'Что выберет игрок?')),'branches','Продолжения истории',
+      step==='start'?'Открой один из вариантов, чтобы прочитать, как разовьётся ситуация. К другому можно вернуться кнопкой «К другим ответам».':'Нажми на ответ, чтобы прочитать его последствия. Чтобы написать ещё одно продолжение, добавь вариант ответа. Если история здесь заканчивается, оформи финал.'));
     const endMode=n.reaction && n.reaction.through===n.messages.at(-1)?'black':n.mode;
     for(const [key,label] of keys){
       const dst=r.scenes[key],box=el('div',null,'choice');
@@ -428,7 +444,7 @@ function render(){
       for(const ref of n.review.signals){const [,key]=ref.split('/'),m=data.messages[key];rev.append(el('p',(m?'«'+(/\[\[([^\]]+)\]\]/.exec(words(m))?.[1]||plain(words(m)))+'» — ':'')+r.cues[ref]));}
       rev.append(el('p',n.review.effect));
     }
-    rev.append(button('Изменить разбор',reviewForm));article.append(rev);
+    rev.append(withHelp(button('Изменить разбор',reviewForm),'review','Разбор выбора','Здесь игрок узнаёт, какую деталь он заметил или пропустил. Отметь фразу в предыдущей реплике, затем свяжи её с последствием в «Изменить разбор».'));article.append(rev);
   }
   article.append(actions(button(Drafts.isChecked(d,role,step)?'Снять отметку «Проверено»':'Отметить как проверенное',()=>{
     if(Drafts.isChecked(d,role,step))delete d.checked[role+'/'+step];else d.checked[role+'/'+step]=Drafts.stamp(d.work,role,step);persist();render();

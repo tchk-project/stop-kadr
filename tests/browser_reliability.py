@@ -89,6 +89,12 @@ class BrowserReliabilityTest(unittest.TestCase):
     def test_editor_character_help_and_handoff(self):
         page = self.page
         page.goto(self.base + "editor.html")
+        help_button = page.get_by_role("button", name="Справка. Работа с историями")
+        help_button.focus()
+        page.keyboard.press("Enter")
+        expect(page.locator("#help-home")).to_be_visible()
+        page.keyboard.press("Space")
+        expect(page.locator("#help-home")).to_be_hidden()
         page.locator("summary", has_text="Кто есть кто").click()
         expect(page.locator("main .cast-list li")).to_have_count(9)
         expect(page.locator("main .cast-list")).to_contain_text("Даня")
