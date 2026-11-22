@@ -378,8 +378,20 @@ function render(){
   }else{
     const keys=Object.entries(n.choices||{});
     if(keys.length)opts.append(el('h2',n.question||(step==='start'?'Два продолжения истории':'Что выберет игрок?')));
-    for(const [key,label] of keys){const dst=r.scenes[key],box=el('div',null,'choice');
-      box.append(button(plain(label)+' →',()=>go(key)),el('small',dst.outcome?.[1]||dst.question||plain(words(data.messages[dst.messages[0]]||{}))||'Продолжение ещё не написано.'));
+    const endMode=n.reaction && n.reaction.through===n.messages.at(-1)?'black':n.mode;
+    for(const [key,label] of keys){
+      const dst=r.scenes[key],box=el('div',null,'choice');
+      const open=button(plain(label)+' →',()=>go(key),'open-choice');
+      if(step!=='start'){
+        const same={white:'белом',yellow:'жёлтом',orange:'оранжевом',red:'красном'};
+        const caption=endMode===dst.mode?'Остаться на '+same[dst.mode]:'Перейти на '+Drafts.levels[dst.mode].toLowerCase();
+        const badge=el('span',caption,'choice-level');
+        badge.id='choice-level-'+key;
+        open.setAttribute('aria-describedby',badge.id);
+        box.dataset.code=dst.mode;
+        box.append(badge);
+      }
+      box.append(open,el('small',dst.outcome?.[1]||dst.question||plain(words(data.messages[dst.messages[0]]||{}))||'Продолжение ещё не написано.'));
       if(step!=='start')box.append(button('Изменить ответ',()=>branch(key),'quiet'));if(step!=='start') box.append(button('Убрать ветку',()=>{
         const drop=new Set();function visit(id){drop.add(id);Object.keys(r.scenes[id].choices||{}).forEach(visit);}visit(key);
         if(!window.confirm('Убрать вариант и все его продолжения ('+drop.size+' фрагм.)?'))return;
