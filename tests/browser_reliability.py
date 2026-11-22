@@ -75,6 +75,16 @@ class BrowserReliabilityTest(unittest.TestCase):
         self.page.get_by_role("button", name="Играть").click()
         expect(self.page.locator(".action.coded").first).to_be_visible()
 
+    def test_editor_can_download_when_browser_storage_is_blocked(self):
+        page = self.page
+        page.add_init_script("Object.defineProperty(window, 'localStorage', {get(){throw Error('blocked')}})")
+        page.goto(self.base + "editor.html")
+        page.get_by_role("button", name=re.compile("Кот под голосовым")).click()
+        expect(page.get_by_text("Черновик в памяти", exact=False)).to_be_visible()
+        with page.expect_download() as download:
+            page.get_by_role("button", name="Скачать черновик", exact=True).click()
+        self.assertTrue(download.value.suggested_filename.endswith(".stop-kadr.json"))
+
     def test_editor_draft_survives_reload_and_only_appears_in_preview(self):
         page = self.page
         page.goto(self.base + "editor.html")

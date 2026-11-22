@@ -39,8 +39,8 @@ function persist(){
 function commit(change){undo.push(clone(d.work));if(undo.length>16)undo.shift();change();persist();render();}
 function current(){const {role,step}=d.view;const r=d.work.data.routes[role];return {role,step,r,n:r.scenes[step]};}
 function go(step,role=d.view.role){d.view={role,step};persist();render();document.querySelector('.scenehead h2')?.focus();}
-function openDraft(value){d=value;undo=[];conflict=false;location.hash=d.key;render();window.scrollTo(0,0);}
-function syncHash(){if(d && location.hash==='#'+d.key)return;readLibrary();const found=library.find(item=>location.hash==='#'+item.key);if(found)openDraft(found);else home();}
+function openDraft(value,saved=true){d=value;undo=[];conflict=!saved;location.hash=d.key;render();window.scrollTo(0,0);}
+function syncHash(){if(d && location.hash==='#'+d.key)return;try{readLibrary();}catch{home();return;}const found=library.find(item=>location.hash==='#'+item.key);if(found)openDraft(found);else home();}
 window.addEventListener('hashchange',syncHash);
 window.addEventListener('storage',e=>{if(d && e.key===prefix+d.key){conflict=true;render();notice('Черновик изменён в другой вкладке. Сохрани свою версию файлом.');}});
 async function original(meta){
@@ -59,7 +59,7 @@ async function editPublished(meta,copy=false){
     const source=await original(meta);if(token!==selectionToken)return;
     const value=Drafts.draft(source,copy?null:source);
     if(copy){const id=Drafts.id('story');value.work.meta.id=value.work.data.id=id;value.work.meta.title+=' — копия';}
-    d=value;persist();openDraft(value);
+    d=value;openDraft(value,persist());
   }catch(e){notice(e.message);}
 }
 function card(title,small,act){const b=button('',act,'storycard');b.append(el('strong',title),el('small',small));return b;}
@@ -111,7 +111,7 @@ function newStory(){
     field('title','Как называется история?').required=true;
     field('name','За кого играет герой?','Лера').required=true;
     field('witness','Кто видит ситуацию со стороны?','Вера').required=true;
-  },v=>{const value=Drafts.draft(Drafts.blank(v.title,v.witness,v.name),null);d=value;persist();openDraft(value);},'Начать писать');
+  },v=>{const value=Drafts.draft(Drafts.blank(v.title,v.witness,v.name),null);d=value;openDraft(value,persist());},'Начать писать');
 }
 function metadata(){
   const m=d.work.meta;
@@ -308,7 +308,7 @@ preview.addEventListener('close',()=>{preview.querySelector('iframe').removeAttr
 document.querySelector('#import-file').onchange=async e=>{
   const f=e.target.files[0];e.target.value='';if(!f)return;
   try{if(f.size>12_000_000)throw Error('Файл слишком большой для этого редактора.');const value=Drafts.unpack(await f.text());
-    d=value;persist();openDraft(value);
+    d=value;openDraft(value,persist());
     const m=allStories.find(item=>item.id===value.base?.meta.id);
     if(m){const latest=await original(m);if(d===value && JSON.stringify(value.base)!==JSON.stringify(latest))notice('Исходная история в игре уже изменилась. Подробности в проверке.');}
   }catch(e){notice(e.message);}
@@ -329,7 +329,7 @@ function render(){
   const menu=el('div',null,'tools');const undoButton=button('Отменить правку',()=>{d.work=undo.pop();if(!d.work.data.routes[role].scenes[step])d.view.step='start';persist();render();});
   undoButton.disabled=!undo.length;
   menu.append(button('Название и герои',metadata),undoButton,button('Проверить историю',inspect),button('Скачать для вычитки',exportReading),
-    button('Создать копию',()=>{const value=Drafts.draft(d.work,null);value.work.meta.id=value.work.data.id=Drafts.id('story');value.work.meta.title+=' — копия';if(d.files)value.files=clone(d.files);d=value;persist();openDraft(value);}));
+    button('Создать копию',()=>{const value=Drafts.draft(d.work,null);value.work.meta.id=value.work.data.id=Drafts.id('story');value.work.meta.title+=' — копия';if(d.files)value.files=clone(d.files);d=value;openDraft(value,persist());}));
   tools.append(menu);rail.append(tools);
   const path=Drafts.pathTo(r,step),head2=el('div',null,'scenehead');
   if(path.length>1)head2.append(button('← К другим ответам',()=>go(path.at(-2)), 'quiet'));
