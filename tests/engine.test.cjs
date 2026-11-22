@@ -26,3 +26,27 @@ test('every catalog entry opens in both roles and all links lead to reachable sc
     }
   }
 });
+
+test('every pressure ending in the catalog can rewind to a real decision', () => {
+  for (const {id} of catalog) for (const role of ['witness','self']) {
+    const {story,cues,decisions} = build(id,role);
+    for (const [step,node] of Object.entries(story)) {
+      if (!node.outcome) continue;
+      const path = ctx.routePath(story,step);
+      if (path[1] !== 'pressure') continue;
+      const stops = ctx.attentionStops(path,story,decisions);
+      const label = id+'/'+role+'#'+step;
+      assert.ok(stops.length,label);
+      for (const stop of stops) {
+        assert.ok(stop.answer && stop.signals.length,label);
+        const known = path.slice(0,path.indexOf(stop.id));
+        for (const ref of stop.signals) {
+          assert.ok(cues[ref] && known.includes(ref.split('/')[0]),label+' '+ref);
+        }
+        let retry = stop.parent;
+        while (story[retry].links.length < 2 && story[retry].parent) retry = story[retry].parent;
+        assert.ok(story[retry].links.length >= 2,label);
+      }
+    }
+  }
+});

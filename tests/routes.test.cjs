@@ -15,7 +15,15 @@ for (const id of ids) for (const role of ['witness','self']) {
     for (const key of ['observe','focus']) {
       assert.equal(story[key+'-ease'].mode,'yellow');
       assert.equal(story[key+'-watch'].mode,'orange');
-      assert.deepEqual(dialogue(story[key+'-ease'].lines),dialogue(story[key+'-watch'].lines));
+      const ease = dialogue(story[key+'-ease'].lines);
+      const watch = dialogue(story[key+'-watch'].lines);
+      if (id === 'money') {
+        // After the shared signal, the player's next choice changes what happens.
+        assert.notDeepEqual(ease,watch);
+        assert.notEqual(story[key+'-ease'].outcome[1],story[key+'-watch'].outcome[1]);
+      } else {
+        assert.deepEqual(ease,watch);
+      }
       assert.ok(decisions[key].signals.length);
     }
     const quiet = id === 'project' ? 'calm-act-0' : 'calm-end';

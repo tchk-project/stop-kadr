@@ -6,23 +6,23 @@
   <meta name="theme-color" content="#59450a">
   <title>Стоп-кадр</title>
   <link rel="preload" href="./assets/avatars.webp" as="image">
-  <link rel="stylesheet" href="./attention-colors.css?v=1">
-<link rel="stylesheet" href="./scene.css?v=demo-2">
-  <link rel="stylesheet" href="./attention.css?v=level-drop-1">
-  <script src="./game/catalog.js?v=stories-1" defer></script>
-  <script src="./catalog.js?v=stories-1" defer></script>
-  <script src="./attention.js?v=stories-1" defer></script>
-  <script src="./engine.js?v=stories-1" defer></script>
-  <script src="./attention-guide.js?v=stories-1" defer></script>
-  <script src="./attention-player.js?v=stories-1" defer></script>
-  <script src="./scene.js?v=stories-1" defer></script>
-<link rel="stylesheet" href="./studio.css?v=play-intro-1">
-<link rel="stylesheet" href="./cooper.css?v=level-titles-1">
+  <link rel="stylesheet" href="./attention-colors.css?v=review-3">
+<link rel="stylesheet" href="./scene.css?v=review-3">
+  <link rel="stylesheet" href="./attention.css?v=review-3">
+  <script src="./game/catalog.js?v=review-3" defer></script>
+  <script src="./catalog.js?v=review-3" defer></script>
+  <script src="./attention.js?v=review-3" defer></script>
+  <script src="./engine.js?v=review-3" defer></script>
+  <script src="./attention-guide.js?v=review-3" defer></script>
+  <script src="./attention-player.js?v=review-3" defer></script>
+  <script src="./scene.js?v=review-3" defer></script>
+<link rel="stylesheet" href="./studio.css?v=review-3">
+<link rel="stylesheet" href="./cooper.css?v=review-3">
 </head>
 <body data-attention-pilot>
   <div class="scene-loader" role="status">
     <p>Загружаем ситуацию…</p>
-    <a href="" hidden>Повторить загрузку</a>
+    <button type="button" hidden onclick="location.reload()">Повторить загрузку</button>
   </div>
   <noscript><style>.scene-loader { display:none }</style>Чтобы читать переписку и выбирать ответы, включи JavaScript в браузере.</noscript>
   <main class="panel" hidden>
@@ -30,7 +30,7 @@
     <aside class="mode-bar" aria-label="Мой режим внимания">
       <span class="signal" aria-hidden="true"></span>
       <div><small>Мой режим внимания</small><strong id="mode-name"><span class="level-name">Жёлтый</span><span class="level-meaning"> · спокойно замечаю, что вокруг</span></strong></div>
-      <a class="cooper-link" href="./cooper.html" target="_blank" rel="noopener" aria-label="Подробнее о цветах Купера"><span class="mode-help-label">Подробнее о цветах Купера</span><span class="mode-help-icon" aria-hidden="true">?</span></a>
+      <a class="cooper-link" href="./colors.html" target="_blank" rel="noopener" aria-label="Цвета в игре"><span class="mode-help-label">Цвета в игре</span><span class="mode-help-icon" aria-hidden="true">?</span></a>
     </aside>
 
   </main>
@@ -39,8 +39,7 @@
       const loader = document.querySelector('.scene-loader');
       loader.classList.add('load-failed');
       loader.querySelector('p').textContent = 'Не удалось загрузить ситуацию.';
-      loader.querySelector('a').hidden = false;
-      loader.querySelector('a').href = location.href.split('#')[0];
+      loader.querySelector('button').hidden = false;
     }
     document.addEventListener('DOMContentLoaded', () => {
       if (!document.querySelector('.scene-loader').hasAttribute('data-started')) showLoadingError();

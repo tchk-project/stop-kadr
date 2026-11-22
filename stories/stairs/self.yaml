@@ -115,10 +115,11 @@ scenes:
     choices:
       calm-end: Посмотреть, что будет дальше
       ask: Догнать Тимура
-      calm-watch: Саша прошёл. Ещё немного присмотрюсь к тому, что происходит у лестницы.
+      calm-watch: Я прошёл. По дороге оглянусь, где Лёша.
   calm-end:
     mode: yellow
     messages:
+    - remarka-sasha-oglyadyvaetsya
     - timur-sash-u-nas-na
     - sasha-aga-geografiya
     outcome:
@@ -211,6 +212,7 @@ scenes:
   calm-watch:
     mode: orange
     messages:
+    - remarka-sasha-oglyadyvaetsya
     - timur-sash-u-nas-na
     - sasha-aga-geografiya
     outcome:

@@ -32,7 +32,7 @@ remarka-sil-naya-narastayuschaya-bol-v:
   text: Сильная нарастающая боль в животе требует экстренной оценки. Так может проявляться аппендицит. Даже если место боли другое, сильная боль сама по себе — повод вызвать скорую. В России можно позвонить 103 или 112.
 remarka-timur-nabiraet-103-i:
   speaker: Ремарка
-  text: Тимур набирает 103 и называет город, улицу и номер школы.
+  text: Тимур набирает 103 и называет город, улицу и номер дома.
 ty-my-u-razdevalki-shkol-nogo:
   speaker: Ты
   text: Мы у раздевалки школьного стадиона, вход через калитку у поля.
@@ -45,6 +45,12 @@ ty-drugu-15-let-s:
 dispetcher-brigada-napravlena-ostavaytes-na:
   speaker: Диспетчер
   text: Бригада направлена. Оставайтесь на линии.
+remarka-trener-podhodit:
+  speaker: Ремарка
+  text: К ступенькам подходит тренер.
+timur-vstrette-u-kalitki:
+  speaker: Тимур
+  text: Встретьте, пожалуйста, скорую у калитки. Я останусь с Мишей.
 remarka-timur-ostayotsya-s-mishey:
   speaker: Ремарка
   text: Тимур остаётся с Мишей. Тренер встречает бригаду у калитки.

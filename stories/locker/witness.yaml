@@ -117,12 +117,13 @@ scenes:
     question: Как продолжишь?
     choices:
       calm-end: Посмотреть, что будет дальше
-      ask: Спросить Мишу, всё ли на месте
-      calm-watch: Рюкзак на лавке. Хочу ещё убедиться, что форма внутри.
+      ask: Спросить, подождать ли Мишу
+      calm-watch: Рюкзак вернули. Успеет Миша в зал до звонка?
   calm-end:
     mode: yellow
     messages:
     - vera-poshli-v-zal-eschyo
+    - remarka-misha-vhodit-v-zal
     outcome:
     - positive
     - Рюкзак вернули до звонка
@@ -134,8 +135,8 @@ scenes:
     - misha-aga-vsyo-tut-dogonyu
     outcome:
     - positive
-    - Миша успевает на урок
-    note: С рюкзаком уже всё в порядке. Осталось время спросить про форму или договориться, где оставлять вещи.
+    - Миша догонит ребят в зале
+    note: Костя предложил подождать. Миша сказал, что догонит ребят, когда переоденется.
   observe:
     mode: yellow
     messages:
@@ -220,6 +221,7 @@ scenes:
     mode: orange
     messages:
     - vera-poshli-v-zal-eschyo
+    - remarka-misha-vhodit-v-zal
     outcome:
     - positive
     - Рюкзак вернули до звонка

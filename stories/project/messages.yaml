@@ -10,6 +10,7 @@ misha-sobral-ler-otkroesh-na:
     caption: Собрал. Лер, откроешь на школьном ноуте? Через пять минут наш выход.
     src: ./assets/yard-project.webp
     file: ./assets/yard-project.pdf
+    html: ./assets/yard-project.html
     alt: 'Наш школьный двор. Авторы: Миша, Аня.'
 anya-mish-na-pervoy-nas:
   speaker: Аня
@@ -38,6 +39,7 @@ misha-uspel-vot-etot-otkryvay:
     caption: Успел. Вот этот открывай.
     src: ./assets/yard-project-v2.webp
     file: ./assets/yard-project-v2.pdf
+    html: ./assets/yard-project-v2.html
     alt: 'Наш школьный двор. Авторы: Миша, Аня, Тимур.'
 ty-vsyo-otkryla-teper-na:
   speaker: Ты
@@ -93,6 +95,7 @@ misha-dobavil-tim-glyan-pervuyu:
     caption: Добавил. Тим, глянь первую. Лер, на защите открывай вот эту.
     src: ./assets/yard-project-v2.webp
     file: ./assets/yard-project-v2.pdf
+    html: ./assets/yard-project-v2.html
     alt: 'Наш школьный двор. Авторы: Миша, Аня, Тимур.'
 anya-tim-ty-sam-pro:
   speaker: Аня
@@ -143,6 +146,7 @@ misha-gotovo-tim-vot-teper:
     caption: Готово. Тим, вот теперь проверь.
     src: ./assets/yard-project-v2.webp
     file: ./assets/yard-project-v2.pdf
+    html: ./assets/yard-project-v2.html
     alt: 'Наш школьный двор. Авторы: Миша, Аня, Тимур.'
 ty-teper-est-ler-mozhno:
   speaker: Ты

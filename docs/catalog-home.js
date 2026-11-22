@@ -6,3 +6,4 @@ if (episode || originalSelected) {
 } else {
   showCatalogue(panel);
 }
+document.querySelector('.catalog-error').remove();

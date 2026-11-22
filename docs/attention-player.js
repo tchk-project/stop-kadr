@@ -2,7 +2,7 @@
 
 async function playAttentionPilot(ui) {
   const {pages, pathFor, messages, makeRow, button, scene, heading, thread, typing, flash,
-    freeze, question, outcome, outcomeLabels, choices, controls, status, motionAllowed} = ui;
+    freeze, question, outcome, choices, controls, status, motionAllowed} = ui;
   const {story,cues,decisions} = ui.route;
   thread.className = 'chat-transcript';
   const guide = attentionGuide(document.querySelector('.panel'));
@@ -16,9 +16,31 @@ async function playAttentionPilot(ui) {
   ];
   const direction = element('span', 'tape-direction');
   direction.setAttribute('role', 'status');
-  const skip = button('dismiss', 'Показать сразу', () => run?.abort(), 'play');
+  const skip = button('dismiss', 'Показать сразу', () => {
+    if (busy) run?.abort();
+    else focusForReading(promptTarget);
+  }, 'play');
   skip.classList.add('tape-skip');
-  bar.append(direction, skip);
+  const storyExit = catalogLink('Пропустить историю');
+  storyExit.classList.add('story-exit');
+  storyExit.title = 'Перейти к выбору истории';
+  const playback = element('nav','tape-controls');
+  playback.setAttribute('aria-label','Управление показом');
+  playback.append(direction, skip, storyExit);
+  bar.append(playback);
+  const jump = button('forward','К ответам',() => focusForReading(promptTarget),'play');
+  jump.classList.add('prompt-jump');
+  jump.hidden = true;
+  bar.after(jump);
+  const readNew = button('rewind','Прочитать новые сообщения',() => {
+    if (!firstNew) return;
+    firstNew.append(jump);
+    focusForReading(firstNew);
+    updateJump();
+  });
+  readNew.classList.add('read-new');
+  readNew.hidden = true;
+  freeze.before(readNew);
   const review = element('section', 'decision-review');
   review.tabIndex = -1;
   review.setAttribute('aria-label', 'Разбор решений');
@@ -26,8 +48,38 @@ async function playAttentionPilot(ui) {
   const frames = [{opacity:0, transform:'translateY(6px)'}, {opacity:1, transform:'translateY(0)'}];
   let run;
   let view;
+  let promptTarget;
+  let firstNew;
   let busy = false;
+  skip.addEventListener('blur', () => { if (!busy) skip.hidden = true; });
   heading.textContent = pages.get('start').title;
+
+  function focusForReading(target) {
+    if (!target) return;
+    ui.setFollow(false);
+    target.focus({preventScroll:true});
+    target.scrollIntoView({block:'start',behavior:'instant'});
+  }
+
+  function updateJump() {
+    if (!promptTarget) {
+      jump.hidden = true;
+      return;
+    }
+    // Once the first answer is in reach, leave the whole list clear for reading.
+    const firstAction = choices.querySelector('button');
+    const edge = (promptTarget === question && firstAction ? firstAction : promptTarget).getBoundingClientRect();
+    jump.hidden = edge.top < window.innerHeight - 24;
+  }
+  window.addEventListener('scroll',updateJump,{passive:true});
+  window.addEventListener('resize',updateJump);
+  const layoutObserver = new ResizeObserver(() => {
+    const inset = getComputedStyle(bar).position === 'sticky' ? bar.offsetHeight : 0;
+    document.documentElement.style.setProperty('--mode-inset',inset+'px');
+    updateJump();
+  });
+  layoutObserver.observe(bar);
+  layoutObserver.observe(scene);
 
   function readView() {
     const hash = location.hash.slice(1);
@@ -235,6 +287,10 @@ async function playAttentionPilot(ui) {
       changeColour(item.attention, !task.signal.aborted);
       const block = blockFor(context.channel);
       const row = makeRow(item, context.caption);
+      if (!firstNew && item.line) {
+        firstNew = row;
+        row.tabIndex = -1;
+      }
       row.dataset.attention = item.attention;
       if (item.reaction) guide.explainReaction(row);
       const next = pending[index+1];
@@ -268,7 +324,7 @@ async function playAttentionPilot(ui) {
 
   function showReview(stops, index) {
     const stop = stops[index];
-    const title = element('h2', '', 'Решение '+(index+1)+' из '+stops.length);
+    const title = element('h2', '', stops.length === 1 ? 'Остановка на твоём выборе' : 'Остановка '+(index+1)+' из '+stops.length);
     const list = element('ul', 'signal-list');
     for (const key of stop.signals) {
       const [quote, why] = cues[key];
@@ -278,21 +334,37 @@ async function playAttentionPilot(ui) {
       const row = thread.querySelector('[data-ref="'+key+'"]');
       if (row) drawSignal(row,key);
     }
-    review.append(title, list, element('p','chosen-answer',transitionLabel(attentionAtLine(story[stop.parent],story[stop.parent].lines.length-1),story[stop.id].mode)+' · '+stop.answer),
+    review.append(title, list, element('p','chosen-answer','Твой ответ · '+stop.answer),
       element('p','',stop.effect));
-    if (stop.recovery) review.append(element('p','recovery',stop.recovery));
+    if (stop.recovery) review.append(recoveryNote(stop,view.path));
     review.hidden = false;
-    const nav = element('div','review-steps');
-    const previous = button('rewind','Назад',() => navigate(view.id,index-1));
-    const next = button('forward','Дальше',() => navigate(view.id,index+1),'play');
-    previous.disabled = index === 0;
-    next.disabled = index === stops.length-1;
-    nav.append(previous,next);
+    if (stops.length > 1) {
+      const nav = element('div','review-steps');
+      const previous = button('rewind','Назад',() => navigate(view.id,index-1));
+      const next = button('forward','Дальше',() => navigate(view.id,index+1),'play');
+      previous.disabled = index === 0;
+      next.disabled = index === stops.length-1;
+      nav.append(previous,next);
+      review.append(nav);
+    }
     let retry = stop.parent;
     while (pages.get(retry).links.length < 2 && pages.get(retry).parent) retry = pages.get(retry).parent;
-    choices.append(nav, button('rewind',retry === stop.parent ? 'Попробовать другой ответ' : 'Вернуться к выбору ответа',() => navigate(retry)));
-    appendNavigation();
+    const replay = button('rewind',retry === stop.parent ? 'Попробовать другой ответ' : 'Вернуться к выбору ответа',() => navigate(retry));
+    replay.classList.add('review-primary');
+    choices.append(replay);
+    appendNextStory();
     return review;
+  }
+
+  function recoveryNote(stop, path) {
+    const section = element('div','recovery');
+    section.append(element('h3','','Что помогло потом'),element('p','',stop.recovery));
+    const later = path.slice(path.indexOf(stop.repair)+1);
+    for (const id of later) {
+      const detail = decisions[id];
+      if (detail && !detail.miss) section.append(element('p','',detail.effect));
+    }
+    return section;
   }
 
   function transitionLabel(before, after) {
@@ -326,73 +398,84 @@ async function playAttentionPilot(ui) {
 
   function showGame(data, path, stops) {
     if (data.outcome) {
-      const {kind} = data.outcome;
       ui.showOutcome(data);
-      choices.append(attentionTrail(path));
-      if (path.includes('calm')) {
-        choices.append(element('p','calm-ending',kind === 'positive' ? 'В этот раз всё пошло хорошо.' : 'Так закончился этот дубль.'),
-          button('rewind','А если бы всё пошло не так спокойно…',() => navigate('pressure')));
-      } else if (stops.length) {
-        choices.append(button('inspect',stops[0].miss ? 'Что я мог сделать иначе?' : 'Какие детали мне помогли?',
-          () => navigate(view.id,0)));
+      for (const stop of stops) {
+        if (stop.recovery) outcome.append(recoveryNote(stop,path));
       }
+      if (path.includes('calm')) {
+        choices.append(button('rewind','А если бы всё пошло не так спокойно…',() => navigate('pressure')));
+      } else if (stops.length) {
+        const inspect = button('inspect',stops[0].miss ? 'Что можно было сделать иначе?' : 'Какие детали мне помогли?',
+          () => navigate(view.id,0));
+        inspect.classList.add('review-primary');
+        choices.append(inspect);
+      }
+      choices.append(attentionTrail(path));
       const otherRole = role === 'self' ? 'witness' : 'self';
-      const otherName = activeStory.roles[otherRole].viewpoint;
+      const other = activeStory.roles[otherRole];
       const replayUrl = focusLink(activeStory.id,otherRole)+'#'+path[1];
-      choices.append(button('forward','Посмотреть глазами '+otherName,() => leave(replayUrl),'play'));
+      const name = {Папа:'папа Леры', Тренер:'тренер'}[other.name] || other.name;
+      controls.append(button('dismiss','Посмотреть глазами '+other.viewpoint,() => leave(replayUrl,'Теперь ты — '+name),'play'));
+      appendNextStory();
     } else {
       freeze.hidden = false;
       question.textContent = data.question;
       for (const {id, label} of data.links) {
-        const option = button('forward', label, () => {
+        const option = button('forward', element('span','choice-label',label), () => {
           guide.dismissIntro();
           navigate(id, undefined, 'conversation');
         });
         const next = pages.get(id);
-        const code = attentionModes[next.mode];
         option.dataset.code = next.mode;
         option.classList.add('coded');
-        option.prepend(element('span','code-tag',transitionLabel(attentionAtLine(data,data.lines.length-1),next.mode)+' · '+code.meaning));
+        option.append(element('span','code-tag',transitionLabel(attentionAtLine(data,data.lines.length-1),next.mode)));
         choices.append(option);
       }
-      guide.annotate(choices.querySelectorAll('.coded'));
+      guide.annotate(choices);
       if (path.length > 2) controls.append(button('rewind','На шаг назад',() => navigate(data.parent)));
+      appendNextStory();
     }
-    appendNavigation();
     return data.outcome ? outcome : question;
   }
 
   function begin() {
-    guide.clear();
     ui.pauseMedia();
     const old = run;
     run = new AbortController();
     run.signal.addEventListener('abort', () => {
       for (const part of levelBadge) part.getAnimations().forEach(animation => animation.cancel());
+      flash.getAnimations().forEach(animation => animation.cancel());
+      freeze.getAnimations().forEach(animation => animation.cancel());
     }, {once:true});
     old?.abort();
     busy = true;
+    promptTarget = null;
+    firstNew = null;
+    readNew.hidden = true;
+    jump.hidden = true;
+    bar.after(jump);
     showActivity();
+    outcome.querySelectorAll('.recovery').forEach(section => section.remove());
     ui.clearPrompt();
     clearSignals();
     review.replaceChildren();
     review.hidden = true;
+    skip.lastChild.textContent = 'Показать сразу';
     skip.hidden = false;
     direction.textContent = '';
     scene.setAttribute('aria-busy','true');
-    ui.setFollow(true);
+    ui.setFollow(document.activeElement === document.body);
     return run;
   }
 
-  function appendNavigation() {
-    controls.append(button('forward','Следующая история',() => leave(randomStoryUrl(selection)),'play'),
-      reviewerLink('К списку ситуаций'));
+  function appendNextStory() {
+    controls.append(button('dismiss','Следующая история',() => leave(randomStoryUrl(selection),'Следующая история'),'play'));
   }
 
-  async function leave(url) {
+  async function leave(url, label) {
     const task = begin();
+    direction.textContent = label;
     if (motionAllowed()) {
-      direction.textContent = '◀◀ Следующая история';
       const tail = [...thread.querySelectorAll('.item')].slice(-3).reverse();
       for (const row of tail) {
         await animateRow(row,true,speed,task);
@@ -402,13 +485,16 @@ async function playAttentionPilot(ui) {
         row.remove();
         if (!block.querySelector('.item')) block.remove();
       }
+      // Leave the destination readable after the last frame. “Показать сразу” skips this pause.
+      await wait(650,task.signal);
     }
     if (run === task) location.assign(url);
   }
 
   async function render(next, mode) {
+    const opening = !view;
     const task = begin();
-    if (!view && guide.introducingYellow) ui.setFollow(false);
+    if (opening) ui.setFollow(false);
     view = next;
     const path = pathFor(next);
     const data = pages.get(next.id);
@@ -430,15 +516,21 @@ async function playAttentionPilot(ui) {
     }
     if (run !== task) return;
     direction.textContent = '';
-    skip.hidden = true;
     showActivity();
-    const target = stop ? showReview(stops,next.index) : showGame(data,path,stops);
-    status.textContent = stop ? 'Разбор. Решение '+(next.index+1)+' из '+stops.length :
-      data.outcome ? data.outcome.headline : 'Стоп-кадр. '+data.question;
-    if (mode !== 'restore' && ui.shouldFollow()) {
-      target.focus({preventScroll:true});
+    promptTarget = stop ? showReview(stops,next.index) : showGame(data,path,stops);
+    const canRead = !stop && Boolean(firstNew);
+    readNew.hidden = !canRead;
+    jump.lastChild.textContent = stop ? 'К разбору' : data.outcome ? 'К итогу' : 'К ответам';
+    skip.hidden = document.activeElement !== skip;
+    if (!skip.hidden) skip.lastChild.textContent = jump.lastChild.textContent;
+    const announcement = stop ? review.querySelector('h2').textContent : data.outcome ? data.outcome.headline : 'Стоп-кадр. '+data.question;
+    status.textContent = (canRead ? 'Появились новые сообщения. ' : '')+announcement;
+    if (!opening && mode !== 'restore' && ui.shouldFollow()) {
+      const target = canRead ? readNew : promptTarget;
       scrollTo(target);
+      target.focus({preventScroll:true});
     }
+    updateJump();
     if (!task.signal.aborted && !stop && data.question) ui.flashFreeze();
     scene.removeAttribute('aria-busy');
     busy = false;

@@ -14,21 +14,21 @@ anya-tim-ty-videl-chto:
   speaker: Аня
   aside: лично тебе
   channel: lichnaya-perepiska-s-aney
-  text: Тим, ты видел, что там про меня? [[Мне уже пишут гадости]]. Что вообще разослали?
+  text: Тим, [[мне уже пишут гадости]]. У меня скрин с одной фразой. Ты знаешь, где его выложили?
 ty-tam-odna-strochka-s:
   speaker: Ты
   channel: lichnaya-perepiska-s-aney
-  text: 'Там одна строчка: «С ними я точно больше не пойду». До и после обрезано. Костя мне скинул. Дальше не отправляю.'
+  text: 'Костя мне скинул. Где выложили, я не знаю. Дальше слать не буду.'
 anya-teper-ponyala-pro-chto:
   speaker: Аня
-  text: Теперь поняла, про что все пишут. Тим, спасибо, саму картинку не кидай.
+  text: Спасибо, Тим. У Веры спрошу, где она его видела.
 ty-pod-raspisaniem-igry-obsuzhdayut:
   speaker: Ты
   channel: lichnaya-perepiska-s-trenerom
-  text: Под расписанием игры обсуждают скрин с Аниным именем. Она говорит, ей уже гадости пишут. Вы можете посмотреть?
+  text: Костя прислал мне обрезанный скрин с Аниным именем. Аня говорит, ей уже пишут гадости. Вы в чате команды что-нибудь видите?
 trener-vizhu-vetku-zakroyu-otvety:
   speaker: Тренер
-  text: Вижу ветку. Закрою ответы под расписанием и напишу Ане отдельно.
+  text: Да, нашёл обсуждение под расписанием игры. Закрою ответы и напишу Ане отдельно.
 ty-rebyat-pro-frazu-ani:
   speaker: Ты
   channel: chat-komandy
@@ -44,16 +44,16 @@ anya-teper-i-sasha-sprashivaet:
 anya-tim-mne-eschyo-dvoe:
   speaker: Аня
   channel: lichnaya-perepiska-s-aney
-  text: '[[Тим, мне ещё двое написали. Можешь хоть сказать, что на скрине?]]'
+  text: '[[Тим, мне ещё двое написали. А тебе кто скрин прислал?]]'
 anya-vera-mne-pokazala-tam:
   speaker: Аня
-  text: Вера мне показала. Там вообще одна фраза.
+  text: Вера нашла обсуждение под расписанием игры.
 ty-odna-fraza-s-nimi:
   speaker: Ты
-  text: 'Одна фраза: «С ними я точно больше не пойду». До и после всё обрезано.'
+  text: 'Мне Костя прислал. Где он взял скрин, я не знаю. Я его никому не пересылал.'
 anya-teper-ponyala-sam-skrin:
   speaker: Аня
-  text: Теперь поняла. Сам скрин мне не кидай.
+  text: Поняла. Спасибо, что дальше не переслал.
 kostya-stop-tut-zhe-odna:
   speaker: Костя
   channel: lichnaya-perepiska-s-kostey
@@ -88,7 +88,7 @@ ty-ya-vpervye-vizhu-etot:
 ty-tim-mne-uzhe-pishut:
   speaker: Ты
   channel: lichnaya-perepiska-s-timurom
-  text: Тим, мне уже пишут гадости. Ты знаешь, где это выложили?
+  text: Тим, мне уже пишут гадости. У меня скрин с одной фразой. Ты знаешь, где его выложили?
 vera-ya-uzhe-reshila-chto:
   speaker: Вера
   channel: lichnaya-perepiska-s-veroy
@@ -125,10 +125,12 @@ remarka-dva-cheloveka-stavyat-plyus:
   text: Два человека ставят плюс. Остальные молчат. Ты весь вечер смотришь на счётчик и гадаешь, что думают остальные.
 ty-ver-davay-v-lichke:
   speaker: Ты
-  text: Вер, давай в личке. Я пока чат закрою.
+  channel: lichnaya-perepiska-s-veroy
+  text: Вер, я тут. Командный чат пока закрыла.
 vera-ya-tut-hochesh-zavtra:
   speaker: Вера
-  text: Я тут. Хочешь, завтра до тренировки вместе дойдём?
+  channel: lichnaya-perepiska-s-veroy
+  text: Я тоже тут. Хочешь, завтра до тренировки вместе дойдём?
 remarka-na-etom-dubl-zakanchivaetsya:
   speaker: Ремарка
   text: На этом дубль заканчивается.

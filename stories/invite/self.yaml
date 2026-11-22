@@ -112,7 +112,7 @@ scenes:
     - remarka-utrom-v-spiske-chatov
     outcome:
     - positive
-    - Аня вышла из беседы перед тренировкой
+    - Аня вышла из беседы
     note: Костя принял объяснение. На турнир можно позвать тех, кто сам хочет сыграть.
   ask:
     mode: yellow
@@ -204,7 +204,7 @@ scenes:
     - remarka-utrom-v-spiske-chatov
     outcome:
     - positive
-    - Аня вышла из беседы перед тренировкой
+    - Аня вышла из беседы
     note: Костя принял объяснение. На турнир можно позвать тех, кто сам хочет сыграть.
 cues:
   pressure/ty-ya-sama-vyshla-ot: Аня объяснила, что вышла сама.

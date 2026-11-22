@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Сценарий для чтения · Стоп-кадр</title>
+  <link rel="stylesheet" href="./read-story.css?v=review-3">
+  <script defer src="./game/catalog.js?v=review-3"></script>
+  <script defer src="./attention.js?v=review-3"></script>
+  <script defer src="./engine.js?v=review-3"></script>
+  <script defer src="./read-story.js?v=review-3"></script>
+</head>
+<body>
+<main>
+  <form method="get">
+    <label for="story">История</label>
+    <select id="story" name="case" required></select>
+    <button>Открыть</button>
+  </form>
+  <h1 id="title">Сценарий для чтения</h1>
+  <p id="state" role="status">Загружаем реплики и развилки…</p>
+  <noscript>Для чтения обеих ролей в браузере включите JavaScript.</noscript>
+  <nav id="roles" aria-label="Роли и дубли"></nav>
+  <div id="script"></div>
+</main>
+</body>
+</html>

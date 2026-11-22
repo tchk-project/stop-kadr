@@ -69,6 +69,8 @@ scenes:
     messages:
     - ty-drugu-15-let-s
     - dispetcher-brigada-napravlena-ostavaytes-na
+    - remarka-trener-podhodit
+    - timur-vstrette-u-kalitki
     - remarka-timur-ostayotsya-s-mishey
     outcome:
     - positive
@@ -96,6 +98,8 @@ scenes:
     messages:
     - ty-drugu-15-let-s
     - dispetcher-brigada-napravlena-ostavaytes-na
+    - remarka-trener-podhodit
+    - timur-vstrette-u-kalitki
     - remarka-timur-ostayotsya-s-mishey
     outcome:
     - positive

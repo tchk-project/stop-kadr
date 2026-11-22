@@ -21,7 +21,10 @@ cast:
 channels:
   chat-shkol-noy-gruppy:
     kind: group
-    title: Чат школьной группы
+    title: Чат музыкальной группы
+  shkolnyy-chat:
+    kind: group
+    title: Общешкольный чат
   lichnaya-perepiska-s-mishey:
     kind: private
     title: Личная переписка с Мишей
