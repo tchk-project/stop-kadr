@@ -71,10 +71,13 @@ misha-da-vot-ego-mozhno:
   text: Да, вот его можно.
 kostya-posledniy-progon-shkol-naya:
   speaker: Костя
+  channel: shkolnyy-chat
   media:
     kind: video
     src: ./assets/rehearsal.mp4
     poster: ./assets/rehearsal.webp
+    captions: ./assets/rehearsal.ru.vtt
+    description: Звучит мелодия без слов. В кадре видны руки на электрогитаре и клавишах, позади — барабаны.
     caption: Последний прогон · школьная музыкальная группа
 ty-kost-tot-gde-vstupili:
   speaker: Ты

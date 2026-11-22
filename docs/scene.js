@@ -29,7 +29,7 @@ async function launchAttentionScene() {
     const script = document.createElement('script');
     script.onload = resolve;
     script.onerror = () => reject(new Error('Не удалось загрузить историю '+episode.id));
-    script.src = './game/stories/'+episode.id+'.js';
+    script.src = './game/stories/'+episode.id+'.js?v=review-3';
     document.head.append(script);
   });
   if (document.readyState !== 'complete') {
@@ -74,8 +74,8 @@ function playScene() {
     <div class="typing" hidden><span class="typing-name"></span><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span></div>
     <div class="screen-flash" aria-hidden="true"></div>
     <p class="freeze" hidden>Стоп-кадр</p>
-    <section class="outcome" aria-labelledby="outcome-label outcome-title" tabindex="-1" hidden>
-      <p class="outcome-label"><span class="outcome-icon" aria-hidden="true"></span><span id="outcome-label"></span></p>
+    <section class="outcome" aria-labelledby="outcome-title" tabindex="-1" hidden>
+      <p class="outcome-label">Чем закончился этот дубль</p>
       <h2 id="outcome-title"></h2><p class="outcome-reason"></p>
     </section>
     <p class="note"></p><h2 class="question" tabindex="-1"></h2>
@@ -109,12 +109,6 @@ function playScene() {
   const note = scene.querySelector('.note');
   const question = scene.querySelector('.question');
   const outcome = scene.querySelector('.outcome');
-  const outcomeLabels = {
-    positive: {label:'Удачный исход', icon:'✓'},
-    negative: {label:'Неудачный исход', icon:'×'},
-    mixed: {label:'Смешанный исход', icon:'≈'},
-    open: {label:'Исход пока открыт', icon:'…'}
-  };
   const hint = scene.querySelector('.choice-hint');
   const choices = scene.querySelector('.choices');
   const controls = scene.querySelector('.playback-controls');
@@ -183,21 +177,17 @@ function playScene() {
     return row;
   }
 
-  const root = document.documentElement;
-  const themeColor = document.querySelector('meta[name="theme-color"]');
-
+  const modeLabel = document.querySelector('.mode-bar small');
+  const modeBar = modeLabel.closest('.mode-bar');
   function showOutcome(data) {
     const {kind, headline} = data.outcome;
     outcome.dataset.kind = kind;
-    outcome.querySelector('.outcome-icon').textContent = outcomeLabels[kind].icon;
-    outcome.querySelector('#outcome-label').textContent = outcomeLabels[kind].label;
     outcome.querySelector('#outcome-title').textContent = headline;
     outcome.querySelector('.outcome-reason').textContent = data.note;
     outcome.hidden = false;
-    if (kind === 'positive' || kind === 'negative') {
-      root.dataset.ending = kind;
-      if (themeColor) themeColor.content = getComputedStyle(root).getPropertyValue('--ending-ink').trim();
-    }
+    modeLabel.textContent = 'Внимание в последнем решении';
+    modeBar.setAttribute('aria-label', modeLabel.textContent);
+    modeBar.classList.add('past-mode');
   }
 
   function finishScene() {
@@ -208,10 +198,11 @@ function playScene() {
   function stopFollowing() { followNew = false; }
   window.addEventListener('wheel', stopFollowing, {passive:true});
   window.addEventListener('touchmove', stopFollowing, {passive:true});
-  thread.addEventListener('pointerdown', stopFollowing);
-  thread.addEventListener('focusin', stopFollowing);
+  document.addEventListener('pointerdown', stopFollowing);
+  document.addEventListener('focusin', stopFollowing);
+  scene.addEventListener('play', stopFollowing, true);
   window.addEventListener('keydown', event => {
-    if (['PageUp', 'PageDown', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key)) stopFollowing();
+    if (['Tab', ' ', 'PageUp', 'PageDown', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key)) stopFollowing();
   });
 
   function clearPrompt() {
@@ -219,10 +210,9 @@ function playScene() {
     freeze.getAnimations().forEach(animation => animation.cancel());
     freeze.hidden = true;
     outcome.hidden = true;
-    if (root.hasAttribute('data-ending')) {
-      delete root.dataset.ending;
-      if (themeColor) themeColor.content = attentionModes[root.dataset.code].chrome;
-    }
+    modeLabel.textContent = 'Мой режим внимания';
+    modeBar.setAttribute('aria-label', modeLabel.textContent);
+    modeBar.classList.remove('past-mode');
     typing.hidden = true;
     note.textContent = '';
     question.textContent = '';
@@ -247,7 +237,7 @@ function playScene() {
     ], {duration: 680, easing: 'cubic-bezier(.3, 0, .2, 1)'});
   }
   return playAttentionPilot({route, pauseMedia, pages, pathFor, messages, makeRow, button, scene, heading, thread, typing,
-      flash, freeze, question, outcome, outcomeLabels, choices, controls, status, finishScene,
+      flash, freeze, question, outcome, choices, controls, status, finishScene,
       showOutcome, clearPrompt, flashFreeze, motionAllowed, reduced, setFollow: value => { followNew = value; },
       shouldFollow: () => followNew});
 }

@@ -155,12 +155,19 @@ def build():
                 else:
                     media = msg["media"]
                     require(media["kind"] in MEDIA and all(media.get(k) for k in MEDIA[media["kind"]]), key)
-                    for prop in ("transcript", "caption"):
+                    for prop in ("transcript", "caption", "description"):
                         if prop in media:
                             marked(media[prop])
-                    for prop in ("src", "poster", "file"):
+                    for prop in ("src", "poster", "file", "html", "captions"):
                         if prop in media:
                             media[prop] = asset(media[prop], folder, output)
+                    if "captions" in media:
+                        # Browsers block file:// text tracks even beside a local video.
+                        path = DOCS / media["captions"]
+                        data = output[path] if path in output else path.read_bytes()
+                        media["captionsText"] = data.decode("utf-8-sig")
+                        require(re.match(r"^WEBVTT(?:[ \t]|[\r\n]|$)", media["captionsText"]),
+                                f"{key}: expected WebVTT subtitles")
             routes = {}
             for role in ROLES:
                 try:

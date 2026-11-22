@@ -29,6 +29,7 @@ scenes:
     messages:
     - papa-postav-korobku-u-menya
     - remarka-papa-saditsya-na-stupen-ku
+    - lera-pap-skoruyu-vyzvat
     - papa-ler-nu-kakuyu-skoruyu
     continuation: true
     question: Что ты сделаешь сейчас?

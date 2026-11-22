@@ -13,18 +13,15 @@ const playerName = activeStory.roles[role].name;
 const originalSelected = selection === 'dubl' || (!selection && location.hash.length > 1 && location.hash !== '#home-guide-title');
 const isCatalogue = !isAttentionPilot && !episode && !originalSelected;
 function focusLink(id, pointOfView) {
-  return './focus.html?case='+encodeURIComponent(id)+'&role='+pointOfView+'&v=reading-1';
+  return './focus.html?case='+encodeURIComponent(id)+'&role='+pointOfView+'&v=review-3';
 }
 function randomStoryUrl(excludeId, startingRole = role) {
   const pool = allStories.filter(item => item.id !== excludeId);
   return focusLink(pool[Math.floor(Math.random() * pool.length)].id, startingRole);
 }
 
-// Turn off the temporary shortcuts after the editorial read-through.
-const reviewNavigationEnabled = true;
-function reviewerLink(label) {
-  if (!reviewNavigationEnabled) return document.createDocumentFragment();
-  const link = element('a','reviewer-link',label+' (для проверяющих)');
+function catalogLink(label) {
+  const link = element('a','catalog-link',label);
   link.href = currentFile+'?view=cases';
   return link;
 }
@@ -93,6 +90,31 @@ function addAvatar(bubble) {
   bubble.prepend(avatar);
 }
 
+function recordingButton(src, label) {
+  const play = element('button', 'play-audio', 'Прослушать');
+  play.type = 'button';
+  play.dataset.src = src;
+  play.setAttribute('aria-label', 'Прослушать · '+label);
+  play.addEventListener('click', () => {
+    const audio = element('audio');
+    audio.controls = true;
+    audio.preload = 'none';
+    audio.setAttribute('aria-label', label);
+    audio.src = src;
+    play.replaceWith(audio);
+    audio.focus();
+    audio.play().catch(error => {
+      if (error.name === 'AbortError' || !audio.isConnected) return;
+      const hadFocus = document.activeElement === audio;
+      play.textContent = 'Не удалось воспроизвести. Повторить';
+      play.setAttribute('aria-label', play.textContent+' · '+label);
+      audio.replaceWith(play);
+      if (hadFocus) play.focus();
+    });
+  });
+  return play;
+}
+
 function messageBubble(message) {
   const {speaker, aside, reactions, media:words, parts} = message;
   const who = aside ? speaker+' · '+aside : speaker;
@@ -119,14 +141,11 @@ function messageBubble(message) {
       bubble.classList.add('live-voice');
       media.append(paragraph(words.transcript));
     }
-    const audio = element('audio');
-    audio.controls = true;
-    audio.preload = 'metadata';
-    audio.src = words.live ? words.src + '?v=cast-1' : words.src;
-    audio.setAttribute('aria-label', (words.live ? 'Реплика в голосовом канале · ' : 'Голосовое · ') + (who === 'Ты' ? playerName : who));
+    const src = words.live ? words.src + '?v=cast-1' : words.src;
+    const label = (words.live ? 'Реплика в голосовом канале · ' : 'Голосовое · ') + (who === 'Ты' ? playerName : who);
     const transcript = element('details', 'transcript');
     transcript.append(element('summary', '', 'Текст голосового'), paragraph(words.transcript));
-    media.append(audio);
+    media.append(recordingButton(src, label));
     if (!words.live) media.append(transcript);
   } else if (words.kind === 'video') {
     const video = element('video');
@@ -135,7 +154,21 @@ function messageBubble(message) {
     video.src = words.src;
     video.poster = words.poster;
     video.setAttribute('aria-label',words.caption);
-    media.append(video);
+    if (words.captions) {
+      const track = element('track');
+      track.kind = 'captions';
+      track.srclang = 'ru';
+      track.label = 'Русские субтитры';
+      track.src = location.protocol === 'file:' && words.captionsText
+        ? 'data:text/vtt;charset=utf-8,' + encodeURIComponent(words.captionsText)
+        : words.captions;
+      track.default = true;
+      video.append(track);
+    }
+    const figure = element('figure','clip');
+    figure.append(video);
+    if (words.description) figure.append(element('figcaption','clip-caption',words.description));
+    media.append(figure);
   } else if (words.kind === 'sticker') {
     const image = element('img');
     image.src = words.src;
@@ -154,6 +187,13 @@ function messageBubble(message) {
       file.rel = 'noopener';
       file.append(image, element('span', '', 'Открыть презентацию · PDF'));
       media.append(file);
+      if (words.html) {
+        const slides = element('a','slide-text','Прочитать слайды текстом');
+        slides.href = words.html;
+        slides.target = '_blank';
+        slides.rel = 'noopener';
+        media.append(slides);
+      }
     } else {
       const open = element('button', 'open-image');
       open.type = 'button';
@@ -209,52 +249,23 @@ function makeTakePreview() {
   return preview;
 }
 
-function cooperOverview(article) {
-  const guide = element('section','home-guide');
-  guide.setAttribute('aria-labelledby','home-guide-title');
-  const title = element('h2','','🎨 Цветовые коды Купера');
-  title.id = 'home-guide-title';
-  guide.append(title);
-  const levels = [
-    ['⬜ Белый — совсем отвлёкся','📱 «Иду и смотрю только в экран».','Отложи телефон и посмотри вокруг.'],
-    ['🟨 Жёлтый — внимательный и спокойный','👀 «Я замечаю, что происходит вокруг».','Пусть это войдёт в привычку: время от времени отрывай взгляд от телефона и замечай, что происходит вокруг.'],
-    ['🟧 Оранжевый — что-то насторожило','🤔 «Тут что-то не так. Пойду туда, где безопаснее».','Держи дистанцию и направляйся к людям или знакомому взрослому.'],
-    ['🟥 Красный — действую сейчас','🗣️ «Мне нужна помощь!»','Если опасность угрожает тебе, уходи к людям и громко зови на помощь. Если кому-то рядом резко стало плохо, вызови скорую.']
-  ];
-  const grid = element('div','home-levels');
-  for (const [name,quote,action] of levels) {
-    const item = element('section','home-level');
-    const advice = element('p');
-    advice.append(element('strong','','Что делать: '),action);
-    item.append(element('h3','',name),element('p','level-quote',quote),advice);
-    grid.append(item);
-  }
-  const black = element('aside','home-level home-black');
-  black.append(element('h3','','🖤 Чёрный — растерялся'),element('p','level-quote','😵 «Я не понимаю, что происходит!»'),
-    element('p','','Растеряться можно в любой момент. Если это случилось, начни с одного действия — позови на помощь.'));
-  const more = element('div','home-guide-more');
-  more.append(article);
-  guide.append(grid,black,more);
-  return guide;
-}
-
 function showCatalogue(panel) {
   panel.querySelectorAll('.page').forEach(el => el.remove());
   const section = element('section','catalogue');
   const roles = panel.querySelector('.roles');
   const masthead = panel.querySelector('.top');
   document.body.classList.add('catalog-home');
-  const listOpen = reviewNavigationEnabled && params.get('view') === 'cases';
+  const listOpen = params.get('view') === 'cases';
   const home = element('a','wordmark','Стоп-кадр');
   home.href = currentFile;
   masthead.replaceChildren(home);
   document.title = listOpen ? 'Выбор ситуации · Стоп-кадр' : 'Стоп-кадр · Игра';
-  const article = element('a','cooper-link','Подробнее о цветах Купера');
-  article.href = './cooper.html';
+  const article = element('a','cooper-link','Цвета в игре');
+  article.href = './colors.html';
   article.target = '_blank';
   article.rel = 'noopener';
   if (!listOpen) {
-    masthead.append(reviewerLink('Выбрать ситуацию'));
+    masthead.append(catalogLink('Выбрать историю'));
     const hero = element('div','catalog-hero');
     const copy = element('div','hero-copy');
     roles.remove();
@@ -264,12 +275,11 @@ function showCatalogue(panel) {
     const start = element('button','start-game','Играть');
     start.type = 'button';
     start.onclick = () => location.assign(randomStoryUrl(undefined, Math.random() < .5 ? 'witness' : 'self'));
-    const levelsLink = element('a','home-colours-link','Что означают цвета в игре?');
-    levelsLink.href = '#home-guide-title';
-    copy.append(title,intro,start,levelsLink);
+    article.id = 'home-guide-title';
+    article.classList.add('home-colours-link');
+    copy.append(title,intro,start,article);
     hero.append(copy,makeTakePreview());
-    article.textContent = 'Подробнее о цветовых кодах Купера →';
-    section.append(hero,cooperOverview(article));
+    section.append(hero);
     panel.append(section);
     return;
   }
@@ -304,5 +314,5 @@ function linkCurrentEpisode() {
   });
   const home = element('a','scene-home','Стоп-кадр');
   home.href = currentFile;
-  document.querySelector('.top').replaceChildren(home,reviewerLink('К списку ситуаций'));
+  document.querySelector('.top').replaceChildren(home);
 }

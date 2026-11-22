@@ -1,9 +1,10 @@
 'use strict';
 
 const colourHelp = {
-  white:'Внимание переключилось на свои дела. Можно пропустить то, что случится дальше, даже если переписка всё ещё идёт.',
-  orange:'Что-то конкретное привлекло внимание. Теперь ты следишь именно за этим и готов пересмотреть первую догадку.',
-  red:'Ты видишь непосредственную угрозу и готов реагировать сейчас. Можно отойти в безопасное место или обратиться за помощью.'
+  white:'Можно отдохнуть или заняться своим делом. К разговору можно вернуться позже.',
+  yellow:'Можно болтать с друзьями и замечать, что происходит вокруг. Например, услышать, что после шутки кто-то просит остановиться.',
+  orange:'Одна деталь привлекла внимание. Можно уточнить, что произошло и чего хочет человек.',
+  red:'Угроза уже рядом. Можно отойти к людям и позвать на помощь.'
 };
 
 function attentionGuide(panel) {
@@ -38,49 +39,41 @@ function attentionGuide(panel) {
   }
   let intro;
   if (!known.has('yellow')) {
-    intro = element('aside','colour-intro');
-    intro.setAttribute('aria-label','Первое прохождение');
-    intro.append(levelTitle('yellow'),
-      element('p','','Можно болтать с друзьями и замечать, что происходит вокруг. Например, услышать не только шутку, но и просьбу перестать. Так проще уловить перемену, даже когда ничего плохого не ждёшь.'),
-      element('p','','Цвет на кнопке показывает, какой уровень внимания ты выбираешь. Каждая история начинается с жёлтого.'));
-    panel.querySelector('.mode-bar').after(intro);
-    onDisplay(intro,'yellow');
+    intro = element('details','colour-intro');
+    const summary = element('summary','','Жёлтый · замечаю, что вокруг');
+    intro.append(summary, element('p','',colourHelp.yellow),
+      element('p','','Цвет на кнопке показывает, куда будет направлено внимание твоего героя.'));
+    panel.querySelector('.scene-role').after(intro);
+    onDisplay(summary,'yellow');
   }
-  const bubbles = [];
   return {
-    get introducingYellow() { return Boolean(intro); },
-    clear() {
-      for (const el of bubbles.splice(0)) if (observer) observer.unobserve(el);
+    dismissIntro() {
+      if (!intro) return;
+      remember('yellow');
+      if (observer) observer.unobserve(intro.querySelector('summary'));
+      intro.remove();
+      intro = null;
     },
-    dismissIntro() { if (intro) { remember('yellow'); if (observer) observer.unobserve(intro); intro.remove(); intro = null; } },
     explainReaction(row) {
-      const label = element('strong','reaction-label','Чёрный · я замер');
-      row.append(label);
+      row.append(element('strong','reaction-label','Чёрный · я замер'));
       mergeSaved();
       if (known.has('black')) return;
       const tip = element('p','reaction-hint');
-      tip.append(levelTitle('black'),'Иногда от неожиданности замираешь. Это случается само. В игре такая реакция не считается ошибкой.');
+      tip.append(levelTitle('black'),'Иногда от испуга трудно говорить или двигаться. Это случается само. Друг может побыть рядом и дать тебе время.');
       row.append(tip);
-      bubbles.push(tip);
       onDisplay(tip,'black');
     },
-    annotate(options) {
-      mergeSaved();
-      const shown = new Set();
-      for (const option of options) {
-        const colour = option.dataset.code;
-        if (!colourHelp[colour] || known.has(colour) || shown.has(colour)) continue;
-        shown.add(colour);
-        const bubble = element('p','colour-tip');
-        bubble.append(levelTitle(colour),colourHelp[colour]);
-        bubble.id = 'help-'+colour;
-        bubble.dataset.code = colour;
-        option.classList.add('new-colour');
-        option.setAttribute('aria-describedby',bubble.id);
-        option.after(bubble);
-        bubbles.push(bubble);
-        onDisplay(bubble,colour);
+    annotate(container) {
+      const colours = new Set(Array.from(container.querySelectorAll('.coded'), option => option.dataset.code));
+      const help = element('details','colour-help');
+      help.append(element('summary','','Что означают цвета ответов?'));
+      for (const colour of colours) {
+        const entry = element('p');
+        entry.dataset.code = colour;
+        entry.append(levelTitle(colour),colourHelp[colour]);
+        help.append(entry);
       }
+      container.append(help);
     }
   };
 }

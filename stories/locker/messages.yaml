@@ -75,12 +75,15 @@ remarka-danya-kladyot-ryukzak-na:
 vera-poshli-v-zal-eschyo:
   speaker: Вера
   text: Пошли в зал, ещё успеваем.
+remarka-misha-vhodit-v-zal:
+  speaker: Ремарка
+  text: Миша успевает переодеться. Звонок застаёт ребят уже в зале.
 ty-mish-formu-nashyol:
   speaker: Ты
-  text: Миш, форму нашёл?
+  text: Миш, тебя подождать?
 misha-aga-vsyo-tut-dogonyu:
   speaker: Миша
-  text: Ага, всё тут. Догоню вас.
+  text: Идите, я переоденусь и догоню вас.
 vera-dan-uzhe-pora-pereodevat-sya:
   speaker: Вера
   text: Дань, уже пора переодеваться.

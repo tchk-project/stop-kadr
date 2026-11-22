@@ -102,11 +102,12 @@ scenes:
     choices:
       calm-end: Посмотреть, что будет дальше
       ask: Сказать Дане про рюкзак
-      calm-watch: Рюкзак на лавке. Хочу ещё убедиться, что форма внутри.
+      calm-watch: Форма у меня. Успею переодеться до звонка?
   calm-end:
     mode: yellow
     messages:
     - vera-poshli-v-zal-eschyo
+    - remarka-misha-vhodit-v-zal
     outcome:
     - positive
     - Рюкзак вернули до звонка
@@ -118,8 +119,8 @@ scenes:
     - danya-ladno
     outcome:
     - positive
-    - Миша успевает на урок
-    note: С рюкзаком уже всё в порядке. Осталось время спросить про форму или договориться, где оставлять вещи.
+    - Даня согласился оставлять рюкзак на лавке
+    note: Миша попросил Даню оставлять рюкзак на лавке. Даня согласился.
   observe:
     mode: yellow
     messages:
@@ -204,6 +205,7 @@ scenes:
     mode: orange
     messages:
     - vera-poshli-v-zal-eschyo
+    - remarka-misha-vhodit-v-zal
     outcome:
     - positive
     - Рюкзак вернули до звонка

@@ -33,8 +33,8 @@ scenes:
     continuation: true
     question: Ты замечаешь резкую перемену. Что сделаешь?
     choices:
-      call: Слова вдруг плохо слушаются. Наберу 112 и передам трубку Вере.
-      delegate: 'Вера рядом с телефоном. Покажу на неё и выговорю: «Скорую».'
+      call: Слова плохо слушаются. Наберу 112 на своём телефоне и передам его Вере.
+      delegate: Покажу Вере на её телефон и поднесу руку к уху.
       wait: Может, это усталость. Посмотрю, пройдёт ли само.
   wait:
     mode: yellow
@@ -43,7 +43,7 @@ scenes:
     - remarka-pri-takih-vnezapnyh-priznakah
     question: Что сделаешь теперь?
     choices:
-      call-now: Позвоню 112 сейчас. Расскажу и о том, как всё началось, и о том, что изменилось.
+      call-now: Наберу 112 и передам телефон Вере. Она видела, как всё началось.
     review:
       signals:
       - pressure/remarka-hochesh-poprosit-rebyat-podvinut-sya
@@ -54,7 +54,7 @@ scenes:
   call:
     mode: red
     messages:
-    - remarka-vyzov-112-prinyat
+    - remarka-trener-peredayot-telefon
     - vera-u-trenera-vdrug-izmenilas
     - remarka-dispetcheru-nazyvayut-gorod-ulitsu
     - dispetcher-zapisal-adres-shkoly-i
@@ -82,7 +82,7 @@ scenes:
   delegate:
     mode: red
     messages:
-    - remarka-ryadom-s-toboy-nabrali
+    - remarka-vera-nabiraet-112
     - vera-u-trenera-vdrug-izmenilas
     - remarka-dispetcheru-nazyvayut-gorod-ulitsu
     - dispetcher-zapisal-adres-shkoly-i
@@ -92,7 +92,7 @@ scenes:
     review:
       signals:
       - pressure/remarka-hochesh-poprosit-rebyat-podvinut-sya
-      effect: Рядом с тобой набрали 112. Внезапное нарушение речи или асимметрия лица — уже повод заподозрить инсульт и сразу вызвать скорую.
+      effect: Вера поняла твой жест и набрала 112. Внезапное нарушение речи или асимметрия лица — уже повод заподозрить инсульт и сразу вызвать скорую.
   delegate-time:
     mode: red
     messages:
@@ -110,7 +110,7 @@ scenes:
   call-now:
     mode: red
     messages:
-    - remarka-vyzov-112-prinyat
+    - remarka-trener-peredayot-telefon
     - vera-u-trenera-vdrug-izmenilas
     - vera-seychas-stalo-luchshe-rasskazhu
     - remarka-dispetcheru-nazyvayut-gorod-ulitsu

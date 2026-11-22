@@ -79,6 +79,9 @@ lyosha-ladno-na-urok-tak:
 remarka-lyosha-otoshyol-k-oknu:
   speaker: Ремарка
   text: Лёша отошёл к окну. Саша проходит к лестнице.
+remarka-sasha-oglyadyvaetsya:
+  speaker: Ремарка
+  text: С лестницы видно, что Лёша всё ещё у окна.
 timur-sash-u-nas-na:
   speaker: Тимур
   text: Саш, у нас на третьем?

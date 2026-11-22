@@ -8,6 +8,7 @@ sasha-ya-v-etot-raz:
   text: '[[Я в этот раз пас]].'
 danya-togda-s-tebya-dvesti:
   speaker: Даня
+  channel: chat-sektsii
   text: '[[Тогда с тебя двести]]. После уроков тебя подождём.'
 sasha-mish-oni-vchera-tozhe:
   speaker: Саша
@@ -79,8 +80,6 @@ remarka-ty-snova-vidish-soobschenie:
   text: Ты снова видишь сообщение. Тренер всё ещё у спортзала.
 ty-posmotrite-sasha-u-razdevalki:
   speaker: Ты
-  channel: scene
-  caption: У тренерской
   text: Посмотрите, Саша у раздевалки. Его не выпускают.
 trener-ponyal-idu-tuda:
   speaker: Тренер
@@ -150,7 +149,8 @@ sasha-uzhe-v-ryukzake:
 trener-pro-podarok-uvidel-sash:
   speaker: Тренер
   channel: chat-sektsii
-  text: Про подарок увидел. Саш, я у кабинета. Можем выйти вместе.
+  caption: После звонка
+  text: Саш, видел, что Даня про двести написал. Я у твоего кабинета. Хочешь, вместе выйдем?
 sasha-da-ya-s-vami:
   speaker: Саша
   text: Да, я с вами пойду. [[Уже вижу вас]].
@@ -158,10 +158,10 @@ remarka-trener-i-sasha-vmeste:
   speaker: Ремарка
   channel: scene
   caption: У выхода из школы
-  text: Тренер и Саша вместе выходят из школы.
+  text: Вы с тренером вместе выходите из школы. У крыльца он ждёт, пока ты застегнёшь куртку.
 ty-trener-sasha-u-razdevalki:
   speaker: Ты
-  text: Тренер, Саша у раздевалки. Можно я с вами? Он меня ждёт.
+  text: Тренер, Саша пишет, что Даня его из раздевалки не выпускает. Пойдёмте вместе? Саша меня ждёт.
 remarka-vy-podhodite-vmeste-trener:
   speaker: Ремарка
   text: Вы подходите вместе. Тренер просит Даню освободить дверь.
@@ -170,7 +170,7 @@ danya-sash-a-den-gi:
   text: Саш! А деньги?
 remarka-sasha-ostanovilsya-guby-shevel-nulis:
   speaker: Ремарка
-  text: Саша остановился. Губы шевельнулись, но ты ничего не расслышал.
+  text: Саша остановился. [[Губы шевельнулись]], но ты ничего не расслышал.
 trener-dver-svobodna-ya-zdes:
   speaker: Тренер
   text: '[[Дверь свободна. Я здесь побуду.]]'
@@ -186,7 +186,7 @@ sasha-ya-v-etot-raz-2:
 sasha-mish-oni-vchera-tozhe-2:
   speaker: Саша
   channel: lichnaya-perepiska-s-mishey
-  text: Миш, они вчера тоже ждали у раздевалки. Побудешь со мной после уроков?
+  text: Миш, они [[вчера]] тоже ждали у раздевалки. Побудешь со мной после уроков?
 ty-marina-sergeevna-s-menya:
   speaker: Ты
   channel: scene
@@ -209,7 +209,7 @@ remarka-u-uchitel-skoy-ty-nahodish:
 ty-mam-smozhesh-menya-vstretit:
   speaker: Ты
   channel: lichnaya-perepiska-s-mamoy
-  text: Мам, сможешь меня встретить? У выхода обещали ждать из-за денег. Я у дежурной.
+  text: Мам, сможешь меня встретить? У меня деньги требуют. Написали, что после уроков будут ждать. Я у дежурной.
 mama-sashi-da-podozhdi-u:
   speaker: Мама Саши
   text: Да. Подожди у учительской, я за тобой туда зайду. Напишу, как буду в школе.
@@ -224,9 +224,11 @@ remarka-pered-poslednim-zvonkom-ty:
   speaker: Ремарка
   channel: scene
   caption: Перед звонком · в классе
-  text: Перед последним звонком ты всё ещё сидишь в классе с деньгами в кармане и думаешь, кто стоит у выхода.
+  text: До последнего звонка несколько минут. Деньги всё ещё у тебя в кармане. Интересно, будут ли ждать после уроков?
 ty-marina-sergeevna-u-menya:
   speaker: Ты
+  channel: scene
+  caption: У учительской
   text: Марина Сергеевна, у меня требуют деньги и обещали ждать после уроков. Можно я пока здесь побуду?
 marina-sergeevna-konechno-ostanus-s:
   speaker: Марина Сергеевна
@@ -242,14 +244,14 @@ ty-mozhno-ya-prosto-podpishu:
   text: Можно я просто подпишу?
 vera-konechno-na-trene-dam:
   speaker: Вера
-  text: Конечно. На трене дам ручку.
+  text: Конечно. Я принесу открытку на треню. И ручку захвачу.
 ty-mish-vstret-menya-u:
   speaker: Ты
   channel: lichnaya-perepiska-s-mishey
   text: Миш, встреть меня у раздевалки, ладно?
 misha-da-ya-s-trenerom:
   speaker: Миша
-  text: Да. Я с тренером, мы уже подходим.
+  text: Да. Я у тренерской, подойду с тренером.
 danya-sash-a-den-gi-2:
   speaker: Даня
   channel: scene
@@ -270,3 +272,51 @@ remarka-ty-kivaesh-misha-zhdyot:
 remarka-misha-ponimaet-zhest-vy:
   speaker: Ремарка
   text: Миша понимает жест. Вы подходите к тренеру, и он остаётся с вами.
+sasha-vishel-s-trenerom:
+  speaker: Саша
+  channel: lichnaya-perepiska-s-sashey
+  text: Миш, я уже с тренером вышел. Не знал, ждать тебя или нет.
+misha-podozhdat-u-kryltsa:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-sashey
+  text: Саш, у крыльца тебя подождать?
+sasha-davay-u-kryltsa:
+  speaker: Саша
+  text: Давай. Мы с тренером сейчас выйдем.
+remarka-sasha-podoshel-k-mishe:
+  speaker: Ремарка
+  channel: scene
+  caption: У крыльца
+  text: Ты ждёшь у крыльца. Саша выходит с тренером и подходит к тебе.
+sasha-vstretish-u-kryltsa:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-mishey
+  text: Миш, я с тренером до крыльца дойду. Встретишь там?
+misha-zhdu-u-kryltsa:
+  speaker: Миша
+  text: Ага, жду у крыльца.
+remarka-misha-zhdyot-u-kryltsa:
+  speaker: Ремарка
+  channel: scene
+  caption: У крыльца
+  text: Вы с тренером выходите из школы. Миша машет тебе с крыльца.
+vera-kuplyu-otkrytku:
+  speaker: Вера
+  channel: chat-sektsii
+  text: Я тогда открытку куплю. В четверг кто захочет, подпишет.
+danya-prinesu-ruchku:
+  speaker: Даня
+  text: Я ручку принесу.
+remarka-misha-pokazal-perepisku:
+  speaker: Ремарка
+  channel: scene
+  caption: У тренерской
+  text: Ты подходишь к тренеру и показываешь ему сообщение Саши.
+misha-poydyom-so-mnoy:
+  speaker: Ты
+  channel: scene
+  text: Я здесь. Тренер тоже. Пойдём со мной?
+misha-mogu-posidet-ryadom:
+  speaker: Ты
+  channel: scene
+  text: Хочешь остаться с тренером? Я могу посидеть с тобой.

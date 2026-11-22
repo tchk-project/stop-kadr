@@ -29,6 +29,7 @@ scenes:
     messages:
     - papa-postav-korobku-u-menya
     - remarka-papa-saditsya-na-stupen-ku
+    - lera-pap-skoruyu-vyzvat
     - papa-ler-nu-kakuyu-skoruyu
     continuation: true
     question: Что ты сделаешь сейчас?
@@ -50,7 +51,7 @@ scenes:
       miss: true
       effect: Вызов отложили, хотя признаки уже были видны.
       repair: call-now
-      recovery: Затем ты организовал вызов скорой.
+      recovery: После этого Лера всё-таки вызвала скорую.
   call:
     mode: red
     messages:

@@ -52,9 +52,9 @@ async function exercise() {
   const assets=new Set();
   const routes=new Set();
   await openPage(new URL('index.html',root),'.start-game');
-  check(!find('a.case-card'),'Каталог открыт до выбора проверяющего');
-  const reviewer=find('.reviewer-link');
-  check(reviewer.textContent.includes('(для проверяющих)'),'Пометка входа в каталог');
+  check(!find('a.case-card'),'Каталог открыт до выбора истории');
+  const catalogLink=find('.catalog-link');
+  check(catalogLink?.textContent === 'Выбрать историю' && catalogLink.search === '?view=cases','Доступ к выбору истории');
   const swap=find('.take-toggle');
   const phone = find('.take-preview');
   const copy = find('.hero-copy');
@@ -78,8 +78,7 @@ async function exercise() {
   check(phone.dataset.code==='yellow' && phone.textContent===initial,'Возврат первого ответа и цвета');
   const article=find('.cooper-link').href;
   const loaded = new Promise(resolve => frame.addEventListener('load',resolve,{once:true}));
-  check(find('.home-guide-more .cooper-link') && doc().querySelectorAll('.home-guide h3').length===5,'Все пять цветов и ссылка после памятки');
-  check(!find('.roles') && find('.home-colours-link').hash==='#home-guide-title','На главной сразу можно играть или посмотреть цвета');
+  check(!find('.roles') && doc().querySelectorAll('a[href="./colors.html"]').length === 1 && find('.home-colours-link').textContent === 'Цвета в игре','С главной доступна памятка по игровым цветам');
   named('Играть').click();
   await loaded;
   check(find('.scene-loader:not([hidden])') && find('.panel[hidden]') && !find('.thread .item'),'Загрузчик до показа сцены');
@@ -106,10 +105,26 @@ async function exercise() {
     frame.style.width=width+'px';
     const bar=find('.mode-bar');
     const height=Math.ceil(bar.getBoundingClientRect().height);
-    check(height <= 60 && bar.scrollWidth <= bar.clientWidth,'Размер плашки при ширине '+width);
+    check(height <= 110 && bar.scrollWidth <= bar.clientWidth,'Размер плашки при ширине '+width);
+    check(bar.querySelector('.story-exit')?.textContent === 'Пропустить историю','Можно выйти из сцены без выбора за героя');
     report.textContent+='Плашка внимания · '+width+' × '+height+' пикселей\n';
   }
   frame.style.removeProperty('width');
+  await openPage(new URL('docs/focus.html?case=sticker&role=witness#pressure',root),'.scene');
+  const guideLink = find('.mode-bar .cooper-link');
+  guideLink.focus();
+  await settled('#pressure');
+  check(doc().activeElement === guideLink,'Автопоказ сохраняет выбранный фокус');
+  await click(buttons().find(b=>b.textContent.includes('Расскажу про Лерину просьбу')));
+  const readNew = find('.read-new:not([hidden])');
+  check(readNew,'Доступен переход к новым репликам');
+  readNew.click();
+  check(doc().activeElement.dataset.key === 'alternative-0','Чтение с первой новой реплики');
+  const backToPrompt = find('.prompt-jump');
+  check(backToPrompt.textContent === 'К итогу','Переход к итогу из новых реплик');
+  backToPrompt.click();
+  check(doc().activeElement.matches('.outcome'),'Фокус на выбранном итоге');
+  report.textContent+='Новые реплики · чтение, возврат, сохранение фокуса\n';
   if (!frame.contentWindow.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     await openPage(new URL('docs/focus.html?case=sticker&role=self#pressure',root),'.scene');
     const inChat = () => find('#messages > .thread > .typing:not([hidden])');
@@ -125,14 +140,14 @@ async function exercise() {
   named('Следующая история').click();
   await until(()=>buttons().length && find('.scene:not([aria-busy])') &&
     new URL(frame.contentWindow.location.href).searchParams.get('case')!==first,'Смена ситуации');
-  find('.playback-controls .reviewer-link').click();
+  find('.story-exit').click();
   await until(()=>find('a.case-card'),'Возврат в список из переписки');
   const catalogSize=doc().querySelectorAll('a.case-card').length;
   check(catalogSize>=16,'В списке есть все исходные истории');
-  await openPage(article,'article h1');
-  check(!find('article button, article mark, article [hidden], article aside'),'Статья открыта для чтения целиком');
-  check(find('#black').textContent.includes('Игра не считает это ошибкой'),'Игровое пояснение о замирании');
-  check(find('article').innerText.includes('Все помнят сцену'),'Пример виден в тексте');
+  await openPage(article,'main h1');
+  check(find('main h1').textContent === 'Цвета в игре','Открылась игровая памятка о цветах');
+  check(['white','yellow','orange','red','black'].every(id => find('#'+id+' h2')), 'В памятке есть пять цветов');
+  check(find('main a[href="./cooper.html"]'), 'Доступен исходный авторский текст');
   for (const role of ['witness','self']) {
     const catalog=new URL(role==='self'?'docs/self.html':'docs/index.html',root);
     catalog.search=root.search;
@@ -162,7 +177,7 @@ async function exercise() {
             const expected = ['Общий чат класса','Личная переписка с Лерой'];
             if (hash !== '#pressure') expected.push('Общий чат класса');
             check(JSON.stringify(titles) === JSON.stringify(expected),'Порядок окон переписки '+hash);
-            check(blocks[0].querySelector('audio') && blocks[1].querySelector('[data-key="pressure-2"]'),'Реплики в своих чатах');
+            check(blocks[0].querySelector('button.play-audio') && blocks[1].querySelector('[data-key="pressure-2"]'),'Реплики в своих чатах');
             if (blocks[2]) check(blocks[2].querySelector('[data-key="'+hash.slice(1)+'-0"]'),'Ответ Ани снова в общем');
           }
           check(!find('.scene-role').textContent.includes('null'),'Пустой портрет в подписи роли');
@@ -182,11 +197,14 @@ async function exercise() {
             check(!find('[data-key="'+key+'-1"] .msg').classList.contains('you'),'Помощник сам отвечает диспетчеру');
           }
           progress.textContent=role+' · '+title+' · '+hash+' · финалов '+endings;
-          for(const el of doc().querySelectorAll('.thread img[src],.thread audio[src],.thread video[src],.thread source[src],.thread a.file-card')) assets.add(el.src || el.href);
+          const media = '.thread :is(img[src],audio[src],button.play-audio,video[src],source[src],track[src],a.file-card,a.slide-text)';
+          for (const el of doc().querySelectorAll(media)) {
+            assets.add(el.src || el.href || new URL(el.dataset.src,doc().baseURI).href);
+          }
           check(!find('.coded[data-code="black"]'),'Чёрный появился на кнопке');
           const outcome=find('.outcome:not([hidden])');
-          const expectedTheme=outcome && ['positive','negative'].includes(outcome.dataset.kind) ? outcome.dataset.kind : undefined;
-          check(doc().documentElement.dataset.ending===expectedTheme,'Тема исхода');
+          check(!doc().documentElement.hasAttribute('data-ending'),'На весь экран не выносится оценка исхода');
+          check(Boolean(outcome)===Boolean(find('.mode-bar.past-mode')),'В финале обозначено время последнего выбора');
           if(outcome) {
             endings++;
             check(find('#outcome-title').textContent,'Пустой финал');
@@ -203,10 +221,12 @@ async function exercise() {
                 check(review && review.querySelector('li') && review.querySelector('.chosen-answer') && !review.querySelector('select'),'Пустой разбор');
                 check(!doc().documentElement.hasAttribute('data-ending'),'Цвет внимания при перемотке');
                 reviews++;
-                if(named('Дальше').disabled) break;
+                const nav = review.querySelector('.review-steps');
+                check(Boolean(nav) === /^Остановка \d+ из \d+/.test(review.querySelector('h2').textContent),'Навигация только для нескольких остановок');
+                if(!nav || named('Дальше').disabled) break;
                 await click(named('Дальше'));
               } while(true);
-              while(!named('Назад').disabled) await click(named('Назад'));
+              while(named('Назад') && !named('Назад').disabled) await click(named('Назад'));
               const retry=[...doc().querySelectorAll('button')].find(b=>/Попробовать другой ответ|Вернуться к выбору ответа/.test(b.textContent));
               await click(retry);
               check(buttons().length>1,'Повтор решения');
@@ -220,6 +240,9 @@ async function exercise() {
           }
           const count=buttons().length;
           check(count,'Нет доступных ходов');
+          check(buttons().every(b=>b.querySelector('.choice-label')?.nextElementSibling?.matches('.code-tag')),
+            'На каждой кнопке сначала виден поступок, затем цвет');
+          check(find('.choices > .colour-help:last-child:not([open])'),'Значения цветов можно раскрыть после списка');
           for(let i=0;i<count;i++) {
             if(frame.contentWindow.location.hash!==hash || find('.decision-review:not([hidden])')) {
               await openPage(url+hash,'.scene');

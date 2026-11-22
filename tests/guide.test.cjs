@@ -4,64 +4,73 @@ const {readFileSync} = require('node:fs');
 const vm = require('node:vm');
 const source = readFileSync(__dirname+'/../docs/attention-guide.js','utf8');
 
-function lesson(saved) {
+function lesson(storage) {
   const observed = new Set();
-  const node = (tag, className, textContent) => ({
-    tag, className, textContent, children:[],
-    dataset:{}, classList:{add() {}}, append(...parts) { this.children.push(...parts); }, remove() {},
-    after(value) { this.afterNode = value; },
-    setAttribute(key,value) { this[key] = value; }
-  });
+  function node(tag, className, textContent) {
+    return {
+      tag, className, textContent, children:[], dataset:{},
+      append(...parts) { this.children.push(...parts); },
+      after(el) { this.following = el; },
+      remove() { this.removed = true; },
+      querySelector(tag) { return this.children.find(el => el.tag === tag); },
+      querySelectorAll(selector) { return this.children.filter(el => '.'+el.className === selector); }
+    };
+  }
   let visible;
   class Observer {
     constructor(notify) { visible = el => notify([{target:el,isIntersecting:true}]); }
     observe(el) { observed.add(el); }
     unobserve(el) { observed.delete(el); }
   }
-  const panel = {querySelector:() => node()};
-  const context = vm.createContext({localStorage:saved,IntersectionObserver:Observer,element:node,
+  const role = node('p','scene-role');
+  const panel = {querySelector:selector => selector === '.scene-role' && role};
+  const context = vm.createContext({localStorage:storage,IntersectionObserver:Observer,element:node,
     attentionModes:{white:{name:'Белый'},yellow:{name:'Жёлтый'},orange:{name:'Оранжевый'},red:{name:'Красный'},black:{name:'Чёрный'}}});
   vm.runInContext(source,context);
   const guide = context.attentionGuide(panel);
-  function option(colour) { const el = node(); el.dataset.code = colour; return el; }
-  return {guide,observed,visible,option};
+  function options(...colours) {
+    const el = node('nav','choices');
+    for (const colour of colours) {
+      const option = node('button','coded');
+      option.dataset.code = colour;
+      el.append(option);
+    }
+    return el;
+  }
+  return {guide,observed,visible,options,role,node};
 }
 
-test('only yellow is introduced initially; new colours are attached to the first matching choice and remembered once visible',() => {
+test('first visit puts a collapsed yellow explanation after the role and remembers it when seen',() => {
   const data = new Map();
   const storage = {getItem:k => data.get(k),setItem:(k,v) => data.set(k,v)};
   const first = lesson(storage);
-  assert.deepEqual([...first.observed].map(el => el.dataset.lesson),['yellow']);
-  first.visible([...first.observed][0]);
-  const choices = ['yellow','orange','orange','white'].map(first.option);
-  first.guide.annotate(choices);
-  assert.deepEqual(choices.map(el=>el.afterNode?.dataset.lesson),[undefined,'orange',undefined,'white']);
-  first.visible(choices[1].afterNode);
-  first.guide.clear();
-  const next = lesson(storage);
-  assert.equal(next.guide.introducingYellow,false);
-  const more = ['orange','white','red'].map(next.option);
-  next.guide.annotate(more);
-  assert.deepEqual(more.map(el=>el.afterNode?.dataset.lesson),[undefined,'white','red']);
+  const intro = first.role.following;
+  assert.equal(intro.tag,'details');
+  assert.equal(intro.querySelector('summary').dataset.lesson,'yellow');
+  first.visible(intro.querySelector('summary'));
+  assert.equal(lesson(storage).role.following,undefined);
 });
 
-test('blocked persistence still lets the player choose and suppresses repeated hints within a scene',() => {
-  const {guide,visible,option} = lesson({getItem(){throw Error()},setItem(){throw Error()}});
+test('colour explanations stay available in one disclosure after the action buttons on repeat visits',() => {
+  const {guide,options} = lesson({getItem:() => '["yellow","white","orange"]'});
+  const choices = options('white','orange','orange','yellow');
+  guide.annotate(choices);
+  assert.deepEqual(choices.children.map(el => el.tag),['button','button','button','button','details']);
+  const help = choices.children.at(-1);
+  assert.equal(help.querySelector('summary').textContent,'Что означают цвета ответов?');
+  assert.deepEqual(help.children.slice(1).map(el => el.children[0].textContent),['Белый уровень','Оранжевый уровень','Жёлтый уровень']);
+});
+
+test('blocked storage still permits dismissing the intro and reading a spontaneous reaction',() => {
+  const {guide,node,visible,observed,role} = lesson({getItem(){ throw Error(); },setItem(){ throw Error(); }});
   guide.dismissIntro();
-  const red = option('red');
-  guide.annotate([red]);
-  visible(red.afterNode);
-  const again = option('red');
-  guide.annotate([again]);
-  assert.equal(again.afterNode,undefined);
-});
-
-test('all five level explanations start with a bold heading', () => {
-  const {guide,observed,option} = lesson({getItem:()=>null});
-  guide.annotate(['white','orange','red'].map(option));
-  guide.explainReaction(option('black'));
-  assert.deepEqual([...observed].map(el=>[el.children[0].tag,el.children[0].textContent]), [
-    ['strong','Жёлтый уровень'], ['strong','Белый уровень'], ['strong','Оранжевый уровень'],
-    ['strong','Красный уровень'], ['strong','Чёрный уровень']
-  ]);
+  assert.ok(role.following.removed);
+  const reaction = node();
+  guide.explainReaction(reaction);
+  const tip = [...observed][0];
+  assert.equal(tip.dataset.lesson,'black');
+  visible(tip);
+  const repeat = node();
+  guide.explainReaction(repeat);
+  assert.deepEqual(repeat.children.map(el => el.textContent),['Чёрный · я замер']);
 });
