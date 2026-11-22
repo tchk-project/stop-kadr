@@ -20,7 +20,7 @@ scenes:
       pressure-act-1: Меня всё ещё передразнивают. Попрошу модератора зайти.
       alternative: Хочу переключить шутки с себя. Напомню Лёшину оговорку.
       observe: Может, сейчас все вернутся к раунду. Пока послушаю.
-      focus: Я прямо попросил перестать. Послушаю, что Даня ответит.
+      focus: Отвечу про ключ в игровом чате, микрофон пока оставлю включённым.
   pressure-act-0:
     mode: orange
     messages:
@@ -132,10 +132,10 @@ scenes:
     messages:
     - danya-ladno-mish-uslyshal-vsyo
     - lyosha-dver-otkryta-zahodim
-    question: Что изменилось для тебя сейчас?
+    question: Дверь открыта. Как продолжишь играть?
     choices:
       observe-ease: Даня услышал. Можно вернуться к раунду.
-      observe-watch: Пока играю дальше. Послушаю, сдержит ли Даня слово.
+      observe-watch: Спрошу в чате, кто пойдёт со мной дальше.
     review:
       signals:
       - pressure/ty-dan-hvatit-menya-peredraznivat
@@ -155,28 +155,30 @@ scenes:
   observe-watch:
     mode: orange
     messages:
-    - sistema-komanda-prohodit-v-sleduyuschuyu
+    - misha-asks-for-teammate
+    - lyosha-offers-to-join
     outcome:
     - positive
-    - Команда продолжила игру
-    note: Даня прямо откликнулся на просьбу. Лёша вернулся к игре.
+    - Миша и Лёша договорились в игровом чате
+    note: Ты спросил в тексте и получил ответ там же. Вы продолжаете играть вместе.
     review:
       signals:
       - observe/danya-ladno-mish-uslyshal-vsyo
-      effect: Пока играю дальше. Послушаю, сдержит ли Даня слово.
+      effect: Ты спросил в тексте и получил ответ там же. Вы продолжаете играть вместе.
   focus:
     mode: orange
     messages:
+    - misha-writes-about-key
     - danya-ladno-mish-uslyshal-vsyo
     - lyosha-dver-otkryta-zahodim
-    question: Что изменилось для тебя сейчас?
+    question: Дверь открыта. Как продолжишь играть?
     choices:
       focus-ease: Даня услышал. Можно вернуться к раунду.
-      focus-watch: Пока играю дальше. Послушаю, сдержит ли Даня слово.
+      focus-watch: Спрошу в чате, кто пойдёт со мной дальше.
     review:
       signals:
       - pressure/ty-dan-hvatit-menya-peredraznivat
-      effect: Даня прямо откликнулся на просьбу. Лёша вернулся к игре.
+      effect: Ты написал команде про ключ. Даня ответил в голосе, что услышал твою просьбу.
   focus-ease:
     mode: yellow
     messages:
@@ -192,15 +194,16 @@ scenes:
   focus-watch:
     mode: orange
     messages:
-    - sistema-komanda-prohodit-v-sleduyuschuyu
+    - misha-asks-for-teammate
+    - lyosha-offers-to-join
     outcome:
     - positive
-    - Команда продолжила игру
-    note: Даня прямо откликнулся на просьбу. Лёша вернулся к игре.
+    - Миша и Лёша договорились в игровом чате
+    note: Ты спросил в тексте и получил ответ там же. Вы продолжаете играть вместе.
     review:
       signals:
       - focus/danya-ladno-mish-uslyshal-vsyo
-      effect: Пока играю дальше. Послушаю, сдержит ли Даня слово.
+      effect: Ты спросил в тексте и получил ответ там же. Вы продолжаете играть вместе.
   calm-watch:
     mode: orange
     messages:

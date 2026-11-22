@@ -19,8 +19,8 @@ scenes:
       alternative: Хочу, чтобы меня отпустили. Попробую переключить его внимание на Веру.
       pressure-act-0: Лёша держит меня за руку. Попрошу Веру привести дежурную.
       pressure-act-1: Мне не дают отойти. Позову дежурную у двери.
-      observe: Вера рядом. Окликну её, хочу сесть за стол.
-      focus: Он всё ещё держит меня за руку. Окликну Веру прямо сейчас.
+      observe: Окликну Веру. Хочу к ребятам за стол.
+      focus: Поймаю взгляд Веры и поманю её свободной рукой.
   pressure-act-0:
     mode: red
     messages:
@@ -127,76 +127,80 @@ scenes:
     - ty-ver-syuda-pozhaluysta
     - remarka-vera-podhodit-lyosha-otpuskaet
     - vera-ya-s-toboy-poydyom
-    question: Что изменилось для тебя сейчас?
+    question: Вера зовёт тебя за стол. Чего тебе сейчас хочется?
     choices:
-      observe-ease: Теперь можно спокойно посидеть с ребятами.
-      observe-watch: Пока останусь поближе к своим и посмотрю, не подойдёт ли он снова.
+      observe-ease: Пойду к ребятам и послушаю музыку.
+      observe-watch: Попрошу Веру посидеть рядом со мной.
     review:
       signals:
       - pressure/remarka-ty-othodish-k-stene
-      effect: Аня может отойти к друзьям. Лёша остался у колонок.
+      effect: Ты окликнула Веру. Она подошла, Лёша отпустил руку, и теперь ты можешь уйти с ней.
   observe-ease:
     mode: yellow
     messages:
+    - anya-lets-sit
     - remarka-za-stolom-slyshno-kak
     outcome:
     - positive
-    - Вера и Аня остались вместе у стола
-    note: Аня может отойти к друзьям. Лёша остался у колонок.
+    - Аня вернулась к музыке
+    note: Лёша отошёл. Ты выбрала побыть с друзьями за столом.
     review:
       signals:
       - observe/remarka-vera-podhodit-lyosha-otpuskaet
-      effect: Аня может отойти к друзьям. Лёша остался у колонок.
+      effect: Лёша отошёл. Ты выбрала побыть с друзьями за столом.
   observe-watch:
     mode: orange
     messages:
-    - remarka-za-stolom-slyshno-kak
+    - anya-ask-vera
+    - vera-stays
     outcome:
     - positive
-    - Вера и Аня остались вместе у стола
-    note: Аня может отойти к друзьям. Лёша остался у колонок.
+    - Вера согласилась посидеть рядом с Аней
+    note: Ты попросила Веру остаться с тобой. Она услышала, чего тебе сейчас хочется.
     review:
       signals:
       - observe/remarka-vera-podhodit-lyosha-otpuskaet
-      effect: Пока останусь поближе к своим и посмотрю, не подойдёт ли он снова.
+      effect: Ты попросила Веру остаться с тобой. Она услышала, чего тебе сейчас хочется.
   focus:
     mode: red
     messages:
-    - ty-ver-syuda-pozhaluysta
+    - remark-anya-wave
     - remarka-vera-podhodit-lyosha-otpuskaet
     - vera-ya-s-toboy-poydyom
-    question: Что изменилось для тебя сейчас?
+    question: Вера зовёт тебя за стол. Чего тебе сейчас хочется?
     choices:
-      focus-ease: Теперь можно спокойно посидеть с ребятами.
-      focus-watch: Пока останусь поближе к своим и посмотрю, не подойдёт ли он снова.
+      focus-ease: Пойду к ребятам и послушаю музыку.
+      focus-watch: Попрошу Веру посидеть рядом со мной.
     review:
       signals:
       - pressure/remarka-ty-othodish-k-stene
-      effect: Аня может отойти к друзьям. Лёша остался у колонок.
+      effect: Вера заметила твой жест и подошла. Лёша отпустил руку. Ты можешь выбрать, где побыть дальше.
   focus-ease:
     mode: yellow
     messages:
+    - anya-lets-sit
     - remarka-za-stolom-slyshno-kak
     outcome:
     - positive
-    - Вера и Аня остались вместе у стола
-    note: Аня может отойти к друзьям. Лёша остался у колонок.
+    - Аня вернулась к музыке
+    note: Лёша отошёл. Ты выбрала побыть с друзьями за столом.
     review:
       signals:
       - focus/remarka-vera-podhodit-lyosha-otpuskaet
-      effect: Аня может отойти к друзьям. Лёша остался у колонок.
+      effect: Лёша отошёл. Ты выбрала побыть с друзьями за столом.
   focus-watch:
     mode: orange
     messages:
-    - remarka-za-stolom-slyshno-kak
+    - anya-ask-vera
+    - vera-stays
     outcome:
     - positive
-    - Вера и Аня остались вместе у стола
-    note: Аня может отойти к друзьям. Лёша остался у колонок.
+    - Вера согласилась посидеть рядом с Аней
+    note: Ты попросила Веру остаться с тобой. Она услышала, чего тебе сейчас хочется.
     review:
       signals:
       - focus/remarka-vera-podhodit-lyosha-otpuskaet
-      effect: Пока останусь поближе к своим и посмотрю, не подойдёт ли он снова.
+      effect: Ты попросила Веру остаться с тобой. Она услышала, чего тебе сейчас хочется.
   calm-watch:
     mode: orange
     messages:

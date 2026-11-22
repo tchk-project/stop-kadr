@@ -58,7 +58,7 @@ scenes:
     - vera-u-trenera-vdrug-izmenilas
     - remarka-dispetcheru-nazyvayut-gorod-ulitsu
     - dispetcher-zapisal-adres-shkoly-i
-    question: Как поможешь передать время звонящему?
+    question: Как подскажешь Вере, когда это началось?
     choices:
       call-time: Покажу Вере на часы в зале. Она слышала меня перед фото.
     review:
@@ -86,7 +86,7 @@ scenes:
     - vera-u-trenera-vdrug-izmenilas
     - remarka-dispetcheru-nazyvayut-gorod-ulitsu
     - dispetcher-zapisal-adres-shkoly-i
-    question: Как поможешь передать время звонящему?
+    question: Как подскажешь Вере, когда это началось?
     choices:
       delegate-time: Покажу Вере на часы в зале. Она слышала меня перед фото.
     review:
@@ -115,7 +115,7 @@ scenes:
     - vera-seychas-stalo-luchshe-rasskazhu
     - remarka-dispetcheru-nazyvayut-gorod-ulitsu
     - dispetcher-zapisal-adres-shkoly-i
-    question: Как поможешь передать время звонящему?
+    question: Как подскажешь Вере, когда это началось?
     choices:
       call-now-time: Покажу Вере на часы в зале. Она слышала меня перед фото.
     review:

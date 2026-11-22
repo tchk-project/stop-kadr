@@ -20,7 +20,7 @@ scenes:
       pressure-act-0: Мне угрожают и не дают пройти. Окликну дежурную сейчас.
       pressure-act-1: Тимур рядом и слышит угрозу. Попрошу его позвать дежурную.
       observe: В соседнем кабинете ребята. Отойду туда от лестницы.
-      focus: Лёша угрожает ударить. Отойду в открытый кабинет, где есть люди.
+      focus: Позову Тимура с собой в открытый класс.
   pressure-act-0:
     mode: red
     messages:
@@ -139,10 +139,10 @@ scenes:
     mode: orange
     messages:
     - remarka-ty-othodish-ot-lestnitsy
-    question: Что изменилось для тебя сейчас?
+    question: Ты в классе с ребятами. Чего тебе хочется?
     choices:
       observe-ease: Мы в классе, здесь есть взрослый. Можно выдохнуть.
-      observe-watch: Пока останусь в классе, рядом с дежурной.
+      observe-watch: Попрошу дежурную побыть со мной.
     review:
       signals:
       - pressure/remarka-lyosha-vstayot-poperyok-prohoda-2
@@ -163,28 +163,32 @@ scenes:
   observe-watch:
     mode: orange
     messages:
-    - marina-sergeevna-ya-pobudu-zdes
+    - sasha-asks-teacher-to-stay
+    - teacher-offers-seat
     outcome:
     - positive
-    - Саша в классе вместе с ребятами и дежурной
-    note: Саша уже в классе. Между ним и Лёшей у двери стоит дежурная.
+    - Дежурная осталась с Сашей
+    note: Ты попросил взрослую остаться рядом. Она услышала и предложила сесть вместе.
     review:
       signals:
       - observe/remarka-ty-othodish-ot-lestnitsy
-      effect: Пока останусь в классе, рядом с дежурной.
+      effect: Ты попросил взрослую остаться рядом. Она услышала и предложила сесть вместе.
   focus:
     mode: red
     messages:
+    - sasha-invites-timur
+    - timur-agrees-to-come
+    - timur-enters-with-sasha
     - remarka-ty-othodish-ot-lestnitsy
-    question: Что изменилось для тебя сейчас?
+    question: Ты в классе с ребятами. Чего тебе хочется?
     choices:
       focus-ease: Мы в классе, здесь есть взрослый. Можно выдохнуть.
-      focus-watch: Пока останусь в классе, рядом с дежурной.
+      focus-watch: Попрошу дежурную побыть со мной.
     review:
       signals:
       - pressure/remarka-lyosha-vstayot-poperyok-prohoda-2
       - pressure/lyosha-eschyo-shag-udaryu
-      effect: Саша уже в классе. Между ним и Лёшей у двери стоит дежурная.
+      effect: Ты попросил Тимура пойти с тобой. Вы зашли в класс, у двери встала дежурная.
   focus-ease:
     mode: yellow
     messages:
@@ -200,15 +204,16 @@ scenes:
   focus-watch:
     mode: orange
     messages:
-    - marina-sergeevna-ya-pobudu-zdes
+    - sasha-asks-teacher-to-stay
+    - teacher-offers-seat
     outcome:
     - positive
-    - Саша в классе вместе с ребятами и дежурной
-    note: Саша уже в классе. Между ним и Лёшей у двери стоит дежурная.
+    - Дежурная осталась с Сашей
+    note: Ты попросил взрослую остаться рядом. Она услышала и предложила сесть вместе.
     review:
       signals:
       - focus/remarka-ty-othodish-ot-lestnitsy
-      effect: Пока останусь в классе, рядом с дежурной.
+      effect: Ты попросил взрослую остаться рядом. Она услышала и предложила сесть вместе.
   calm-watch:
     mode: orange
     messages:

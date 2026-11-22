@@ -142,7 +142,7 @@ function messageBubble(message) {
       bubble.classList.add('live-voice');
       media.append(paragraph(words.transcript));
     }
-    const src = words.live ? words.src + '?v=cast-1' : words.src;
+    const src = words.src.startsWith('./assets/') ? words.src + '?v=voices-2' : words.src;
     const label = (words.live ? 'Реплика в голосовом канале · ' : 'Голосовое · ') + (who === 'Ты' ? playerName : who);
     const transcript = element('details', 'transcript');
     transcript.append(element('summary', '', 'Текст голосового'), paragraph(words.transcript));

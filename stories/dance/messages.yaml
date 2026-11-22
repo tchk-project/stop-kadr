@@ -94,6 +94,7 @@ anya-spasibo-posizhu-s-vami:
   text: Спасибо, [[посижу с вами]].
 remarka-za-stolom-slyshno-kak:
   speaker: Ремарка
+  channel: scene
   text: За столом слышно, как меняется песня. Вера остаётся рядом.
 lyosha-potantsuem:
   speaker: Лёша
@@ -180,3 +181,37 @@ remarka-vera-podhodit-lyosha-otpuskaet:
 vera-ya-s-toboy-poydyom:
   speaker: Вера
   text: Я с тобой. Пойдём за стол?
+remark-danya-chair:
+  speaker: Ремарка
+  channel: scene
+  text: Ты отодвигаешь свободный стул, чтобы к нему можно было пройти. Телефон остался на столе.
+remark-danya-waves:
+  speaker: Ремарка
+  channel: scene
+  text: Ты поднимаешь руку и показываешь на свободный стул. Аня замечает тебя и машет в ответ.
+danya-stay-near:
+  speaker: Ты
+  channel: scene
+  text: Ань, мне тут с тобой посидеть?
+anya-stay-near:
+  speaker: Аня
+  text: Посиди, ладно? Просто давай про другое. Что за песня сейчас была?
+remark-anya-wave:
+  speaker: Ремарка
+  channel: scene
+  text: Ты ловишь взгляд Веры и свободной рукой зовёшь её к себе.
+anya-lets-sit:
+  speaker: Ты
+  channel: scene
+  text: Пойдём. Я пока здесь посижу.
+anya-ask-vera:
+  speaker: Ты
+  channel: scene
+  text: Вер, посидишь со мной немного?
+vera-stays:
+  speaker: Вера
+  text: Конечно. Подвинься чуть, я рядом сяду.
+remark-danya-space:
+  speaker: Ремарка
+  channel: scene
+  text: Ты убираешь со стола свою бутылку. Аня садится, а ребята спорят, кто поёт припев.

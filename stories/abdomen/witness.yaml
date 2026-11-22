@@ -15,7 +15,7 @@ scenes:
     continuation: true
     question: Что дальше?
     choices:
-      calm-end: Взять манишки и выйти на поле.
+      calm-end: Передам Мише манишку и пойду с ним на поле.
   calm-end:
     mode: yellow
     messages:
@@ -38,6 +38,7 @@ scenes:
   wait:
     mode: yellow
     messages:
+    - witness-waits
     - remarka-misha-boitsya-propustit-igru
     - remarka-sil-naya-narastayuschaya-bol-v
     question: Что сделаешь теперь?
@@ -50,10 +51,11 @@ scenes:
       miss: true
       effect: Вызов отложили, хотя признаки уже были видны.
       repair: call-now
-      recovery: Затем ты организовал вызов скорой.
+      recovery: Потом ты позвонил и остался с Мишей.
   call:
     mode: red
     messages:
+    - witness-asks-before-call
     - remarka-timur-nabiraet-103-i
     - ty-my-u-razdevalki-shkol-nogo
     - dispetcher-chto-sluchilos
@@ -83,6 +85,7 @@ scenes:
   call-now:
     mode: red
     messages:
+    - witness-asks-before-call
     - remarka-timur-nabiraet-103-i
     - ty-my-u-razdevalki-shkol-nogo
     - dispetcher-chto-sluchilos

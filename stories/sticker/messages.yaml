@@ -211,3 +211,25 @@ ty-hvatit-nesi-pryamo-k:
 danya-begu:
   speaker: Даня
   text: Бегу.
+vera-brings-glue:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-leroy
+  text: Лер, я голосовое послушала. Клей захватила, уже иду.
+vera-asks-about-cats:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-leroy
+  text: Лер, хочешь про этого кота сейчас поговорить?
+lera-asks-about-headline:
+  speaker: Лера
+  text: Давай потом. Лучше помоги мне заголовок приклеить.
+lera-defers-cat-talk:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-veroy
+  text: Вер, давай про кота потом, когда увидимся.
+lera-repeats-request:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-daney
+  text: Дань, клей — спасибо. А кота под моими голосовыми я правда больше не хочу.
+danya-acknowledges-request:
+  speaker: Даня
+  text: Понял, Лер. Больше не буду.

@@ -81,7 +81,8 @@ scenes:
   delegate:
     mode: red
     messages:
-    - remarka-ryadom-s-toboy-nabrali
+    - timur-asks-vera
+    - vera-calls
     - vera-u-uchitel-nitsy-vnezapno-dvoitsya
     - remarka-dispetcheru-nazyvayut-gorod-ulitsu
     - dispetcher-zapisal-adres-shkoly-i

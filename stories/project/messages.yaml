@@ -122,6 +122,7 @@ ty-dogovorilis-na-pervoy-tvoyo:
 misha-tim-stoy-uspel-ler:
   speaker: Миша
   text: Тим, стой, успел! Лер, открывай второй файл.
+  channel: chat-proekta
 anya-teper-troe-timur-tozhe:
   speaker: Аня
   text: Теперь трое. [[Тимур тоже на титульном]].
@@ -192,3 +193,25 @@ ty-teper-vsyo-na-meste:
 anya-davay-ya-esli-zabudu:
   speaker: Аня
   text: Давай я. Если забуду, сколько за скамейки, подскажешь из зала?
+lera-shows-laptop:
+  speaker: Ремарка
+  channel: scene
+  text: Ты поворачиваешь ноутбук к Тимуру. На первом слайде пока два имени.
+lera-checks-submission:
+  speaker: Ремарка
+  channel: scene
+  text: После защиты ты открываешь сданную презентацию. На титульном имена Миши, Ани и Тимура.
+timur-asks-anya-to-check:
+  speaker: Ты
+  channel: chat-proekta
+  text: Ань, ты у экрана. Моё имя там видно?
+timur-asks-for-submission:
+  speaker: Ты
+  channel: chat-proekta
+  text: Миш, скинь версию, которую сдали?
+misha-sends-submission:
+  speaker: Миша
+  text: Вот, тот же файл, что мы показывали.
+timur-checks-title:
+  speaker: Ремарка
+  text: Ты открываешь файл. На первом слайде твоё имя рядом с именами Миши и Ани.

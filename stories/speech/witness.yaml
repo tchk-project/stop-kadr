@@ -81,7 +81,8 @@ scenes:
   delegate:
     mode: red
     messages:
-    - remarka-ryadom-s-toboy-nabrali
+    - vera-asks-sasha-to-call
+    - sasha-calls
     - sasha-u-trenera-vnezapno-izmenilas
     - remarka-dispetcheru-nazyvayut-gorod-ulitsu
     - dispetcher-zapisal-adres-shkoly-i

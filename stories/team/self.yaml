@@ -20,7 +20,7 @@ scenes:
       alternative: Спою только припев. Хочу просто доехать до игры.
       pressure-act-1: Хочу сесть с ребятами. У Миши спрошу про место.
       observe: Автобус ещё закрыт. Посмотрю, кто куда сядет.
-      focus: Место теперь зависит от песни. Посмотрю, что будет, когда откроют двери.
+      focus: У двери автобуса спрошу Сашу, есть ли рядом место.
   pressure-act-0:
     mode: orange
     messages:
@@ -111,7 +111,7 @@ scenes:
     choices:
       calm-end: Посмотреть, что будет дальше
       ask: Выбрать место у окна
-      calm-watch: Место дали без песни. Посмотрю, останется ли оно свободным.
+      calm-watch: Сяду у окна и поеду с командой.
   calm-end:
     mode: yellow
     messages:
@@ -134,10 +134,10 @@ scenes:
     messages:
     - sasha-tim-ya-kurtku-ubral
     - remarka-timur-saditsya-ryadom-s
-    question: Что изменилось для тебя сейчас?
+    question: Ты уже сел с Сашей. Как поедешь дальше?
     choices:
       observe-ease: С местом разобрались. Поехали.
-      observe-watch: Место нашлось. Ещё посмотрю, к кому Костя подойдёт с микрофоном.
+      observe-watch: Спрошу Сашу про сегодняшний матч.
     review:
       signals:
       - pressure/kostya-togda-sadish-sya-otdel-no-s
@@ -158,29 +158,31 @@ scenes:
   observe-watch:
     mode: orange
     messages:
-    - trener-vse-na-mestah-poehali
+    - timur-asks-about-match
+    - sasha-talks-goalkeepers
     outcome:
     - positive
-    - Тимур едет на игру рядом с Сашей
-    note: Рядом нашлось место без условия про песню.
+    - Тимур и Саша заговорили о матче
+    note: Ты сам начал разговор о том, ради чего поехал с командой.
     review:
       signals:
       - observe/remarka-timur-saditsya-ryadom-s
-      effect: Место нашлось. Ещё посмотрю, к кому Костя подойдёт с микрофоном.
+      effect: Ты сам начал разговор о том, ради чего поехал с командой.
   focus:
     mode: orange
     messages:
+    - timur-asks-sasha-about-seat
     - sasha-tim-ya-kurtku-ubral
     - remarka-timur-saditsya-ryadom-s
-    question: Что изменилось для тебя сейчас?
+    question: Ты уже сел с Сашей. Как поедешь дальше?
     choices:
       focus-ease: С местом разобрались. Поехали.
-      focus-watch: Место нашлось. Ещё посмотрю, к кому Костя подойдёт с микрофоном.
+      focus-watch: Спрошу Сашу про сегодняшний матч.
     review:
       signals:
       - pressure/kostya-togda-sadish-sya-otdel-no-s
       - pressure/ty-ya-voobsche-uzhe-ehat
-      effect: Рядом нашлось место без условия про песню.
+      effect: Ты спросил Сашу про место. Он убрал куртку с сиденья у окна, и ты сел рядом.
   focus-ease:
     mode: yellow
     messages:
@@ -196,15 +198,16 @@ scenes:
   focus-watch:
     mode: orange
     messages:
-    - trener-vse-na-mestah-poehali
+    - timur-asks-about-match
+    - sasha-talks-goalkeepers
     outcome:
     - positive
-    - Тимур едет на игру рядом с Сашей
-    note: Рядом нашлось место без условия про песню.
+    - Тимур и Саша заговорили о матче
+    note: Ты сам начал разговор о том, ради чего поехал с командой.
     review:
       signals:
       - focus/remarka-timur-saditsya-ryadom-s
-      effect: Место нашлось. Ещё посмотрю, к кому Костя подойдёт с микрофоном.
+      effect: Ты сам начал разговор о том, ради чего поехал с командой.
   calm-watch:
     mode: orange
     messages:

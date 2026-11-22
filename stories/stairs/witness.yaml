@@ -22,7 +22,7 @@ scenes:
       alternative: К лестнице нужна помощь. Напишу в чат класса.
       ignore: Пойти к кабинету. Может, Лёша уже отойдёт.
       observe: В кабинет рядом можно пройти. Покажу Саше на открытую дверь.
-      focus: Лёша угрожает у лестницы. Покажу Саше, куда можно отойти к людям.
+      focus: Зайду в соседний класс и позову Сашу оттуда.
   pressure-act-0:
     mode: red
     messages:
@@ -144,10 +144,10 @@ scenes:
     messages:
     - ty-sash-syuda-mozhno-dver
     - remarka-sasha-othodit-ot-lestnitsy
-    question: Что изменилось для тебя сейчас?
+    question: Саша уже в классе. Что ты сделаешь?
     choices:
       observe-ease: Мы в классе, здесь есть взрослый. Можно выдохнуть.
-      observe-watch: Пока останусь в классе, рядом с дежурной.
+      observe-watch: Расскажу дежурной, какие слова я слышал.
     review:
       signals:
       - pressure/remarka-lyosha-vstayot-poperyok-prohoda
@@ -168,29 +168,31 @@ scenes:
   observe-watch:
     mode: orange
     messages:
-    - marina-sergeevna-ya-pobudu-zdes
+    - kostya-describes-threat
+    - teacher-promises-to-call
     outcome:
     - positive
-    - Саша в классе вместе с ребятами и дежурной
-    note: Саша уже в классе. Между ним и Лёшей у двери стоит дежурная.
+    - Дежурная услышала рассказ Кости
+    note: Ты рассказал, что сам слышал у лестницы. Дежурная взялась позвать классного руководителя.
     review:
       signals:
       - observe/remarka-sasha-othodit-ot-lestnitsy
-      effect: Пока останусь в классе, рядом с дежурной.
+      effect: Ты рассказал, что сам слышал у лестницы. Дежурная взялась позвать классного руководителя.
   focus:
     mode: red
     messages:
-    - ty-sash-syuda-mozhno-dver
+    - kostya-enters-class
+    - kostya-calls-from-door
     - remarka-sasha-othodit-ot-lestnitsy
-    question: Что изменилось для тебя сейчас?
+    question: Саша уже в классе. Что ты сделаешь?
     choices:
       focus-ease: Мы в классе, здесь есть взрослый. Можно выдохнуть.
-      focus-watch: Пока останусь в классе, рядом с дежурной.
+      focus-watch: Расскажу дежурной, какие слова я слышал.
     review:
       signals:
       - pressure/remarka-lyosha-vstayot-poperyok-prohoda
       - pressure/lyosha-eschyo-shag-udaryu
-      effect: Саша уже в классе. Между ним и Лёшей у двери стоит дежурная.
+      effect: Ты позвал Сашу из класса. Он зашёл к ребятам, а дежурная встала в дверях.
   focus-ease:
     mode: yellow
     messages:
@@ -206,15 +208,16 @@ scenes:
   focus-watch:
     mode: orange
     messages:
-    - marina-sergeevna-ya-pobudu-zdes
+    - kostya-describes-threat
+    - teacher-promises-to-call
     outcome:
     - positive
-    - Саша в классе вместе с ребятами и дежурной
-    note: Саша уже в классе. Между ним и Лёшей у двери стоит дежурная.
+    - Дежурная услышала рассказ Кости
+    note: Ты рассказал, что сам слышал у лестницы. Дежурная взялась позвать классного руководителя.
     review:
       signals:
       - focus/remarka-sasha-othodit-ot-lestnitsy
-      effect: Пока останусь в классе, рядом с дежурной.
+      effect: Ты рассказал, что сам слышал у лестницы. Дежурная взялась позвать классного руководителя.
   calm-watch:
     mode: orange
     messages:

@@ -19,7 +19,7 @@ scenes:
       pressure-act-1: Вера знает, где скрин. Попрошу её связаться с тренером.
       alternative: Хочу понять, кто мне верит. Попрошу ребят поставить плюс.
       observe: Пока никому не перешлю. Почитаю, что напишут в команде.
-      focus: На скрине обрезаны соседние сообщения. Посмотрю, остановится ли пересылка.
+      focus: Попрошу Веру пока побыть со мной в личке.
   pressure-act-0:
     mode: orange
     messages:
@@ -97,7 +97,7 @@ scenes:
     choices:
       calm-end: Посмотреть, что будет дальше
       ask: Попросить Веру спросить в личке у того, кто прислал скрин
-      calm-watch: Дальше картинку не передали. Пока хочется разобраться, откуда она взялась.
+      calm-watch: Послушаю, что скажет Вера про скрин.
   calm-end:
     mode: yellow
     messages:
@@ -120,10 +120,10 @@ scenes:
     mode: yellow
     messages:
     - trener-vetku-pod-raspisaniem-zakryl
-    question: Что изменилось для тебя сейчас?
+    question: Под расписанием больше не пишут. Что тебе сейчас подходит?
     choices:
       observe-ease: В этой ветке больше не пишут. Можно отложить телефон.
-      observe-watch: Здесь ветку закрыли. Если скрин появится снова, я знаю, куда написать.
+      observe-watch: Скажу тренеру в личке, что мне уже приходили сообщения.
     review:
       signals:
       - pressure/vera-ya-uzhe-reshila-chto
@@ -143,27 +143,30 @@ scenes:
   observe-watch:
     mode: orange
     messages:
-    - sistema-kommentarii-pod-raspisaniem-zakryty
+    - anya-asks-coach-about-dms
+    - coach-confirms-contact
     outcome:
-    - mixed
-    - В командном чате обсуждение закрыто
-    note: Тренер закрыл конкретное обсуждение. Что происходит в других чатах, пока неизвестно.
+    - positive
+    - Аня договорилась, куда писать при новых сообщениях
+    note: Тренер подтвердил, что ты можешь написать ему лично. Про другие чаты он обещаний не давал.
     review:
       signals:
       - observe/trener-vetku-pod-raspisaniem-zakryl
-      effect: Здесь ветку закрыли. Если скрин появится снова, я знаю, куда написать.
+      effect: Тренер подтвердил, что ты можешь написать ему лично. Про другие чаты он обещаний не давал.
   focus:
     mode: orange
     messages:
+    - anya-asks-vera-to-stay
+    - vera-stays-in-chat
     - trener-vetku-pod-raspisaniem-zakryl
-    question: Что изменилось для тебя сейчас?
+    question: Под расписанием больше не пишут. Что тебе сейчас подходит?
     choices:
       focus-ease: В этой ветке больше не пишут. Можно отложить телефон.
-      focus-watch: Здесь ветку закрыли. Если скрин появится снова, я знаю, куда написать.
+      focus-watch: Скажу тренеру в личке, что мне уже приходили сообщения.
     review:
       signals:
       - pressure/vera-ya-uzhe-reshila-chto
-      effect: Тренер закрыл конкретное обсуждение. Что происходит в других чатах, пока неизвестно.
+      effect: Вера осталась с тобой на связи. Сообщение о закрытой ветке пришло от тренера в чате команды.
   focus-ease:
     mode: yellow
     messages:
@@ -179,15 +182,16 @@ scenes:
   focus-watch:
     mode: orange
     messages:
-    - sistema-kommentarii-pod-raspisaniem-zakryty
+    - anya-asks-coach-about-dms
+    - coach-confirms-contact
     outcome:
-    - mixed
-    - В командном чате обсуждение закрыто
-    note: Тренер закрыл конкретное обсуждение. Что происходит в других чатах, пока неизвестно.
+    - positive
+    - Аня договорилась, куда писать при новых сообщениях
+    note: Тренер подтвердил, что ты можешь написать ему лично. Про другие чаты он обещаний не давал.
     review:
       signals:
       - focus/trener-vetku-pod-raspisaniem-zakryl
-      effect: Здесь ветку закрыли. Если скрин появится снова, я знаю, куда написать.
+      effect: Тренер подтвердил, что ты можешь написать ему лично. Про другие чаты он обещаний не давал.
   calm-watch:
     mode: orange
     messages:

@@ -150,3 +150,22 @@ ty-ver-kinesh-mne-zavtra:
 vera-aga-s-utra-prishlyu:
   speaker: Вера
   text: Ага, с утра пришлю.
+lera-invites-volunteers:
+  speaker: Ты
+  channel: chat-posle-otboya
+  text: Ребят, кто ещё хочет шестым? Отпишитесь Косте.
+lera-wishes-good-luck:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-aney
+  text: Ань, удачи завтра на тренировке!
+anya-says-goodnight:
+  speaker: Аня
+  text: Спасибо! Всё, я спать.
+anya-arranges-schedule:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-veroy
+  text: Вер, давай расписание завтра отдельно. Спасибо.
+anya-says-goodnight-to-team:
+  speaker: Ты
+  channel: chat-posle-otboya
+  text: Всё, я спать. Удачи вам на турнире!

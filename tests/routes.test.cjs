@@ -11,19 +11,19 @@ for (const id of ids) for (const role of ['witness','self']) {
     // The same external event can follow different conscious readings of it.
     assert.notEqual(story.observe.mode,story.focus.mode);
     const dialogue = lines => lines.map(({parts,speaker,media})=>[speaker,parts?.text,media?.src]);
-    assert.deepEqual(dialogue(story.observe.lines),dialogue(story.focus.lines));
+    if (id === 'money') {
+      // Both choices are ways to read the same chat and the coach responds independently.
+      assert.deepEqual(dialogue(story.observe.lines),dialogue(story.focus.lines));
+    } else {
+      assert.notDeepEqual(dialogue(story.observe.lines),dialogue(story.focus.lines));
+    }
     for (const key of ['observe','focus']) {
       assert.equal(story[key+'-ease'].mode,'yellow');
       assert.equal(story[key+'-watch'].mode,'orange');
       const ease = dialogue(story[key+'-ease'].lines);
       const watch = dialogue(story[key+'-watch'].lines);
-      if (id === 'money') {
-        // After the shared signal, the player's next choice changes what happens.
-        assert.notDeepEqual(ease,watch);
-        assert.notEqual(story[key+'-ease'].outcome[1],story[key+'-watch'].outcome[1]);
-      } else {
-        assert.deepEqual(ease,watch);
-      }
+      assert.notDeepEqual(ease,watch);
+      assert.notEqual(story[key+'-ease'].outcome[1],story[key+'-watch'].outcome[1]);
       assert.ok(decisions[key].signals.length);
     }
     const quiet = id === 'project' ? 'calm-act-0' : 'calm-end';

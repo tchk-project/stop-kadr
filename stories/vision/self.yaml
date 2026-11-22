@@ -54,6 +54,7 @@ scenes:
   call:
     mode: red
     messages:
+    - teacher-sits-to-call
     - remarka-vyzov-112-prinyat
     - ty-u-menya-vnezapno-stalo
     - remarka-dispetcheru-nazyvayut-gorod-ulitsu
@@ -81,7 +82,8 @@ scenes:
   delegate:
     mode: red
     messages:
-    - remarka-ryadom-s-toboy-nabrali
+    - teacher-asks-timur
+    - teacher-sits-timur-calls
     - timur-u-uchitel-nitsy-vnezapno-zadvoilis
     - remarka-dispetcheru-nazyvayut-gorod-ulitsu
     - dispetcher-zapisal-adres-shkoly-i

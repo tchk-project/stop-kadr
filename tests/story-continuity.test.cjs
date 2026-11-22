@@ -46,3 +46,70 @@ test('the approved rehearsal clip is published in a different group from the reh
     }
   }
 });
+
+test('at the dance a private answer, making room, and a visible invitation reach Anya differently', () => {
+  const {story} = build('dance','witness');
+  const reply = story['pressure-act-0'].lines[0];
+  assert.equal(reply.speaker,'Ты');
+  assert.equal(reply.channel.kind,'private');
+  for (const id of ['observe','focus']) {
+    assert.equal(story[id].lines[0].channel.kind,'scene');
+    assert.equal(story[id].lines[0].speaker,'Ремарка');
+    assert.equal(story[id].lines.at(-1).speaker,'Аня');
+    const directQuestion = story[id+'-watch'].lines;
+    assert.deepEqual(Array.from(directQuestion, line => line.speaker),['Ты','Аня']);
+    assert.ok(story[id+'-ease'].lines.every(line => line.speaker === 'Ремарка'));
+  }
+  assert.notEqual(story.focus.lines[0].id,story.observe.lines[0].id);
+});
+
+test('Anya can summon Vera with a gesture and ask her to stay after the hand is released', () => {
+  const {story} = build('dance','self');
+  assert.equal(story.observe.lines[0].speaker,'Ты');
+  assert.equal(story.focus.lines[0].speaker,'Ремарка');
+  for (const id of ['observe','focus']) {
+    assert.ok(story[id].lines.some(line => line.parts?.quote?.includes('отпускает')));
+    assert.deepEqual(Array.from(story[id+'-watch'].lines, line => line.speaker),['Ты','Вера']);
+    assert.equal(story[id+'-watch'].outcome[0],story[id+'-ease'].outcome[0]);
+  }
+});
+
+test('the girls discuss the sticker in private, with the partner named by the choice', () => {
+  for (const [role, partner] of [['witness','Лерой'], ['self','Даней']]) {
+    const {story} = build('sticker',role);
+    for (const start of ['focus','observe']) {
+      const [question, answer] = story[start+'-watch'].lines;
+      assert.equal(question.speaker,'Ты');
+      assert.equal(question.channel.kind,'private');
+      assert.ok(question.channel.title.endsWith(partner));
+      assert.ok(answer.parts.text);
+      assert.notEqual(answer.speaker,'Ты');
+    }
+  }
+});
+
+test('checking a clip shows the published video after consent, in the school chat', () => {
+  for (const role of ['witness','self']) {
+    const {story} = build('dubl',role);
+    for (const start of ['focus','observe']) {
+      const lines = story[start+'-watch'].lines;
+      const clip = lines.at(-1);
+      assert.equal(clip.media.kind,'video');
+      assert.equal(clip.channel.title,'Общешкольный чат');
+      assert.match(lines.at(-2).parts.text,/можно/);
+    }
+  }
+});
+
+test('a request for someone else to make the call is followed by that person speaking', () => {
+  for (const [id,role,step,person] of [
+    ['speech','witness','delegate','Саша'], ['vision','witness','delegate','Вера'],
+    ['vision','self','delegate','Тимур'], ['abdomen','self','call','Тимур'],
+    ['chest','self','call','Лера'],
+  ]) {
+    const {story} = build(id,role);
+    const lines = story[step].lines;
+    assert.equal(lines[0].speaker,'Ты');
+    assert.ok(lines.slice(1).some(line=>line.speaker===person));
+  }
+});

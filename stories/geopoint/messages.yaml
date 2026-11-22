@@ -177,3 +177,28 @@ anya-uzhe-doma-seychas-prishlyu-2:
   speaker: Аня
   channel: lichnaya-perepiska-s-timurom
   text: Уже дома. Сейчас пришлю задачу.
+timur-promises-privacy:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-aney
+  text: Понял. Где ты, ему не скажу.
+timur-relays-bus-message:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-aney
+  text: Лёша написал, что сел в автобус. Про тебя я ему ничего не говорил.
+anya-thanks-timur:
+  speaker: Аня
+  text: Спасибо, Тим. А то я гадала, что ты ему ответил.
+anya-asks-for-update:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-timurom
+  text: Тим, если он ещё про меня спросит, напишешь мне?
+timur-agrees-to-write:
+  speaker: Тимур
+  text: Ага, напишу.
+anya-arranges-call:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-timurom
+  text: Тим, гео не включала. Давай я позже тебе наберу?
+timur-agrees-to-call:
+  speaker: Тимур
+  text: Давай. Я дома буду.

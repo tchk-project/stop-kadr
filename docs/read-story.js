@@ -25,7 +25,9 @@ function renderRole(meta, role) {
     const node = story[id];
     function choiceLabel(target, choice) {
       if (id !== 'start') return choice;
-      return target === 'calm' ? 'Спокойный дубль' : story[target].continuation || 'Напряжённый дубль';
+      if (target === 'calm') return 'Спокойный дубль';
+      const title = story[target].continuation;
+      return typeof title === 'string' && title.trim() ? title : 'Напряжённый дубль';
     }
     const article = document.createElement('article');
     article.id = stepId(id);

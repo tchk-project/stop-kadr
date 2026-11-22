@@ -22,7 +22,7 @@ scenes:
       pressure-act-1: Он спросил ещё и Тимура. Попрошу Тимура побыть на связи.
       alternative: Может, перестанет спрашивать. Включу гео только до дома.
       observe: Точку можно пока оставить при себе. Посмотрю, что дальше.
-      focus: Про маршрут спрашивают второй раз. Пока ничего не передам и дочитаю сообщения.
+      focus: Попрошу Тимура дать знать, если Лёша снова ему напишет.
   pressure-act-0:
     mode: orange
     messages:
@@ -104,7 +104,7 @@ scenes:
     choices:
       calm-end: Посмотреть, что будет дальше
       ask: Написать Тимуру про задачу
-      calm-watch: На этот раз он принял ответ. Посмотрю, не спросит ли снова.
+      calm-watch: Пришлю Тимуру задачу, как договаривались.
   calm-end:
     mode: yellow
     messages:
@@ -127,10 +127,10 @@ scenes:
     mode: yellow
     messages:
     - lyosha-ladno-ya-uzhe-sel
-    question: Что изменилось для тебя сейчас?
+    question: Лёша написал, что уехал. Что тебе сейчас удобно?
     choices:
       observe-ease: Лёша уехал. Можно заняться своими делами.
-      observe-watch: Он написал, что уехал. Если снова спросит, где я, посмотрю, как он отреагирует на мой отказ.
+      observe-watch: Напишу Тимуру, что с гео разобралась и позвоню позже.
     review:
       signals:
       - pressure/lyosha-da-chto-takogo-vklyuchi
@@ -152,29 +152,31 @@ scenes:
   observe-watch:
     mode: orange
     messages:
-    - anya-uzhe-doma-seychas-prishlyu-2
-    - timur-spasibo
+    - anya-arranges-call
+    - timur-agrees-to-call
     outcome:
     - positive
-    - Аня доехала домой, не передавая маршрут
-    note: Лёша написал, что уехал. В этом сообщении он больше не просит передать маршрут.
+    - Аня сама выбрала, когда связаться с Тимуром
+    note: Ты договорилась о звонке с Тимуром. Называть маршрут для этого не понадобилось.
     review:
       signals:
       - observe/lyosha-ladno-ya-uzhe-sel
-      effect: Он написал, что уехал. Если снова спросит, где я, посмотрю, как он отреагирует на мой отказ.
+      effect: Ты договорилась о звонке с Тимуром. Называть маршрут для этого не понадобилось.
   focus:
     mode: orange
     messages:
+    - anya-asks-for-update
+    - timur-agrees-to-write
     - lyosha-ladno-ya-uzhe-sel
-    question: Что изменилось для тебя сейчас?
+    question: Лёша написал, что уехал. Что тебе сейчас удобно?
     choices:
       focus-ease: Лёша уехал. Можно заняться своими делами.
-      focus-watch: Он написал, что уехал. Если снова спросит, где я, посмотрю, как он отреагирует на мой отказ.
+      focus-watch: Напишу Тимуру, что с гео разобралась и позвоню позже.
     review:
       signals:
       - pressure/lyosha-da-chto-takogo-vklyuchi
       - pressure/ty-ya-emu-uzhe-skazala
-      effect: Лёша написал, что уехал. В этом сообщении он больше не просит передать маршрут.
+      effect: Тимур ответил тебе в личке. Отдельно Лёша написал тебе, что сел в автобус.
   focus-ease:
     mode: yellow
     messages:
@@ -191,16 +193,16 @@ scenes:
   focus-watch:
     mode: orange
     messages:
-    - anya-uzhe-doma-seychas-prishlyu-2
-    - timur-spasibo
+    - anya-arranges-call
+    - timur-agrees-to-call
     outcome:
     - positive
-    - Аня доехала домой, не передавая маршрут
-    note: Лёша написал, что уехал. В этом сообщении он больше не просит передать маршрут.
+    - Аня сама выбрала, когда связаться с Тимуром
+    note: Ты договорилась о звонке с Тимуром. Называть маршрут для этого не понадобилось.
     review:
       signals:
       - focus/lyosha-ladno-ya-uzhe-sel
-      effect: Он написал, что уехал. Если снова спросит, где я, посмотрю, как он отреагирует на мой отказ.
+      effect: Ты договорилась о звонке с Тимуром. Называть маршрут для этого не понадобилось.
   calm-watch:
     mode: orange
     messages:
