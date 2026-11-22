@@ -186,3 +186,25 @@ remarka-misha-prosit-ubrat-mikrofon:
 remarka-ty-nadevaesh-naushniki-misha:
   speaker: Ремарка
   text: Ты надеваешь наушники. Миша освобождает место для твоей сумки.
+misha-waits-with-timur:
+  speaker: Ты
+  channel: scene
+  text: Тим, давай тут вместе подождём.
+misha-checks-in:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-timurom
+  text: Тим, как ты там?
+timur-talks-football:
+  speaker: Тимур
+  text: С Сашей нормально. Уже спорим, кто сегодня первый забьёт.
+timur-asks-sasha-about-seat:
+  speaker: Ты
+  channel: scene
+  text: Саш, у тебя рядом занято?
+timur-asks-about-match:
+  speaker: Ты
+  channel: scene
+  text: Саш, тебя сегодня в ворота поставят?
+sasha-talks-goalkeepers:
+  speaker: Саша
+  text: Первый тайм мой. Ты во втором встанешь?

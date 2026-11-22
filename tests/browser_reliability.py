@@ -84,6 +84,35 @@ class BrowserReliabilityTest(unittest.TestCase):
         self.page.get_by_role("button", name="Играть").click()
         expect(self.page.locator(".action.coded").first).to_be_visible()
 
+    def test_editor_can_download_when_browser_storage_is_blocked(self):
+        page = self.page
+        page.add_init_script("Object.defineProperty(window, 'localStorage', {get(){throw Error('blocked')}})")
+        page.goto(self.base + "editor.html")
+        page.get_by_role("button", name=re.compile("Кот под голосовым")).click()
+        expect(page.get_by_text("Черновик в памяти", exact=False)).to_be_visible()
+        with page.expect_download() as download:
+            page.get_by_role("button", name="Скачать черновик", exact=True).click()
+        self.assertTrue(download.value.suggested_filename.endswith(".stop-kadr.json"))
+
+    def test_editor_draft_survives_reload_and_only_appears_in_preview(self):
+        page = self.page
+        page.goto(self.base + "editor.html")
+        page.get_by_role("button", name=re.compile("Кот под голосовым")).click()
+        page.get_by_role("button", name="Читать дальше →").click()
+        page.locator(".group.private").get_by_role("button", name="Изменить реплику").first.click()
+        box = page.get_by_role("dialog").get_by_label("Реплика", exact=True)
+        text = box.input_value() + " Пробная редакторская правка."
+        box.fill(text)
+        page.get_by_role("button", name="Сохранить", exact=True).click()
+        page.reload()
+        expect(page.locator(".group.private")).to_contain_text(text)
+        page.get_by_role("button", name="Проверить в игре").click()
+        expect(page.frame_locator("#preview iframe").locator("#messages")).to_contain_text(text)
+        page.get_by_role("button", name="Вернуться к тексту", exact=True).click()
+        page.goto(self.base + "focus.html?case=sticker&role=self#pressure")
+        expect(page.locator(".coded").first).to_be_visible()
+        expect(page.locator("#messages")).not_to_contain_text(text)
+
     def test_self_catalog_retry(self):
         self.retry("**/game/catalog.js*", url=self.base + "self.html?view=cases")
         card = self.page.locator('.case-card[href*="case=voice&role=self"]')

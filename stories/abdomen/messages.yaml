@@ -63,3 +63,15 @@ ty-tim-skazhi-chto-snachala:
 timur-mishe-15-let-on:
   speaker: Тимур
   text: Мише 15 лет. Он говорит, что с утра болело у пупка, а теперь сильно болит справа внизу и тошнит. Когда попробовал встать, снова сел.
+witness-asks-before-call:
+  speaker: Ты
+  text: Миш, я останусь с тобой и позвоню 103.
+witness-waits:
+  speaker: Ты
+  text: Посидим тут до свистка. Тренеру пока не скажу.
+self-asks-before-call:
+  speaker: Ты
+  text: Тим, всё-таки вызови скорую. Я здесь посижу.
+self-waits:
+  speaker: Ты
+  text: Тим, давай до свистка подождём?

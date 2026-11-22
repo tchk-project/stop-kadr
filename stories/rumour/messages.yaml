@@ -18,7 +18,7 @@ anya-tim-ty-videl-chto:
 ty-tam-odna-strochka-s:
   speaker: Ты
   channel: lichnaya-perepiska-s-aney
-  text: 'Костя мне скинул. Где выложили, я не знаю. Дальше слать не буду.'
+  text: Костя мне скинул. Где выложили, я не знаю. Дальше слать не буду.
 anya-teper-ponyala-pro-chto:
   speaker: Аня
   text: Спасибо, Тим. У Веры спрошу, где она его видела.
@@ -50,7 +50,7 @@ anya-vera-mne-pokazala-tam:
   text: Вера нашла обсуждение под расписанием игры.
 ty-odna-fraza-s-nimi:
   speaker: Ты
-  text: 'Мне Костя прислал. Где он взял скрин, я не знаю. Я его никому не пересылал.'
+  text: Мне Костя прислал. Где он взял скрин, я не знаю. Я его никому не пересылал.
 anya-teper-ponyala-sam-skrin:
   speaker: Аня
   text: Поняла. Спасибо, что дальше не переслал.
@@ -150,3 +150,28 @@ ty-ver-sprosi-u-togo:
 vera-horosho-sproshu-u-nego:
   speaker: Вера
   text: Хорошо, спрошу у него в личке.
+timur-declines-forward:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-kostey
+  text: Кость, в команду от меня это не пойдёт.
+timur-tells-anya-about-thread:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-aney
+  text: Ань, тренер написал про ветку под расписанием. Там закрыл комментарии.
+anya-thanks-for-private-message:
+  speaker: Аня
+  text: Вижу. Спасибо, что мне отдельно написал.
+anya-asks-vera-to-stay:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-veroy
+  text: Вер, побудь пока тут со мной?
+vera-stays-in-chat:
+  speaker: Вера
+  text: Я здесь.
+anya-asks-coach-about-dms:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-trenerom
+  text: Мне до этого в личку гадости писали. Можно вам сюда написать, если ещё придут?
+coach-confirms-contact:
+  speaker: Тренер
+  text: Да, Ань. Пиши прямо мне.

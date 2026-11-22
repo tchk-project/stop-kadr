@@ -13,7 +13,8 @@ const playerName = activeStory.roles[role].name;
 const originalSelected = selection === 'dubl' || (!selection && location.hash.length > 1 && location.hash !== '#home-guide-title');
 const isCatalogue = !isAttentionPilot && !episode && !originalSelected;
 function focusLink(id, pointOfView) {
-  return './focus.html?case='+encodeURIComponent(id)+'&role='+pointOfView+'&v=review-3';
+  const page = document.body?.hasAttribute('data-preview') ? './editor-preview.html' : './focus.html';
+  return page+'?case='+encodeURIComponent(id)+'&role='+pointOfView+'&v=review-3';
 }
 function randomStoryUrl(excludeId, startingRole = role) {
   const pool = allStories.filter(item => item.id !== excludeId);
@@ -299,7 +300,9 @@ function showCatalogue(panel) {
   });
   section.append(cards);
   const foot = element('footer','catalog-foot');
-  foot.append(article);
+  const editor = element('a','catalog-link','Редактор историй');
+  editor.href = './editor.html';
+  foot.append(article,editor);
   section.append(foot);
   panel.append(section);
 }

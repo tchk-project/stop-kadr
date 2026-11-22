@@ -21,7 +21,7 @@ scenes:
       pressure-act-0: Меня всё ещё нет на титульном. Попрошу Леру подождать.
       pressure-act-1: Мои подписи под графиками уже есть. Покажу учительнице.
       observe: Может, Миша успеет до показа. Посмотрю на экран.
-      focus: Имя обещали добавить после защиты. Посмотрю именно на титульный.
+      focus: Спрошу Аню, видно ли моё имя с её места.
   pressure-act-0:
     mode: orange
     messages:
@@ -105,7 +105,7 @@ scenes:
     choices:
       calm-act-0: Рассказать про один график самому
       calm-act-1: Попросить Аню показать оба графика
-      calm-watch: Проверю, что имя есть на экране, и сам расскажу про один график.
+      calm-watch: Проверю своё имя и выберу, про какой график расскажу.
   calm-act-0:
     mode: yellow
     messages:
@@ -129,10 +129,10 @@ scenes:
     messages:
     - misha-tim-stoy-uspel-ler
     - anya-teper-troe-timur-tozhe
-    question: Что изменилось для тебя сейчас?
+    question: Твоё имя видно классу. Что дальше?
     choices:
       observe-ease: Все три имени на месте. Послушаю выступление.
-      observe-watch: На экране трое. Проверю потом, какой файл ушёл на сдачу.
+      observe-watch: После защиты попрошу прислать сданную версию и открою её.
     review:
       signals:
       - start/ty-a-grafiki-ya-vsyo
@@ -153,29 +153,32 @@ scenes:
   observe-watch:
     mode: orange
     messages:
-    - marina-sergeevna-vizhu-tryoh-avtorov
+    - timur-asks-for-submission
+    - misha-sends-submission
+    - timur-checks-title
     outcome:
     - positive
-    - Класс увидел имена всех трёх авторов
-    note: Есть новый файл. Аня проверила, какие имена видны на экране.
+    - Тимур проверил своё имя в сданной работе
+    note: Ты открыл сданную презентацию и увидел своё имя на титульном.
     review:
       signals:
       - observe/anya-teper-troe-timur-tozhe
-      effect: На экране трое. Проверю потом, какой файл ушёл на сдачу.
+      effect: Ты открыл сданную презентацию и увидел своё имя на титульном.
   focus:
     mode: orange
     messages:
+    - timur-asks-anya-to-check
     - misha-tim-stoy-uspel-ler
     - anya-teper-troe-timur-tozhe
-    question: Что изменилось для тебя сейчас?
+    question: Твоё имя видно классу. Что дальше?
     choices:
       focus-ease: Все три имени на месте. Послушаю выступление.
-      focus-watch: На экране трое. Проверю потом, какой файл ушёл на сдачу.
+      focus-watch: После защиты попрошу прислать сданную версию и открою её.
     review:
       signals:
       - start/ty-a-grafiki-ya-vsyo
       - pressure/misha-ler-otkryvay-chto-skinul
-      effect: Есть новый файл. Аня проверила, какие имена видны на экране.
+      effect: Ты попросил Аню посмотреть на экран. После замены файла она назвала твоё имя.
   focus-ease:
     mode: yellow
     messages:
@@ -191,15 +194,17 @@ scenes:
   focus-watch:
     mode: orange
     messages:
-    - marina-sergeevna-vizhu-tryoh-avtorov
+    - timur-asks-for-submission
+    - misha-sends-submission
+    - timur-checks-title
     outcome:
     - positive
-    - Класс увидел имена всех трёх авторов
-    note: Есть новый файл. Аня проверила, какие имена видны на экране.
+    - Тимур проверил своё имя в сданной работе
+    note: Ты открыл сданную презентацию и увидел своё имя на титульном.
     review:
       signals:
       - focus/anya-teper-troe-timur-tozhe
-      effect: На экране трое. Проверю потом, какой файл ушёл на сдачу.
+      effect: Ты открыл сданную презентацию и увидел своё имя на титульном.
   calm-watch:
     mode: orange
     messages:

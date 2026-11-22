@@ -152,3 +152,25 @@ ty-dan-ostavlyay-ego-na:
 danya-ladno:
   speaker: Даня
   text: Ладно.
+kostya-waits-at-bench:
+  speaker: Ты
+  channel: scene
+  text: Миш, я тут. Подожду с тобой.
+kostya-offers-to-wait:
+  speaker: Ты
+  channel: scene
+  text: Миш, у двери тебя подождать?
+misha-ties-shoes:
+  speaker: Миша
+  text: Ага. Я только кеды зашнурую.
+misha-points-out-bag:
+  speaker: Ты
+  channel: scene
+  text: Вер, вон у Дани мой рюкзак. Видишь?
+misha-asks-vera-to-wait:
+  speaker: Ты
+  channel: scene
+  text: Вер, подождёшь меня у двери?
+vera-gets-ball:
+  speaker: Вера
+  text: Конечно. Я пока мяч возьму.

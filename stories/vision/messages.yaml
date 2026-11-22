@@ -47,9 +47,6 @@ ty-v-12-25-my-veshali:
 dispetcher-brigada-napravlena-ostavaytes-na:
   speaker: Диспетчер
   text: Бригада направлена. Оставайтесь на связи, я скажу, что делать до её приезда.
-remarka-ryadom-s-toboy-nabrali:
-  speaker: Ремарка
-  text: Рядом с тобой набрали 112.
 vera-u-uchitel-nitsy-vnezapno-dvoitsya:
   speaker: Вера
   channel: scene
@@ -89,3 +86,18 @@ timur-u-uchitel-nitsy-vnezapno-zadvoilis:
 timur-v-12-25-my-veshali:
   speaker: Тимур
   text: В 12:25 мы вешали афишу. Сразу после этого Марина Сергеевна пошатнулась и взялась за спинку скамьи.
+timur-asks-vera:
+  speaker: Ты
+  text: Вер, вызови сейчас скорую. Я останусь с Мариной Сергеевной.
+vera-calls:
+  speaker: Вера
+  text: Звоню. Уже ответили.
+teacher-asks-timur:
+  speaker: Ты
+  text: Тимур, у меня двоится. Вызови скорую, пожалуйста.
+teacher-sits-timur-calls:
+  speaker: Ремарка
+  text: Ты садишься на скамью. Тимур набирает 112 рядом с тобой.
+teacher-sits-to-call:
+  speaker: Ремарка
+  text: Ты садишься на скамью и достаёшь телефон.

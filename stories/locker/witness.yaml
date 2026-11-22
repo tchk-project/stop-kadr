@@ -21,7 +21,7 @@ scenes:
       pressure-act-1: Миша вчера тоже ждал. Спрошу, что ему сейчас нужно.
       ignore: Пойду переодеваться. Наверняка сами успеют.
       observe: До звонка ещё есть время. Посмотрю, принесут ли рюкзак.
-      focus: Форма всё ещё у Дани. Не отойду от лавки, пока не увижу рюкзак.
+      focus: Подойду к лавке и останусь рядом с Мишей.
   pressure-act-0:
     mode: orange
     messages:
@@ -142,10 +142,10 @@ scenes:
     messages:
     - vera-dan-uzhe-pora-pereodevat-sya
     - remarka-danya-stavit-ryukzak-ryadom
-    question: Что изменилось для тебя сейчас?
+    question: Форма у Миши. Как пойдёшь в зал?
     choices:
       observe-ease: Форма нашлась. Пора на урок.
-      observe-watch: Сегодня рюкзак вернули. На следующей перемене обращу внимание, где он лежит.
+      observe-watch: Спрошу Мишу, подождать ли его у двери.
     review:
       signals:
       - pressure/danya-proydyosh-nash-kvest
@@ -167,30 +167,31 @@ scenes:
   observe-watch:
     mode: orange
     messages:
-    - vera-ya-v-zal-vy
-    - remarka-v-razdevalke-zvonit-zvonok
+    - kostya-offers-to-wait
+    - misha-ties-shoes
     outcome:
     - positive
-    - Рюкзак вернулся к хозяину до звонка
-    note: Рюкзак вернули. Миша может сам достать свои вещи.
+    - Миша попросил Костю подождать у двери
+    note: Форма уже у Миши. Вы договорились идти на урок вместе.
     review:
       signals:
       - observe/remarka-danya-stavit-ryukzak-ryadom
-      effect: Сегодня рюкзак вернули. На следующей перемене обращу внимание, где он лежит.
+      effect: Форма уже у Миши. Вы договорились идти на урок вместе.
   focus:
     mode: orange
     messages:
+    - kostya-waits-at-bench
     - vera-dan-uzhe-pora-pereodevat-sya
     - remarka-danya-stavit-ryukzak-ryadom
-    question: Что изменилось для тебя сейчас?
+    question: Форма у Миши. Как пойдёшь в зал?
     choices:
       focus-ease: Форма нашлась. Пора на урок.
-      focus-watch: Сегодня рюкзак вернули. На следующей перемене обращу внимание, где он лежит.
+      focus-watch: Спрошу Мишу, подождать ли его у двери.
     review:
       signals:
       - pressure/danya-proydyosh-nash-kvest
       - pressure/misha-kakoy-eschyo-kvest-mne
-      effect: Рюкзак вернули. Миша может сам достать свои вещи.
+      effect: Ты остался рядом с Мишей. Вера напомнила про урок, и Даня вернул рюкзак.
   focus-ease:
     mode: yellow
     messages:
@@ -207,16 +208,16 @@ scenes:
   focus-watch:
     mode: orange
     messages:
-    - vera-ya-v-zal-vy
-    - remarka-v-razdevalke-zvonit-zvonok
+    - kostya-offers-to-wait
+    - misha-ties-shoes
     outcome:
     - positive
-    - Рюкзак вернулся к хозяину до звонка
-    note: Рюкзак вернули. Миша может сам достать свои вещи.
+    - Миша попросил Костю подождать у двери
+    note: Форма уже у Миши. Вы договорились идти на урок вместе.
     review:
       signals:
       - focus/remarka-danya-stavit-ryukzak-ryadom
-      effect: Сегодня рюкзак вернули. На следующей перемене обращу внимание, где он лежит.
+      effect: Форма уже у Миши. Вы договорились идти на урок вместе.
   calm-watch:
     mode: orange
     messages:

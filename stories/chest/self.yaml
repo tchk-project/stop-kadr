@@ -22,7 +22,7 @@ scenes:
     - remarka-korobku-donesli-do-mashiny
     outcome:
     - positive
-    - Успели вместе
+    - Коробку донесли до машины
     note: В этом дубле оба хорошо себя чувствуют.
   pressure:
     mode: yellow
@@ -39,6 +39,7 @@ scenes:
   wait:
     mode: yellow
     messages:
+    - self-waits
     - remarka-papa-svyazyvaet-bol-s
     - remarka-sdavlenie-v-grudi-s
     question: Что сделаешь теперь?
@@ -51,10 +52,11 @@ scenes:
       miss: true
       effect: Вызов отложили, хотя признаки уже были видны.
       repair: call-now
-      recovery: Затем ты организовал вызов скорой.
+      recovery: Потом ты попросил Леру позвонить, и она осталась рядом.
   call:
     mode: red
     messages:
+    - self-asks-before-call
     - remarka-lera-nabiraet-103-i
     - lera-my-na-kryl-tse-shkoly
     - dispetcher-chto-sluchilos
@@ -83,6 +85,7 @@ scenes:
   call-now:
     mode: red
     messages:
+    - self-asks-before-call
     - remarka-lera-nabiraet-103-i
     - lera-my-na-kryl-tse-shkoly
     - dispetcher-chto-sluchilos
@@ -97,7 +100,7 @@ scenes:
     mode: red
     messages:
     - ty-ler-skazhi-chto-v
-    - lera-u-papy-tol-ko-chto
+    - lera-describes-persistent-pain
     - dispetcher-brigada-napravlena-ostavaytes-na
     - remarka-lera-ostayotsya-ryadom-papa
     outcome:

@@ -21,7 +21,7 @@ scenes:
       pressure-act-1: Костя решает за весь автобус. Скажу тренеру перед выездом.
       ignore: Сесть в автобус. Про песни поболтают и забудут.
       observe: Автобус ещё закрыт. Посмотрю, кто куда сядет.
-      focus: Место теперь зависит от песни. Посмотрю, что будет, когда откроют двери.
+      focus: Останусь рядом с Тимуром, пока двери закрыты.
   pressure-act-0:
     mode: orange
     messages:
@@ -119,7 +119,7 @@ scenes:
     choices:
       calm-end: Посмотреть, что будет дальше
       ask: Позвать Тимура на соседнее место
-      calm-watch: Место дали без песни. Посмотрю, останется ли оно свободным.
+      calm-watch: Посмотрю, где Тимур сядет, когда автобус тронется.
   calm-end:
     mode: yellow
     messages:
@@ -142,10 +142,10 @@ scenes:
     messages:
     - sasha-tim-ya-kurtku-ubral
     - remarka-timur-saditsya-ryadom-s
-    question: Что изменилось для тебя сейчас?
+    question: Тимур сел с Сашей. Что дальше?
     choices:
       observe-ease: С местом разобрались. Поехали.
-      observe-watch: Место нашлось. Ещё посмотрю, к кому Костя подойдёт с микрофоном.
+      observe-watch: Спрошу Тимура в личке, как ему на новом месте.
     review:
       signals:
       - pressure/kostya-togda-sadish-sya-otdel-no-s
@@ -166,29 +166,31 @@ scenes:
   observe-watch:
     mode: orange
     messages:
-    - trener-vse-na-mestah-poehali
+    - misha-checks-in
+    - timur-talks-football
     outcome:
     - positive
-    - Тимур едет на игру рядом с Сашей
-    note: Рядом нашлось место без условия про песню.
+    - Тимур рассказал Мише, как устроился
+    note: Ты спросил у Тимура наедине. Он сам рассказал, чем занят с Сашей.
     review:
       signals:
       - observe/remarka-timur-saditsya-ryadom-s
-      effect: Место нашлось. Ещё посмотрю, к кому Костя подойдёт с микрофоном.
+      effect: Ты спросил у Тимура наедине. Он сам рассказал, чем занят с Сашей.
   focus:
     mode: orange
     messages:
+    - misha-waits-with-timur
     - sasha-tim-ya-kurtku-ubral
     - remarka-timur-saditsya-ryadom-s
-    question: Что изменилось для тебя сейчас?
+    question: Тимур сел с Сашей. Что дальше?
     choices:
       focus-ease: С местом разобрались. Поехали.
-      focus-watch: Место нашлось. Ещё посмотрю, к кому Костя подойдёт с микрофоном.
+      focus-watch: Спрошу Тимура в личке, как ему на новом месте.
     review:
       signals:
       - pressure/kostya-togda-sadish-sya-otdel-no-s
       - pressure/timur-ya-voobsche-uzhe-ehat
-      effect: Рядом нашлось место без условия про песню.
+      effect: Ты ждал у автобуса вместе с Тимуром. Место у окна ему предложил Саша.
   focus-ease:
     mode: yellow
     messages:
@@ -204,15 +206,16 @@ scenes:
   focus-watch:
     mode: orange
     messages:
-    - trener-vse-na-mestah-poehali
+    - misha-checks-in
+    - timur-talks-football
     outcome:
     - positive
-    - Тимур едет на игру рядом с Сашей
-    note: Рядом нашлось место без условия про песню.
+    - Тимур рассказал Мише, как устроился
+    note: Ты спросил у Тимура наедине. Он сам рассказал, чем занят с Сашей.
     review:
       signals:
       - focus/remarka-timur-saditsya-ryadom-s
-      effect: Место нашлось. Ещё посмотрю, к кому Костя подойдёт с микрофоном.
+      effect: Ты спросил у Тимура наедине. Он сам рассказал, чем занят с Сашей.
   calm-watch:
     mode: orange
     messages:

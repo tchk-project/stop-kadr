@@ -24,7 +24,7 @@ scenes:
       pressure-act-0: Меня снова вернули после отказа. Напомню Косте и выйду.
       pressure-act-1: Я уже всё сказала. Выйду ещё раз без объяснений.
       observe: Может, Костя сам заглянет во вчерашний чат. Пока дочитаю.
-      focus: Я просила больше не добавлять. Посмотрю, что Костя сделает теперь.
+      focus: Отвечу Вере в личке про расписание на утро.
   pressure-act-0:
     mode: orange
     messages:
@@ -104,7 +104,7 @@ scenes:
     choices:
       calm-end: Посмотреть, что будет дальше
       ask: Договориться про расписание отдельно
-      calm-watch: Костя согласился. Посмотрю, вспомнит ли он про это перед игрой.
+      calm-watch: Выйду из беседы. Утром посмотрю, вернули ли меня.
   calm-end:
     mode: yellow
     messages:
@@ -127,10 +127,10 @@ scenes:
     mode: yellow
     messages:
     - kostya-an-vizhu-vcherashnee-bol-she
-    question: Что изменилось для тебя сейчас?
+    question: Костя нашёл шестого. Как закончишь вечер?
     choices:
-      observe-ease: Костя понял. На сегодня вопрос закрыт.
-      observe-watch: Он обещал больше не добавлять. Посмотрю, сдержит ли слово.
+      observe-ease: Выйду из беседы и пойду спать.
+      observe-watch: Перед выходом попрощаюсь с ребятами.
     review:
       signals:
       - pressure/ty-ya-sama-vyshla-ot
@@ -139,7 +139,7 @@ scenes:
   observe-ease:
     mode: yellow
     messages:
-    - sistema-anya-vyshla-iz-besedy
+    - sistema-ty-vyshla-iz-besedy
     outcome:
     - positive
     - Аня закончила разговор о турнире
@@ -151,32 +151,34 @@ scenes:
   observe-watch:
     mode: orange
     messages:
-    - sistema-anya-vyshla-iz-besedy
+    - anya-says-goodnight-to-team
+    - sistema-ty-vyshla-iz-besedy
     outcome:
     - positive
-    - Аня закончила разговор о турнире
-    note: Костя увидел прошлую просьбу. Место в составе он предложил другому игроку.
+    - Аня попрощалась и вышла из беседы
+    note: Ты сама решила, что сказать напоследок. На матч команда позвала другого игрока.
     review:
       signals:
       - observe/kostya-an-vizhu-vcherashnee-bol-she
-      effect: Он обещал больше не добавлять. Посмотрю, сдержит ли слово.
+      effect: Ты сама решила, что сказать напоследок. На матч команда позвала другого игрока.
   focus:
     mode: orange
     messages:
+    - anya-arranges-schedule
     - kostya-an-vizhu-vcherashnee-bol-she
-    question: Что изменилось для тебя сейчас?
+    question: Костя нашёл шестого. Как закончишь вечер?
     choices:
-      focus-ease: Костя понял. На сегодня вопрос закрыт.
-      focus-watch: Он обещал больше не добавлять. Посмотрю, сдержит ли слово.
+      focus-ease: Выйду из беседы и пойду спать.
+      focus-watch: Перед выходом попрощаюсь с ребятами.
     review:
       signals:
       - pressure/ty-ya-sama-vyshla-ot
       - pressure/kostya-an-nas-pyatero-na
-      effect: Костя увидел прошлую просьбу. Место в составе он предложил другому игроку.
+      effect: Ты договорилась с Верой в личке. В общем чате Костя написал, что позвал Даню.
   focus-ease:
     mode: yellow
     messages:
-    - sistema-anya-vyshla-iz-besedy
+    - sistema-ty-vyshla-iz-besedy
     outcome:
     - positive
     - Аня закончила разговор о турнире
@@ -188,15 +190,16 @@ scenes:
   focus-watch:
     mode: orange
     messages:
-    - sistema-anya-vyshla-iz-besedy
+    - anya-says-goodnight-to-team
+    - sistema-ty-vyshla-iz-besedy
     outcome:
     - positive
-    - Аня закончила разговор о турнире
-    note: Костя увидел прошлую просьбу. Место в составе он предложил другому игроку.
+    - Аня попрощалась и вышла из беседы
+    note: Ты сама решила, что сказать напоследок. На матч команда позвала другого игрока.
     review:
       signals:
       - focus/kostya-an-vizhu-vcherashnee-bol-she
-      effect: Он обещал больше не добавлять. Посмотрю, сдержит ли слово.
+      effect: Ты сама решила, что сказать напоследок. На матч команда позвала другого игрока.
   calm-watch:
     mode: orange
     messages:

@@ -140,3 +140,18 @@ ty-posledniy-gde-my:
 kostya-aga-ego-i-vzyal:
   speaker: Костя
   text: Ага, его и взял.
+self-allows-last-take:
+  speaker: Ты
+  text: Да, этот можно.
+timur-abstains:
+  speaker: Ты
+  channel: chat-shkol-noy-gruppy
+  text: Я в этом опросе не голосую.
+misha-declines-first-take:
+  speaker: Ты
+  channel: chat-shkol-noy-gruppy
+  text: Кость, я уже ответил. Первый дубль оставь в группе.
+misha-allows-last-take:
+  speaker: Ты
+  channel: chat-shkol-noy-gruppy
+  text: Последний, где все вместе вступили, можно выкладывать.

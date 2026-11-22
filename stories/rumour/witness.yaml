@@ -19,7 +19,7 @@ scenes:
       pressure-act-1: Ане уже пишут гадости. Попрошу тренера проверить командный чат.
       ignore: Пока не отвечать Ане. Про скрин скоро забудут.
       observe: Пока никому не перешлю. Почитаю, что напишут в команде.
-      focus: На скрине обрезаны соседние сообщения. Посмотрю, остановится ли пересылка.
+      focus: Отвечу Косте в личке, что не стану пересылать скрин.
   pressure-act-0:
     mode: orange
     messages:
@@ -111,7 +111,7 @@ scenes:
     choices:
       calm-end: Посмотреть, что будет дальше
       ask: Переспросить про источник
-      calm-watch: Дальше картинку не передали. Пока хочется разобраться, откуда она взялась.
+      calm-watch: Дочитаю, кому Костя уже отправил скрин.
   calm-end:
     mode: yellow
     messages:
@@ -133,10 +133,10 @@ scenes:
     mode: yellow
     messages:
     - trener-vetku-pod-raspisaniem-zakryl
-    question: Что изменилось для тебя сейчас?
+    question: Тренер закрыл ветку под расписанием. Что дальше?
     choices:
       observe-ease: В этой ветке больше не пишут. Можно отложить телефон.
-      observe-watch: Здесь ветку закрыли. Если скрин появится снова, я знаю, куда написать.
+      observe-watch: Напишу Ане, какую ветку закрыл тренер.
     review:
       signals:
       - pressure/kostya-zakin-v-chat-komandy
@@ -157,28 +157,30 @@ scenes:
   observe-watch:
     mode: orange
     messages:
-    - sistema-kommentarii-pod-raspisaniem-zakryty
+    - timur-tells-anya-about-thread
+    - anya-thanks-for-private-message
     outcome:
-    - mixed
-    - В командном чате обсуждение закрыто
-    note: Тренер закрыл конкретное обсуждение. Что происходит в других чатах, пока неизвестно.
+    - positive
+    - Аня узнала, где закрыли комментарии
+    note: Ты передал Ане то, что сообщил тренер. Скрин для этого пересылать не пришлось.
     review:
       signals:
       - observe/trener-vetku-pod-raspisaniem-zakryl
-      effect: Здесь ветку закрыли. Если скрин появится снова, я знаю, куда написать.
+      effect: Ты передал Ане то, что сообщил тренер. Скрин для этого пересылать не пришлось.
   focus:
     mode: orange
     messages:
+    - timur-declines-forward
     - trener-vetku-pod-raspisaniem-zakryl
-    question: Что изменилось для тебя сейчас?
+    question: Тренер закрыл ветку под расписанием. Что дальше?
     choices:
       focus-ease: В этой ветке больше не пишут. Можно отложить телефон.
-      focus-watch: Здесь ветку закрыли. Если скрин появится снова, я знаю, куда написать.
+      focus-watch: Напишу Ане, какую ветку закрыл тренер.
     review:
       signals:
       - pressure/kostya-zakin-v-chat-komandy
       - pressure/anya-tim-ty-videl-chto
-      effect: Тренер закрыл конкретное обсуждение. Что происходит в других чатах, пока неизвестно.
+      effect: Ты ответил только Косте. Затем в командном чате тренер сам объявил о закрытии ветки.
   focus-ease:
     mode: yellow
     messages:
@@ -194,15 +196,16 @@ scenes:
   focus-watch:
     mode: orange
     messages:
-    - sistema-kommentarii-pod-raspisaniem-zakryty
+    - timur-tells-anya-about-thread
+    - anya-thanks-for-private-message
     outcome:
-    - mixed
-    - В командном чате обсуждение закрыто
-    note: Тренер закрыл конкретное обсуждение. Что происходит в других чатах, пока неизвестно.
+    - positive
+    - Аня узнала, где закрыли комментарии
+    note: Ты передал Ане то, что сообщил тренер. Скрин для этого пересылать не пришлось.
     review:
       signals:
       - focus/trener-vetku-pod-raspisaniem-zakryl
-      effect: Здесь ветку закрыли. Если скрин появится снова, я знаю, куда написать.
+      effect: Ты передал Ане то, что сообщил тренер. Скрин для этого пересылать не пришлось.
   calm-watch:
     mode: orange
     messages:

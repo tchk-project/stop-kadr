@@ -209,3 +209,25 @@ remarka-moderator-otvechaet-v-lichke:
 remarka-ty-vyhodish-iz-igry:
   speaker: Ремарка
   text: Ты выходишь из игры. Личная переписка с модератором остаётся у тебя.
+sasha-acknowledges-key:
+  speaker: Ты
+  channel: tekstovyy-chat-igry
+  text: Миш, я тебя понял. Ключ у тебя, мы у двери.
+sasha-invites-misha:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-mishey
+  text: Миш, ещё раунд со мной сыграешь?
+misha-chooses-no-mic:
+  speaker: Миша
+  text: Давай. Только я пока без микрофона.
+misha-writes-about-key:
+  speaker: Ты
+  channel: tekstovyy-chat-igry
+  text: Ключ у меня. Сейчас открою.
+misha-asks-for-teammate:
+  speaker: Ты
+  channel: tekstovyy-chat-igry
+  text: Кто со мной дальше? Я тут в чате читаю.
+lyosha-offers-to-join:
+  speaker: Лёша
+  text: Я с тобой. Маякну, как дойду до двери.

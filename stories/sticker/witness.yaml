@@ -14,14 +14,14 @@ scenes:
     - danya-sticker-2
     - lera-ya-emu-vchera-napisala
     continuation: true
-    question: Что ответишь Лере?
+    question: Лера написала тебе лично про кота и клей. Как поступишь?
     choices:
       alternative: Может, в общем чате его остановят. Расскажу про Лерину просьбу.
       pressure-act-0: За котом потерялся вопрос. Отвечу в классе про клей.
       pressure-act-1: Лера уже просила перестать. Спрошу в личке, чем помочь.
       ignore: Закрыть чат. Они всегда друг другу стикеры кидают.
       observe: Может, сейчас ответят про клей. Секунду почитаю чат.
-      focus: Кот уже второй раз под голосовым. Посмотрю, ответит ли кто-нибудь про клей.
+      focus: Напишу Лере в личку, что услышала её голосовое.
   pressure-act-0:
     mode: orange
     messages:
@@ -113,7 +113,7 @@ scenes:
     choices:
       calm-end: Посмотреть, что будет дальше
       ask: Предложить ещё один тюбик
-      calm-watch: На вопрос про клей ответили. Посмотрю, вернётся ли шутка.
+      calm-watch: Дочитаю, куда Даня понесёт клей.
   calm-end:
     mode: yellow
     messages:
@@ -136,10 +136,10 @@ scenes:
     messages:
     - anya-rebyat-vy-golosovoe-slushali
     - danya-u-menya-tyubik-seychas
-    question: Что изменилось для тебя сейчас?
+    question: Даня принесёт клей. Что ты хочешь сделать?
     choices:
       observe-ease: С клеем разобрались. Вернусь к стенгазете.
-      observe-watch: Посмотрю, ответит ли Даня ещё и про кота.
+      observe-watch: Спрошу у Леры в личке, хочет ли она сейчас говорить про стикеры.
     review:
       signals:
       - pressure/lera-ya-emu-vchera-napisala
@@ -159,28 +159,30 @@ scenes:
   observe-watch:
     mode: orange
     messages:
-    - remarka-danya-kladyot-kley-na
+    - vera-asks-about-cats
+    - lera-asks-about-headline
     outcome:
-    - mixed
-    - Клей принесли. Услышал ли Даня просьбу Леры — пока непонятно
-    note: Появился ответ на вопрос из голосового. Про вчерашнюю просьбу Даня пока ничего не сказал.
+    - positive
+    - Лера попросила помочь со стенгазетой
+    note: Ты спросила наедине. Лера сама выбрала, когда вернуться к разговору про стикеры.
     review:
       signals:
       - observe/danya-u-menya-tyubik-seychas
-      effect: Посмотрю, ответит ли Даня ещё и про кота.
+      effect: Ты спросила наедине. Лера сама выбрала, когда вернуться к разговору про стикеры.
   focus:
     mode: orange
     messages:
+    - vera-brings-glue
     - anya-rebyat-vy-golosovoe-slushali
     - danya-u-menya-tyubik-seychas
-    question: Что изменилось для тебя сейчас?
+    question: Даня принесёт клей. Что ты хочешь сделать?
     choices:
       focus-ease: С клеем разобрались. Вернусь к стенгазете.
-      focus-watch: Посмотрю, ответит ли Даня ещё и про кота.
+      focus-watch: Спрошу у Леры в личке, хочет ли она сейчас говорить про стикеры.
     review:
       signals:
       - pressure/lera-ya-emu-vchera-napisala
-      effect: Появился ответ на вопрос из голосового. Про вчерашнюю просьбу Даня пока ничего не сказал.
+      effect: Ты ответила Лере лично. Про клей в общем чате спросила Аня, и Даня предложил свой тюбик.
   focus-ease:
     mode: yellow
     messages:
@@ -196,15 +198,16 @@ scenes:
   focus-watch:
     mode: orange
     messages:
-    - remarka-danya-kladyot-kley-na
+    - vera-asks-about-cats
+    - lera-asks-about-headline
     outcome:
-    - mixed
-    - Клей принесли. Услышал ли Даня просьбу Леры — пока непонятно
-    note: Появился ответ на вопрос из голосового. Про вчерашнюю просьбу Даня пока ничего не сказал.
+    - positive
+    - Лера попросила помочь со стенгазетой
+    note: Ты спросила наедине. Лера сама выбрала, когда вернуться к разговору про стикеры.
     review:
       signals:
       - focus/danya-u-menya-tyubik-seychas
-      effect: Посмотрю, ответит ли Даня ещё и про кота.
+      effect: Ты спросила наедине. Лера сама выбрала, когда вернуться к разговору про стикеры.
   calm-watch:
     mode: orange
     messages:

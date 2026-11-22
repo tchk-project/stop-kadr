@@ -47,9 +47,6 @@ ty-v-16-10-trener-poprosil:
 dispetcher-brigada-napravlena-ostavaytes-na:
   speaker: Диспетчер
   text: Бригада направлена. Оставайтесь на связи, я скажу, что делать до её приезда.
-remarka-ryadom-s-toboy-nabrali:
-  speaker: Ремарка
-  text: Рядом с тобой набрали 112.
 sasha-u-trenera-vnezapno-izmenilas:
   speaker: Саша
   channel: scene
@@ -93,3 +90,9 @@ vera-v-16-10-trener-poprosil:
 vera-seychas-stalo-luchshe-rasskazhu:
   speaker: Вера
   text: Сейчас тренер снова смог чётко сказать моё имя. Улыбка всё ещё неровная.
+vera-asks-sasha-to-call:
+  speaker: Ты
+  text: Саш, вызови скорую сейчас. Я останусь с тренером.
+sasha-calls:
+  speaker: Саша
+  text: Звоню. Уже ответили.

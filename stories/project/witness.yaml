@@ -22,7 +22,7 @@ scenes:
       alternative: Миша обещал поправить позже. Пока начну с этим файлом.
       ignore: Подключить ноутбук и оставить титульный как есть.
       observe: Может, Миша успеет до показа. Посмотрю на экран.
-      focus: Имя обещали добавить после защиты. Посмотрю именно на титульный.
+      focus: Поверну ноутбук к Тимуру, чтобы он сам увидел титульный.
   pressure-act-0:
     mode: orange
     messages:
@@ -143,10 +143,10 @@ scenes:
     messages:
     - misha-tim-stoy-uspel-ler
     - anya-teper-troe-timur-tozhe
-    question: Что изменилось для тебя сейчас?
+    question: На экране три автора. Что сделаешь теперь?
     choices:
       observe-ease: Все три имени на месте. Послушаю выступление.
-      observe-watch: На экране трое. Проверю потом, какой файл ушёл на сдачу.
+      observe-watch: После защиты открою сданный файл и сверю титульный.
     review:
       signals:
       - start/timur-a-grafiki-ya-vsyo
@@ -167,29 +167,30 @@ scenes:
   observe-watch:
     mode: orange
     messages:
-    - marina-sergeevna-vizhu-tryoh-avtorov
+    - lera-checks-submission
     outcome:
     - positive
-    - Класс увидел имена всех трёх авторов
-    note: Есть новый файл. Аня проверила, какие имена видны на экране.
+    - В сданном файле остались имена всех троих
+    note: Теперь ты видела обе версии, на экране и в сданном файле. В обеих указан Тимур.
     review:
       signals:
       - observe/anya-teper-troe-timur-tozhe
-      effect: На экране трое. Проверю потом, какой файл ушёл на сдачу.
+      effect: Теперь ты видела обе версии, на экране и в сданном файле. В обеих указан Тимур.
   focus:
     mode: orange
     messages:
+    - lera-shows-laptop
     - misha-tim-stoy-uspel-ler
     - anya-teper-troe-timur-tozhe
-    question: Что изменилось для тебя сейчас?
+    question: На экране три автора. Что сделаешь теперь?
     choices:
       focus-ease: Все три имени на месте. Послушаю выступление.
-      focus-watch: На экране трое. Проверю потом, какой файл ушёл на сдачу.
+      focus-watch: После защиты открою сданный файл и сверю титульный.
     review:
       signals:
       - start/timur-a-grafiki-ya-vsyo
       - pressure/misha-ler-otkryvay-chto-skinul
-      effect: Есть новый файл. Аня проверила, какие имена видны на экране.
+      effect: Ты показала Тимуру экран. Миша прислал исправленный файл, и Аня увидела на титульном третье имя.
   focus-ease:
     mode: yellow
     messages:
@@ -205,15 +206,15 @@ scenes:
   focus-watch:
     mode: orange
     messages:
-    - marina-sergeevna-vizhu-tryoh-avtorov
+    - lera-checks-submission
     outcome:
     - positive
-    - Класс увидел имена всех трёх авторов
-    note: Есть новый файл. Аня проверила, какие имена видны на экране.
+    - В сданном файле остались имена всех троих
+    note: Теперь ты видела обе версии, на экране и в сданном файле. В обеих указан Тимур.
     review:
       signals:
       - focus/anya-teper-troe-timur-tozhe
-      effect: На экране трое. Проверю потом, какой файл ушёл на сдачу.
+      effect: Теперь ты видела обе версии, на экране и в сданном файле. В обеих указан Тимур.
   calm-watch:
     mode: orange
     messages:

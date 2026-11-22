@@ -5,7 +5,7 @@ async function playAttentionPilot(ui) {
     freeze, question, outcome, choices, controls, status, motionAllowed} = ui;
   const {story,cues,decisions} = ui.route;
   thread.className = 'chat-transcript';
-  const guide = attentionGuide(document.querySelector('.panel'));
+  const guide = attentionGuide(document.querySelector('.panel'), document.body.hasAttribute('data-preview') ? 'stop-kadr.editor.preview.cooper' : undefined);
   const speed = 4;
   const bar = document.querySelector('.mode-bar');
   const levelBadge = [bar.querySelector('.signal'), bar.querySelector('.level-name')];
@@ -234,7 +234,7 @@ async function playAttentionPilot(ui) {
     task.signal.removeEventListener('abort', cancel);
   }
 
-  async function moveTo(items, rate, task, signals = []) {
+  async function moveTo(items, rate, task, signals = [], instant = false) {
     const rows = [...thread.querySelectorAll('.item')];
     let common = 0;
     while (common < items.length && common < rows.length &&
@@ -244,22 +244,22 @@ async function playAttentionPilot(ui) {
     let reverseActivity = {label:'Перемотка назад', kind:'dots'};
     while (rows.length > common) {
       const row = rows.pop();
-      if (!task.signal.aborted) {
+      if (!instant && !task.signal.aborted) {
         scrollTo(row);
         showActivity(reverseActivity, reverseChannel);
         await wait(Number(row.dataset.readingPause)/speed, task.signal);
         if (run !== task) return;
       }
       showActivity();
-      await animateRow(row, true, speed, task);
+      if (!instant) await animateRow(row, true, speed, task);
       if (run !== task) return;
       const block = row.parentElement;
       row.remove();
       if (!block.querySelector('.item')) block.remove();
       const last = rows.at(-1);
       const code = last?.dataset.attention || 'yellow';
-      changeColour(code, !task.signal.aborted);
-      if (!task.signal.aborted) {
+      changeColour(code, !instant && !task.signal.aborted);
+      if (!instant && !task.signal.aborted) {
         scrollTo(last);
         reverseChannel = blockChannel(block);
         reverseActivity = {label:row.dataset.activity, kind:row.dataset.kind};
@@ -279,15 +279,15 @@ async function playAttentionPilot(ui) {
     for (const [index, {item, context, activity}] of pending.entries()) {
       const {pause} = timing(item);
 
-      if (!task.signal.aborted) {
+      if (!instant && !task.signal.aborted) {
         showActivity(activity, context.channel);
         await wait(pause/rate, task.signal);
         if (run !== task) return;
       }
-      changeColour(item.attention, !task.signal.aborted);
+      changeColour(item.attention, !instant && !task.signal.aborted);
       const block = blockFor(context.channel);
       const row = makeRow(item, context.caption);
-      if (!firstNew && item.line) {
+      if (!instant && !firstNew && item.line) {
         firstNew = row;
         row.tabIndex = -1;
       }
@@ -300,10 +300,10 @@ async function playAttentionPilot(ui) {
       row.dataset.kind = activity.kind;
       block.append(row);
       showActivity();
-      if (!task.signal.aborted) scrollTo(row, rate === 1 ? 'smooth' : 'instant');
-      await animateRow(row, false, rate, task);
+      if (!instant && !task.signal.aborted) scrollTo(row, rate === 1 ? 'smooth' : 'instant');
+      if (!instant) await animateRow(row, false, rate, task);
       if (run !== task) return;
-      if (!task.signal.aborted) {
+      if (!instant && !task.signal.aborted) {
         if (next) showActivity(next.activity, next.context.channel);
         await wait(Number(row.dataset.readingPause)/rate, task.signal);
         if (run !== task) return;
@@ -311,7 +311,7 @@ async function playAttentionPilot(ui) {
       if (signals.includes(item.ref)) {
         showActivity();
         drawSignal(row, item.ref);
-        if (!task.signal.aborted) {
+        if (!instant && !task.signal.aborted) {
           direction.textContent = 'Стоп-кадр · деталь';
           scrollTo(row);
           await wait(1250, task.signal);
@@ -419,7 +419,7 @@ async function playAttentionPilot(ui) {
       appendNextStory();
     } else {
       freeze.hidden = false;
-      question.textContent = data.question;
+      question.textContent = data.question || (document.body.hasAttribute('data-preview') && !data.links.length ? 'Продолжение ещё не написано.' : '');
       for (const {id, label} of data.links) {
         const option = button('forward', element('span','choice-label',label), () => {
           guide.dismissIntro();
@@ -469,6 +469,10 @@ async function playAttentionPilot(ui) {
   }
 
   function appendNextStory() {
+    if (document.body.hasAttribute('data-preview')) {
+      controls.append(button('dismiss','Вернуться к тексту',() => parent.document.querySelector('#preview').close()));
+      return;
+    }
     controls.append(button('dismiss','Следующая история',() => leave(randomStoryUrl(selection),'Следующая история'),'play'));
   }
 
@@ -512,7 +516,11 @@ async function playAttentionPilot(ui) {
       }
       await moveTo(items.slice(0,end),speed,task,stop.signals);
     } else {
-      await moveTo(items,mode === 'conversation' ? 1 : speed,task);
+      if (mode === 'excerpt') {
+        const pos = items.findIndex(item => item.ref === params.get('from'));
+        if (pos > 0) await moveTo(items.slice(0,pos),speed,task,[],true);
+      }
+      await moveTo(items,mode === 'conversation' || mode === 'excerpt' ? 1 : speed,task);
     }
     if (run !== task) return;
     direction.textContent = '';
@@ -557,6 +565,7 @@ async function playAttentionPilot(ui) {
   if (location.hash === '#end') { ui.finishScene(); return; }
   const next = readView();
   const opening = pages.get(next.id).parent === 'start';
-  await render(next, opening ? 'conversation' : 'restore');
+  const excerpt = document.body.hasAttribute('data-preview') && params.has('from');
+  await render(next, excerpt ? 'excerpt' : opening ? 'conversation' : 'restore');
   scene.classList.remove('scene-opening');
 }

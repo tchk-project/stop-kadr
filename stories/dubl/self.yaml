@@ -18,9 +18,9 @@ scenes:
     choices:
       pressure-act-0: Опрос идёт после моего отказа. Напишу админу.
       pressure-act-1: Я уже ответил. Выключу звук и побуду с Верой.
-      alternative: Может, до пересылки не дойдёт. Подожду результата опроса.
-      observe: Может, Костя просто спросил. Посмотрю, что появится в чате.
-      focus: Просьба уже прозвучала, а Костя собирает голоса. Проверю, что он сделает с записью.
+      alternative: Отложу телефон до конца репетиции. Позже проверю опрос.
+      observe: Останусь в чате и дождусь следующего сообщения Кости.
+      focus: Напишу Косте прямо под опросом, что мой ответ прежний.
   pressure-act-0:
     mode: orange
     messages:
@@ -124,10 +124,10 @@ scenes:
     messages:
     - kostya-stop-mish-uvidel-tvoyo
     - sistema-kostya-zakryl-opros
-    question: Что изменилось для тебя сейчас?
+    question: Костя закрыл опрос. Что теперь?
     choices:
-      observe-ease: Опрос закрыт. Вернусь к репетиции.
-      observe-watch: Опрос закрыт. Ещё посмотрю, какой дубль отправят.
+      observe-ease: Отвечу в группе, можно ли выкладывать последний прогон.
+      observe-watch: Уточню, какой дубль разрешаю выложить, и открою школьный чат.
     review:
       signals:
       - start/misha-kost-etot-v-shkol-nyy
@@ -137,7 +137,7 @@ scenes:
     mode: yellow
     messages:
     - kostya-vot-posledniy-progon
-    - misha-da-etot-mozhno
+    - self-allows-last-take
     outcome:
     - positive
     - Миша согласился на последний прогон
@@ -149,35 +149,36 @@ scenes:
   observe-watch:
     mode: orange
     messages:
-    - kostya-vot-posledniy-progon
-    - misha-da-etot-mozhno
+    - misha-allows-last-take
+    - kostya-posledniy-progon-shkol-naya
     outcome:
     - positive
-    - Миша согласился на последний прогон
-    note: Костя услышал просьбу и сам закрыл голосование.
+    - В школьный чат ушёл выбранный Мишей дубль
+    note: Ты назвал конкретную запись. Костя отправил её, и ты видишь видео в школьном чате.
     review:
       signals:
       - observe/sistema-kostya-zakryl-opros
-      effect: Опрос закрыт. Ещё посмотрю, какой дубль отправят.
+      effect: Ты назвал конкретную запись. Костя отправил её, и ты видишь видео в школьном чате.
   focus:
     mode: orange
     messages:
+    - misha-declines-first-take
     - kostya-stop-mish-uvidel-tvoyo
     - sistema-kostya-zakryl-opros
-    question: Что изменилось для тебя сейчас?
+    question: Костя закрыл опрос. Что теперь?
     choices:
-      focus-ease: Опрос закрыт. Вернусь к репетиции.
-      focus-watch: Опрос закрыт. Ещё посмотрю, какой дубль отправят.
+      focus-ease: Отвечу в группе, можно ли выкладывать последний прогон.
+      focus-watch: Уточню, какой дубль разрешаю выложить, и открою школьный чат.
     review:
       signals:
       - start/misha-kost-etot-v-shkol-nyy
       - pressure/kostya-davayte-golosovat-kto-za
-      effect: Костя услышал просьбу и сам закрыл голосование.
+      effect: Ты повторил просьбу под опросом. Костя снял голосование и предложил последний прогон.
   focus-ease:
     mode: yellow
     messages:
     - kostya-vot-posledniy-progon
-    - misha-da-etot-mozhno
+    - self-allows-last-take
     outcome:
     - positive
     - Миша согласился на последний прогон
@@ -189,16 +190,16 @@ scenes:
   focus-watch:
     mode: orange
     messages:
-    - kostya-vot-posledniy-progon
-    - misha-da-etot-mozhno
+    - misha-allows-last-take
+    - kostya-posledniy-progon-shkol-naya
     outcome:
     - positive
-    - Миша согласился на последний прогон
-    note: Костя услышал просьбу и сам закрыл голосование.
+    - В школьный чат ушёл выбранный Мишей дубль
+    note: Ты назвал конкретную запись. Костя отправил её, и ты видишь видео в школьном чате.
     review:
       signals:
       - focus/sistema-kostya-zakryl-opros
-      effect: Опрос закрыт. Ещё посмотрю, какой дубль отправят.
+      effect: Ты назвал конкретную запись. Костя отправил её, и ты видишь видео в школьном чате.
   calm-watch:
     mode: orange
     messages:

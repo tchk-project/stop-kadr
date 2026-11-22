@@ -7,8 +7,7 @@ const colourHelp = {
   red:'Угроза уже рядом. Можно отойти к людям и позвать на помощь.'
 };
 
-function attentionGuide(panel) {
-  const storageKey = 'stop-kadr.cooper.seen.v1';
+function attentionGuide(panel, storageKey = 'stop-kadr.cooper.seen.v1') {
   const known = new Set();
   function mergeSaved() {
     try {

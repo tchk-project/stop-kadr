@@ -25,7 +25,7 @@ function afterPaint() {
 async function launchAttentionScene() {
   const loader = document.querySelector('.scene-loader');
   loader.dataset.started = '';
-  await new Promise((resolve, reject) => {
+  if (!document.body.hasAttribute('data-preview')) await new Promise((resolve, reject) => {
     const script = document.createElement('script');
     script.onload = resolve;
     script.onerror = () => reject(new Error('Не удалось загрузить историю '+episode.id));

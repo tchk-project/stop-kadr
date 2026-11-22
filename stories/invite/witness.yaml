@@ -24,7 +24,7 @@ scenes:
       alternative: Нам правда не хватает шестого. Попрошу Аню остаться на турнир.
       ignore: Заняться турнирной сеткой. С добавлением сами разберутся.
       observe: Может, Костя сам заглянет во вчерашний чат. Пока дочитаю.
-      focus: После просьбы Аню опять добавили. Посмотрю, учтёт ли Костя её ответ.
+      focus: Предложу поискать шестого среди тех, кто сам хочет играть.
   pressure-act-0:
     mode: orange
     messages:
@@ -120,7 +120,7 @@ scenes:
     choices:
       calm-end: Посмотреть, что будет дальше
       ask: Предложить себя на турнир
-      calm-watch: Костя согласился. Посмотрю, вспомнит ли он про это перед игрой.
+      calm-watch: Дочитаю, кто сыграет шестым.
   calm-end:
     mode: yellow
     messages:
@@ -143,10 +143,10 @@ scenes:
     mode: yellow
     messages:
     - kostya-an-vizhu-vcherashnee-bol-she
-    question: Что изменилось для тебя сейчас?
+    question: Шестого позвали. Что сделаешь теперь?
     choices:
       observe-ease: Костя понял. На сегодня вопрос закрыт.
-      observe-watch: Он обещал больше не добавлять. Посмотрю, сдержит ли слово.
+      observe-watch: Перед сном напишу Ане в личку и пожелаю удачи на тренировке.
     review:
       signals:
       - pressure/anya-ya-sama-vyshla-ot
@@ -168,27 +168,30 @@ scenes:
     mode: orange
     messages:
     - sistema-anya-vyshla-iz-besedy
+    - lera-wishes-good-luck
+    - anya-says-goodnight
     outcome:
     - positive
-    - Аня закончила разговор о турнире
-    note: Костя увидел прошлую просьбу. Место в составе он предложил другому игроку.
+    - Лера пожелала Ане удачи в личке
+    note: Аня вышла из игры и сама закончила личный разговор, когда захотела спать.
     review:
       signals:
       - observe/kostya-an-vizhu-vcherashnee-bol-she
-      effect: Он обещал больше не добавлять. Посмотрю, сдержит ли слово.
+      effect: Аня вышла из игры и сама закончила личный разговор, когда захотела спать.
   focus:
     mode: orange
     messages:
+    - lera-invites-volunteers
     - kostya-an-vizhu-vcherashnee-bol-she
-    question: Что изменилось для тебя сейчас?
+    question: Шестого позвали. Что сделаешь теперь?
     choices:
       focus-ease: Костя понял. На сегодня вопрос закрыт.
-      focus-watch: Он обещал больше не добавлять. Посмотрю, сдержит ли слово.
+      focus-watch: Перед сном напишу Ане в личку и пожелаю удачи на тренировке.
     review:
       signals:
       - pressure/anya-ya-sama-vyshla-ot
       - pressure/kostya-an-nas-pyatero-na
-      effect: Костя увидел прошлую просьбу. Место в составе он предложил другому игроку.
+      effect: Ты предложила поискать желающего. Костя увидел вчерашнюю просьбу Ани и позвал Даню.
   focus-ease:
     mode: yellow
     messages:
@@ -205,14 +208,16 @@ scenes:
     mode: orange
     messages:
     - sistema-anya-vyshla-iz-besedy
+    - lera-wishes-good-luck
+    - anya-says-goodnight
     outcome:
     - positive
-    - Аня закончила разговор о турнире
-    note: Костя увидел прошлую просьбу. Место в составе он предложил другому игроку.
+    - Лера пожелала Ане удачи в личке
+    note: Аня вышла из игры и сама закончила личный разговор, когда захотела спать.
     review:
       signals:
       - focus/kostya-an-vizhu-vcherashnee-bol-she
-      effect: Он обещал больше не добавлять. Посмотрю, сдержит ли слово.
+      effect: Аня вышла из игры и сама закончила личный разговор, когда захотела спать.
   calm-watch:
     mode: orange
     messages:

@@ -193,3 +193,35 @@ remarka-vy-sadites-marina-sergeevna:
 remarka-dezhurnaya-prohodit-s-toboy:
   speaker: Ремарка
   text: Дежурная проходит с тобой до класса. У порога ты сам берёшься за ручку двери.
+timur-enters-with-sasha:
+  speaker: Ремарка
+  text: Тимур заходит в кабинет рядом с тобой.
+kostya-enters-class:
+  speaker: Ремарка
+  channel: scene
+  text: Ты заходишь в открытый класс. От двери Саша тебя видит.
+kostya-calls-from-door:
+  speaker: Ты
+  channel: scene
+  text: Саш, я здесь. Иди ко мне!
+kostya-describes-threat:
+  speaker: Ты
+  channel: scene
+  text: Марина Сергеевна, я слышал, как Лёша сказал Саше, что ударит.
+teacher-promises-to-call:
+  speaker: Марина Сергеевна
+  text: Я услышала. Побудьте пока здесь, я позову классного руководителя.
+sasha-invites-timur:
+  speaker: Ты
+  channel: scene
+  text: Тим, пойдём со мной в класс, пожалуйста.
+timur-agrees-to-come:
+  speaker: Тимур
+  text: Иду с тобой.
+sasha-asks-teacher-to-stay:
+  speaker: Ты
+  channel: scene
+  text: Марина Сергеевна, можно я с вами тут побуду?
+teacher-offers-seat:
+  speaker: Марина Сергеевна
+  text: Конечно, Саш. Давай здесь сядем.
