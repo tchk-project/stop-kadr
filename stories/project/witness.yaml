@@ -1,0 +1,232 @@
+scenes:
+  start:
+    mode: yellow
+    messages:
+    - misha-sobral-ler-otkroesh-na
+    - anya-mish-na-pervoy-nas
+    - misha-ya-teh-vpisal-kto
+    - timur-a-grafiki-ya-vsyo
+    choices:
+      pressure: Читать дальше
+      calm: Спокойный дубль
+  pressure:
+    mode: yellow
+    messages:
+    - misha-ler-otkryvay-chto-skinul
+    - anya-my-seychas-vyhodim-na
+    continuation: true
+    question: У тебя на ноутбуке пока старая версия. Что сделаешь?
+    choices:
+      pressure-act-0: Через минуту все увидят старый титульный. Подожду исправленный файл.
+      pressure-act-1: Класс ещё не знает, чьи графики. Скажу учительнице до показа.
+      alternative: Миша обещал поправить позже. Пока начну с этим файлом.
+      ignore: Подключить ноутбук и оставить титульный как есть.
+      observe: Может, Миша успеет до показа. Посмотрю на экран.
+      focus: Имя обещали добавить после защиты. Посмотрю именно на титульный.
+  pressure-act-0:
+    mode: orange
+    messages:
+    - ty-mish-u-menya-poka
+    - misha-uspel-vot-etot-otkryvay
+    - ty-vsyo-otkryla-teper-na
+    outcome:
+    - positive
+    - На экран успели вывести исправленный файл
+    note: Лера предупредила, что подождёт, а Миша успел изменить файл до показа. Имя Тимура видно классу.
+    review:
+      signals:
+      - start/timur-a-grafiki-ya-vsyo
+      - pressure/misha-ler-otkryvay-chto-skinul
+      effect: Лера предупредила, что подождёт, а Миша успел изменить файл до показа. Имя Тимура видно классу.
+  pressure-act-1:
+    mode: orange
+    messages:
+    - ty-marina-sergeevna-u-nas
+    - marina-sergeevna-vizhu-podpis-timur
+    - timur-ya-delal-grafiki-a
+    outcome:
+    - positive
+    - Учительница дала Тимуру слово до защиты
+    note: Лера показала учительнице работу Тимура, пока ещё можно было представить его классу. Тимур сам сказал, что сделал.
+    review:
+      signals:
+      - start/timur-a-grafiki-ya-vsyo
+      - pressure/misha-ler-otkryvay-chto-skinul
+      effect: Лера показала учительнице работу Тимура, пока ещё можно было представить его классу. Тимур сам сказал, что сделал.
+  alternative:
+    mode: yellow
+    messages:
+    - ty-ladno-togda-otkryvayu-etot
+    - marina-sergeevna-proekt-mishi-i
+    - timur-ya-vchera-eti-grafiki
+    outcome:
+    - negative
+    - На защите представили только двух авторов
+    note: Лера торопилась, а первой на экране появилась старая версия. Миша обещал правку позже, но к тому времени проект уже представили классу. Ещё можно рассказать учительнице, кто сделал графики.
+    review:
+      signals:
+      - start/timur-a-grafiki-ya-vsyo
+      - pressure/misha-ler-otkryvay-chto-skinul
+      effect: Лера торопилась, а первой на экране появилась старая версия. Миша обещал правку позже, но к тому времени проект уже представили классу. Ещё можно рассказать учительнице, кто сделал графики.
+      miss: true
+  ignore:
+    mode: white
+    messages:
+    - timur-ler-uzhe-na-ekran
+    question: Теперь ты знаешь ещё кое-что. Что сделаешь?
+    choices:
+      stay: Запустить показ с первым файлом.
+      rejoin: Задержать показ на минуту.
+    review:
+      miss: true
+      signals:
+      - start/timur-a-grafiki-ya-vsyo
+      - pressure/misha-ler-otkryvay-chto-skinul
+      effect: 'После твоего решения разговор продолжился: «Лер, уже на экран вывели? Моего имени всё ещё нет?»'
+      repair: rejoin
+      recovery: Лера дождалась файла с тремя именами.
+  stay:
+    mode: white
+    messages:
+    - marina-sergeevna-proekt-mishi-i-2
+    outcome:
+    - mixed
+    - Классу представили двух авторов
+    note: Учительница прочитала титульный с двумя именами. К этому моменту исправить файл для первого показа уже не успели.
+    review:
+      miss: true
+      signals:
+      - ignore/timur-ler-uzhe-na-ekran
+      effect: Учительница прочитала титульный с двумя именами. К этому моменту исправить файл для первого показа уже не успели.
+  rejoin:
+    mode: orange
+    messages:
+    - ty-eschyo-ne-vyvela-mish
+    - misha-vsyo-derzhi-novyy-fayl
+    outcome:
+    - positive
+    - Лера дождалась файла с тремя именами
+    note: Пока экран был свободен, Миша успел прислать версию с именем Тимура.
+  calm:
+    mode: yellow
+    messages:
+    - misha-dobavil-tim-glyan-pervuyu
+    - anya-tim-ty-sam-pro
+    continuation: true
+    question: До защиты пара минут. Как ответишь?
+    choices:
+      calm-act-0: Открыть новый файл и дать Тимуру проверить
+      calm-act-1: Спросить Тимура в личке про выступление
+      calm-watch: Открою новый файл и проверю с Тимуром, что его имя на экране.
+  calm-act-0:
+    mode: yellow
+    messages:
+    - ty-otkryla-novyy-tim-posmotri
+    - timur-aga-teper-vse-troe
+    - anya-davay-ya-tebe-kliker
+    outcome:
+    - positive
+    - На экране три автора. Тимур выбрал свой график
+    note: Лера включила исправленную версию. Тимур проверил её и сам выбрал часть доклада.
+  calm-act-1:
+    mode: orange
+    messages:
+    - ty-tim-esli-ne-hochesh
+    - timur-listay-spasibo-ya-ane
+    - ty-dogovorilis-na-pervoy-tvoyo
+    outcome:
+    - positive
+    - Тимур остаётся автором и выбирает помощь со слайдами
+    note: Лера предложила помощь с ноутбуком. Тимур решил, чего хочет сам, и попросит Аню выступить.
+  observe:
+    mode: yellow
+    messages:
+    - misha-tim-stoy-uspel-ler
+    - anya-teper-troe-timur-tozhe
+    question: Что изменилось для тебя сейчас?
+    choices:
+      observe-ease: Все три имени на месте. Послушаю выступление.
+      observe-watch: На экране трое. Проверю потом, какой файл ушёл на сдачу.
+    review:
+      signals:
+      - start/timur-a-grafiki-ya-vsyo
+      - pressure/misha-ler-otkryvay-chto-skinul
+      effect: Есть новый файл. Аня проверила, какие имена видны на экране.
+  observe-ease:
+    mode: yellow
+    messages:
+    - marina-sergeevna-vizhu-tryoh-avtorov
+    outcome:
+    - positive
+    - Класс увидел имена всех трёх авторов
+    note: Есть новый файл. Аня проверила, какие имена видны на экране.
+    review:
+      signals:
+      - observe/anya-teper-troe-timur-tozhe
+      effect: Есть новый файл. Аня проверила, какие имена видны на экране.
+  observe-watch:
+    mode: orange
+    messages:
+    - marina-sergeevna-vizhu-tryoh-avtorov
+    outcome:
+    - positive
+    - Класс увидел имена всех трёх авторов
+    note: Есть новый файл. Аня проверила, какие имена видны на экране.
+    review:
+      signals:
+      - observe/anya-teper-troe-timur-tozhe
+      effect: На экране трое. Проверю потом, какой файл ушёл на сдачу.
+  focus:
+    mode: orange
+    messages:
+    - misha-tim-stoy-uspel-ler
+    - anya-teper-troe-timur-tozhe
+    question: Что изменилось для тебя сейчас?
+    choices:
+      focus-ease: Все три имени на месте. Послушаю выступление.
+      focus-watch: На экране трое. Проверю потом, какой файл ушёл на сдачу.
+    review:
+      signals:
+      - start/timur-a-grafiki-ya-vsyo
+      - pressure/misha-ler-otkryvay-chto-skinul
+      effect: Есть новый файл. Аня проверила, какие имена видны на экране.
+  focus-ease:
+    mode: yellow
+    messages:
+    - marina-sergeevna-vizhu-tryoh-avtorov
+    outcome:
+    - positive
+    - Класс увидел имена всех трёх авторов
+    note: Есть новый файл. Аня проверила, какие имена видны на экране.
+    review:
+      signals:
+      - focus/anya-teper-troe-timur-tozhe
+      effect: Есть новый файл. Аня проверила, какие имена видны на экране.
+  focus-watch:
+    mode: orange
+    messages:
+    - marina-sergeevna-vizhu-tryoh-avtorov
+    outcome:
+    - positive
+    - Класс увидел имена всех трёх авторов
+    note: Есть новый файл. Аня проверила, какие имена видны на экране.
+    review:
+      signals:
+      - focus/anya-teper-troe-timur-tozhe
+      effect: На экране трое. Проверю потом, какой файл ушёл на сдачу.
+  calm-watch:
+    mode: orange
+    messages:
+    - ty-otkryla-novyy-tim-posmotri
+    - timur-aga-teper-vse-troe
+    - anya-davay-ya-tebe-kliker
+    outcome:
+    - positive
+    - На экране три автора. Тимур выбрал свой график
+    note: Лера включила исправленную версию. Тимур проверил её и сам выбрал часть доклада.
+cues:
+  start/timur-a-grafiki-ya-vsyo: Тимур попросил указать его работу. На выступление он ещё не соглашался.
+  pressure/misha-ler-otkryvay-chto-skinul: Класс увидит титульный раньше, чем в нём появится имя.
+  ignore/timur-ler-uzhe-na-ekran: Теперь к тебе обратились напрямую.
+  observe/anya-teper-troe-timur-tozhe: Есть новый файл. Аня проверила, какие имена видны на экране.
+  focus/anya-teper-troe-timur-tozhe: Есть новый файл. Аня проверила, какие имена видны на экране.

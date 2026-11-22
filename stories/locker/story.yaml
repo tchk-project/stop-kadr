@@ -1,0 +1,23 @@
+id: locker
+title: Пять минут до звонка
+order: 1
+place: Школьный коридор
+roles:
+  witness:
+    name: Костя
+    viewpoint: Кости
+    intro: Ты в коридоре. Вера спрашивает, видел ли ты Мишин рюкзак.
+  self:
+    name: Миша
+    viewpoint: Миши
+    intro: Ты оставил рюкзак на лавке в раздевалке и вернулся за ним.
+cast:
+- Вера
+- Даня
+- Костя
+- Марина Сергеевна
+- Миша
+channels:
+  scene:
+    kind: scene
+    title: ''

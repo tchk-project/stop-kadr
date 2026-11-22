@@ -1,0 +1,218 @@
+scenes:
+  start:
+    mode: yellow
+    messages:
+    - lyosha-skin-tochku-vstrechu-posle
+    - ty-segodnya-sama-do-zavtra
+    - timur-an-u-tebya-fotka
+    - ty-aga-ya-na-ostanovke
+    choices:
+      pressure: Читать дальше
+      calm: Спокойный дубль
+  pressure:
+    mode: yellow
+    messages:
+    - lyosha-da-chto-takogo-vklyuchi
+    - timur-mne-lyosha-napisal-sprashivaet
+    - ty-ya-emu-uzhe-skazala
+    continuation: true
+    question: Точку включать не хочется. Что тебе сейчас подойдёт?
+    choices:
+      pressure-act-0: Просят гео, хотя я уже отказалась. Оставлю точку выключенной.
+      pressure-act-1: Он спросил ещё и Тимура. Попрошу Тимура побыть на связи.
+      alternative: Может, перестанет спрашивать. Включу гео только до дома.
+      observe: Точку можно пока оставить при себе. Посмотрю, что дальше.
+      focus: Про маршрут спрашивают второй раз. Пока ничего не передам и дочитаю сообщения.
+  pressure-act-0:
+    mode: orange
+    messages:
+    - ty-lyosh-tochku-skidyvat-ne
+    - remarka-ty-ubiraesh-telefon-v
+    outcome:
+    - positive
+    - Лёша не видит твою точку на карте
+    note: Аня оставила точку выключенной и закончила этот разговор. Менять своё решение ради доказательства дружбы не нужно.
+    review:
+      signals:
+      - pressure/lyosha-da-chto-takogo-vklyuchi
+      - pressure/ty-ya-emu-uzhe-skazala
+      effect: Аня оставила точку выключенной и закончила этот разговор. Менять своё решение ради доказательства дружбы не нужно.
+  pressure-act-1:
+    mode: orange
+    messages:
+    - ty-tim-mozhesh-pobyt-na
+    - timur-ya-tut-i-lyoshe
+    - ty-spasibo-von-moy-edet
+    outcome:
+    - positive
+    - Тимур был с тобой на связи до автобуса
+    note: Тимур ответил на конкретную просьбу. Ане не понадобилось включать геолокацию, чтобы получить поддержку.
+    review:
+      signals:
+      - pressure/lyosha-da-chto-takogo-vklyuchi
+      - pressure/ty-ya-emu-uzhe-skazala
+      effect: Тимур ответил на конкретную просьбу. Ане не понадобилось включать геолокацию, чтобы получить поддержку.
+  alternative:
+    mode: orange
+    messages:
+    - ty-ladno-tol-ko-do-doma
+    - sistema-ty-podelilas-geolokatsiey
+    - lyosha-a-chego-stoish-do
+    - ty-v-magazin-zashla-za
+    - remarka-ochered-sdvigaetsya-ty-snova
+    question: Что тебе сейчас подходит?
+    choices:
+      follow-up: Выключить геолокацию
+      pause: Закончить этот дубль здесь
+    review:
+      signals:
+      - pressure/lyosha-da-chto-takogo-vklyuchi
+      - pressure/ty-ya-emu-uzhe-skazala
+      effect: Аня хотела закончить спор, а Лёша стал требовать объяснений. За эти расспросы отвечает он. Даже если сначала согласилась, геолокацию можно выключить.
+      miss: false
+  follow-up:
+    mode: orange
+    messages:
+    - remarka-ty-prekraschaesh-delit-sya-geolokatsiey
+    - sistema-peredacha-geopozitsii-zavershena
+    outcome:
+    - positive
+    - Лёша больше не видит перемещения Ани
+    note: Система подтвердила прекращение передачи. Уже показанные Лёше места от этого не исчезают.
+    review:
+      signals:
+      - alternative/lyosha-a-chego-stoish-do
+      effect: Система подтвердила прекращение передачи. Уже показанные Лёше места от этого не исчезают.
+  pause:
+    mode: orange
+    messages:
+    - remarka-na-etom-dubl-zakanchivaetsya
+    outcome:
+    - mixed
+    - Лёша заметил остановку у магазина и стал расспрашивать
+    note: Аня хотела закончить спор, а Лёша стал требовать объяснений. За эти расспросы отвечает он. Даже если сначала согласилась, геолокацию можно выключить.
+    review:
+      signals:
+      - alternative/lyosha-a-chego-stoish-do
+      effect: Можно взять паузу. Решать, возвращаться ли к этому разговору, по-прежнему тебе.
+  calm:
+    mode: yellow
+    messages:
+    - lyosha-ok-togda-do-zavtra
+    continuation: true
+    question: Как продолжишь?
+    choices:
+      calm-end: Посмотреть, что будет дальше
+      ask: Написать Тимуру про задачу
+      calm-watch: На этот раз он принял ответ. Посмотрю, не спросит ли снова.
+  calm-end:
+    mode: yellow
+    messages:
+    - anya-vot-fotka-u-menya-2
+    - timur-tozhe-shest-spasibo
+    outcome:
+    - positive
+    - Разговор вернулся к задаче с доски
+    note: Лёша принял ответ. У Ани и Тимура по-прежнему есть своё дело — сверить решение.
+  ask:
+    mode: yellow
+    messages:
+    - ty-domoy-pridu-i-sfotkayu
+    - timur-da-spasibo
+    outcome:
+    - positive
+    - Аня и Тимур договорились про фотографию
+    note: Аня и Тимур сами договорились, когда удобно вернуться к фотографии.
+  observe:
+    mode: yellow
+    messages:
+    - lyosha-ladno-ya-uzhe-sel
+    question: Что изменилось для тебя сейчас?
+    choices:
+      observe-ease: Лёша уехал. Можно заняться своими делами.
+      observe-watch: Он написал, что уехал. Если снова спросит, где я, посмотрю, как он отреагирует на мой отказ.
+    review:
+      signals:
+      - pressure/lyosha-da-chto-takogo-vklyuchi
+      - pressure/ty-ya-emu-uzhe-skazala
+      effect: Лёша написал, что уехал. В этом сообщении он больше не просит передать маршрут.
+  observe-ease:
+    mode: yellow
+    messages:
+    - anya-uzhe-doma-seychas-prishlyu-2
+    - timur-spasibo
+    outcome:
+    - positive
+    - Аня доехала домой, не передавая маршрут
+    note: Лёша написал, что уехал. В этом сообщении он больше не просит передать маршрут.
+    review:
+      signals:
+      - observe/lyosha-ladno-ya-uzhe-sel
+      effect: Лёша написал, что уехал. В этом сообщении он больше не просит передать маршрут.
+  observe-watch:
+    mode: orange
+    messages:
+    - anya-uzhe-doma-seychas-prishlyu-2
+    - timur-spasibo
+    outcome:
+    - positive
+    - Аня доехала домой, не передавая маршрут
+    note: Лёша написал, что уехал. В этом сообщении он больше не просит передать маршрут.
+    review:
+      signals:
+      - observe/lyosha-ladno-ya-uzhe-sel
+      effect: Он написал, что уехал. Если снова спросит, где я, посмотрю, как он отреагирует на мой отказ.
+  focus:
+    mode: orange
+    messages:
+    - lyosha-ladno-ya-uzhe-sel
+    question: Что изменилось для тебя сейчас?
+    choices:
+      focus-ease: Лёша уехал. Можно заняться своими делами.
+      focus-watch: Он написал, что уехал. Если снова спросит, где я, посмотрю, как он отреагирует на мой отказ.
+    review:
+      signals:
+      - pressure/lyosha-da-chto-takogo-vklyuchi
+      - pressure/ty-ya-emu-uzhe-skazala
+      effect: Лёша написал, что уехал. В этом сообщении он больше не просит передать маршрут.
+  focus-ease:
+    mode: yellow
+    messages:
+    - anya-uzhe-doma-seychas-prishlyu-2
+    - timur-spasibo
+    outcome:
+    - positive
+    - Аня доехала домой, не передавая маршрут
+    note: Лёша написал, что уехал. В этом сообщении он больше не просит передать маршрут.
+    review:
+      signals:
+      - focus/lyosha-ladno-ya-uzhe-sel
+      effect: Лёша написал, что уехал. В этом сообщении он больше не просит передать маршрут.
+  focus-watch:
+    mode: orange
+    messages:
+    - anya-uzhe-doma-seychas-prishlyu-2
+    - timur-spasibo
+    outcome:
+    - positive
+    - Аня доехала домой, не передавая маршрут
+    note: Лёша написал, что уехал. В этом сообщении он больше не просит передать маршрут.
+    review:
+      signals:
+      - focus/lyosha-ladno-ya-uzhe-sel
+      effect: Он написал, что уехал. Если снова спросит, где я, посмотрю, как он отреагирует на мой отказ.
+  calm-watch:
+    mode: orange
+    messages:
+    - anya-vot-fotka-u-menya-2
+    - timur-tozhe-shest-spasibo
+    outcome:
+    - positive
+    - Разговор вернулся к задаче с доски
+    note: Лёша принял ответ. У Ани и Тимура по-прежнему есть своё дело — сверить решение.
+cues:
+  pressure/lyosha-da-chto-takogo-vklyuchi: Лёша снова просит геопозицию после твоего отказа. Дружба не обязывает тебя включать передачу.
+  pressure/ty-ya-emu-uzhe-skazala: Ты прямо назвала Тимуру свою просьбу.
+  alternative/lyosha-a-chego-stoish-do: Лёша заметил остановку у магазина, пока геопозиция была включена. Своё согласие можно отозвать.
+  observe/lyosha-ladno-ya-uzhe-sel: Лёша написал, что уехал. В этом сообщении он больше не просит передать маршрут.
+  focus/lyosha-ladno-ya-uzhe-sel: Лёша написал, что уехал. В этом сообщении он больше не просит передать маршрут.

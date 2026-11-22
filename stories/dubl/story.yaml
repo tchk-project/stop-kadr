@@ -1,0 +1,30 @@
+id: dubl
+title: Дубль для своих
+order: 0
+place: Школьная музыкальная группа
+roles:
+  witness:
+    name: Тимур
+    viewpoint: Тимура
+    intro: Ты читаешь чат своей музыкальной группы после репетиции.
+  self:
+    name: Миша
+    viewpoint: Миши
+    intro: На репетиции ты вступил раньше времени. У друзей осталась запись.
+cast:
+- Вера
+- Даня
+- Костя
+- Миша
+- Саша
+- Тимур
+channels:
+  chat-shkol-noy-gruppy:
+    kind: group
+    title: Чат школьной группы
+  lichnaya-perepiska-s-mishey:
+    kind: private
+    title: Личная переписка с Мишей
+  lichnaya-perepiska-s-veroy:
+    kind: private
+    title: Личная переписка с Верой

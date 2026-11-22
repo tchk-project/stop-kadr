@@ -1,0 +1,213 @@
+lera-rebyat-zavtra-vstrechaemsya-v:
+  speaker: Лера
+  channel: obschiy-chat-klassa
+  caption: Вчера
+  media:
+    kind: voice
+    src: ./assets/lera-meet.mp3
+    transcript: Ребят, завтра встречаемся в три, у кабинета музыки. Я цветную бумагу принесу.
+danya-sticker:
+  speaker: Даня
+  reactions:
+    😅:
+    - Миша
+    - Костя
+  media:
+    kind: sticker
+    src: ./assets/sticker-usnul.webp
+    alt: Сонный рыжий кот в наушниках. Надпись «УСНУЛ».
+  reply: На голосовое Леры
+lera-my-uzhe-na-meste:
+  speaker: Лера
+  channel: obschiy-chat-klassa
+  caption: Сегодня
+  media:
+    kind: voice
+    src: ./assets/lera-glue.mp3
+    transcript: Мы уже на месте. Бумага и ножницы есть. Ребят, кто может клей захватить?
+danya-sticker-2:
+  speaker: Даня
+  reactions:
+    😕:
+    - Аня
+  media:
+    kind: sticker
+    src: ./assets/sticker-usnul.webp
+    alt: Сонный рыжий кот в наушниках. Надпись «УСНУЛ».
+  reply: На голосовое Леры
+lera-ya-emu-vchera-napisala:
+  speaker: Лера
+  channel: lichnaya-perepiska-s-leroy
+  text: '[[Я ему вчера написала, чтобы перестал]]. Опять этот кот. А клей кто-нибудь взял вообще?'
+ty-ler-kley-u-menya:
+  speaker: Ты
+  channel: obschiy-chat-klassa
+  text: Лер, клей у меня. Я у кабинета.
+lera-o-super-my-za:
+  speaker: Лера
+  text: О, супер. Мы за последней партой.
+ty-ler-ya-oba-stikera:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-leroy
+  text: Лер, я оба стикера видела. Хочешь, вместе напишем админу чата класса?
+lera-davay-posle-stengazety-i:
+  speaker: Лера
+  text: Давай после стенгазеты. И клей захвати, если есть.
+ty-uzhe-v-ryukzake-seychas:
+  speaker: Ты
+  text: Уже в рюкзаке. Сейчас подойду.
+ty-rebyat-lera-mne-v:
+  speaker: Ты
+  channel: obschiy-chat-klassa
+  text: Ребят, Лера мне в личке написала, что уже просила Даню перестать. Хватит этих котов.
+danya-ler-a-zachem-ty:
+  speaker: Даня
+  text: Лер, а зачем ты всем про нашу переписку рассказываешь?
+lera-ya-tol-ko-tebe-eto:
+  speaker: Лера
+  aside: лично тебе
+  channel: lichnaya-perepiska-s-leroy
+  text: Я только тебе это сказала. Теперь ещё и за это объясняться.
+ty-ler-zrya-ya-eto:
+  speaker: Ты
+  text: Лер, зря я это в общий написала. Хочешь, я ещё что-нибудь скажу?
+lera-poka-nichego-potom-pogovorim:
+  speaker: Лера
+  text: Пока ничего. Потом поговорим.
+lera-ver-ty-kley-to-vzyala:
+  speaker: Лера
+  channel: lichnaya-perepiska-s-leroy
+  text: '[[Вер, ты клей-то взяла? Уже бумагу разложили.]]'
+lera-nashla-kley-v-sosednem:
+  speaker: Лера
+  channel: lichnaya-perepiska-s-leroy
+  caption: Позже
+  text: Нашла клей в соседнем кабинете. Твой уже не неси.
+ty-u-menya-v-ryukzake:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-leroy
+  text: У меня в рюкзаке, сейчас зайду. Извини, пропустила вопрос.
+lera-horosho-ostavlyu-tebe-vtoroy:
+  speaker: Лера
+  text: Хорошо, оставлю тебе второй лист.
+danya-ya-kley-prinesu-odin:
+  speaker: Даня
+  text: Я клей принесу. Один тюбик хватит?
+lera-hvatit-my-u-kabineta:
+  speaker: Лера
+  text: Хватит. Мы у кабинета музыки.
+ty-esli-chto-u-menya:
+  speaker: Ты
+  text: Если что, у меня тоже есть.
+lera-o-beri-u-nas:
+  speaker: Лера
+  text: О, бери. У нас два листа.
+anya-rebyat-vy-golosovoe-slushali:
+  speaker: Аня
+  channel: obschiy-chat-klassa
+  text: Ребят, вы голосовое слушали? Она про клей спрашивает.
+danya-u-menya-tyubik-seychas:
+  speaker: Даня
+  text: У меня тюбик. [[Сейчас занесу]].
+remarka-danya-kladyot-kley-na:
+  speaker: Ремарка
+  channel: scene
+  caption: У стола со стенгазетой
+  text: Даня кладёт клей на стол. Ребята раскладывают листы.
+ty-rebyat-zavtra-vstrechaemsya-v:
+  speaker: Ты
+  channel: obschiy-chat-klassa
+  caption: Вчера
+  media:
+    kind: voice
+    src: ./assets/lera-meet.mp3
+    transcript: Ребят, завтра встречаемся в три, у кабинета музыки. Я цветную бумагу принесу.
+danya-sticker-3:
+  speaker: Даня
+  reactions:
+    😅:
+    - Миша
+    - Костя
+  media:
+    kind: sticker
+    src: ./assets/sticker-usnul.webp
+    alt: Сонный рыжий кот в наушниках. Надпись «УСНУЛ».
+  reply: На твоё голосовое
+ty-dan-mozhesh-bol-she-ne:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-daney
+  text: Дань, можешь больше не кидать этого кота под моими голосовыми? Я вообще-то про встречу.
+ty-my-uzhe-na-meste:
+  speaker: Ты
+  channel: obschiy-chat-klassa
+  caption: Сегодня
+  media:
+    kind: voice
+    src: ./assets/lera-glue.mp3
+    transcript: Мы уже на месте. Бумага и ножницы есть. Ребят, кто может клей захватить?
+danya-sticker-4:
+  speaker: Даня
+  reactions:
+    😕:
+    - Аня
+  media:
+    kind: sticker
+    src: ./assets/sticker-usnul.webp
+    alt: Сонный рыжий кот в наушниках. Надпись «УСНУЛ».
+  reply: На твоё голосовое
+ty-ya-emu-vchera-napisala:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-veroy
+  text: '[[Я ему вчера написала, чтобы перестал]]. Опять этот кот. А клей кто-нибудь взял вообще?'
+vera-u-menya-kley-ya:
+  speaker: Вера
+  text: У меня клей. Я у кабинета. Хочешь, напишу в общий?
+ty-da-napishi-v-klasse:
+  speaker: Ты
+  text: Да, напиши в классе, что клей у тебя. Про личку не надо.
+vera-ler-kley-u-menya:
+  speaker: Вера
+  channel: obschiy-chat-klassa
+  text: Лер, клей у меня. Я у кабинета.
+ty-o-super-my-za:
+  speaker: Ты
+  text: О, супер. Мы за последней партой.
+ty-spasibo-a-posle-stengazety:
+  speaker: Ты
+  text: Спасибо! А после стенгазеты поможешь написать админу чата класса? Не хочу одна.
+vera-davay-podozhdu-tebya-poka:
+  speaker: Вера
+  text: Давай. Подожду тебя, пока уберём бумагу.
+ty-dogovorilis-tut-glavnoe:
+  speaker: Ты
+  text: Договорились. Тут главное — оба стикера показать.
+ty-ver-mozhesh-tozhe-nad:
+  speaker: Ты
+  text: Вер, можешь тоже над ним пошутить? Хочу, чтобы понял, каково мне.
+vera-dan-a-ty-u:
+  speaker: Вера
+  channel: obschiy-chat-klassa
+  text: Дань, а ты у нас только котами разговаривать умеешь?
+danya-a-ty-zdes-pri:
+  speaker: Даня
+  text: А ты здесь при чём? Лера сама попросила?
+vera-on-teper-i-mne:
+  speaker: Вера
+  aside: лично тебе
+  channel: lichnaya-perepiska-s-veroy
+  text: '[[Он теперь и мне пишет]]. Я вообще-то про клей хотела ответить.'
+ty-ver-davay-bol-she-emu:
+  speaker: Ты
+  text: Вер, давай больше ему не отвечать. Клей у тебя?
+vera-da-nesu-pro-kotov:
+  speaker: Вера
+  text: Да, несу. Про котов поговорим потом.
+remarka-na-etom-dubl-zakanchivaetsya:
+  speaker: Ремарка
+  text: На этом дубль заканчивается.
+ty-hvatit-nesi-pryamo-k:
+  speaker: Ты
+  text: Хватит, неси прямо к кабинету.
+danya-begu:
+  speaker: Даня
+  text: Бегу.

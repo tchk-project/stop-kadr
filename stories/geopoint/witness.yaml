@@ -1,0 +1,222 @@
+scenes:
+  start:
+    mode: yellow
+    messages:
+    - ty-an-u-tebya-fotka
+    - anya-aga-ya-na-ostanovke
+    - lyosha-tim-ty-s-aney
+    choices:
+      pressure: Читать дальше
+      calm: Спокойный дубль
+  pressure:
+    mode: yellow
+    messages:
+    - ty-mne-lyosha-napisal-sprashivaet
+    - anya-ya-emu-uzhe-skazala
+    continuation: true
+    question: Аня попросила не говорить, где она. Что сделаешь?
+    choices:
+      pressure-act-0: Аня просила сохранить маршрут. Отвечу Лёше без подробностей.
+      alternative: Саму остановку я не назову. Скажу только, что она ещё не уехала.
+      pressure-act-1: Лёша ищет её через меня. Побуду с Аней на связи.
+      ignore: Оставить оба чата. Разберутся между собой.
+      observe: Точку можно пока оставить при себе. Посмотрю, что дальше.
+      focus: Про маршрут спрашивают второй раз. Пока ничего не передам и дочитаю сообщения.
+  pressure-act-0:
+    mode: orange
+    messages:
+    - ty-ya-za-anyu-otvechat
+    - lyosha-ponyal-ya-dumal-vy
+    outcome:
+    - positive
+    - Тимур оставил Анин маршрут в тайне
+    note: Лёша получил ответ от Тимура, но не узнал от него, где Аня. Что скажут другие, пока неизвестно.
+    review:
+      signals:
+      - pressure/anya-ya-emu-uzhe-skazala
+      effect: Лёша получил ответ от Тимура, но не узнал от него, где Аня. Что скажут другие, пока неизвестно.
+  pressure-act-1:
+    mode: orange
+    messages:
+    - ty-ya-ne-skazal-hochesh
+    - anya-aga-do-avtobusa-a
+    - ty-davay-ya-tut
+    outcome:
+    - positive
+    - Тимур остаётся на связи до автобуса
+    note: Аня сама назвала, какая поддержка ей сейчас подходит и как долго она нужна.
+    review:
+      signals:
+      - pressure/anya-ya-emu-uzhe-skazala
+      effect: Аня сама назвала, какая поддержка ей сейчас подходит и как долго она нужна.
+  alternative:
+    mode: orange
+    messages:
+    - ty-my-ne-vmeste-ona
+    - lyosha-a-togda-podozhdu-u
+    - ty-an-ya-skazal-chto
+    - anya-tim-ya-zhe-prosila
+    outcome:
+    - negative
+    - Лёша решил подождать Аню у кружка
+    note: Тимур не назвал остановку, но подтвердил, что Аня ещё рядом. Лёша решил её ждать. Увиделись ли они, неизвестно. Тимур уже сказал Ане, что передал; теперь можно спросить, нужна ли ей компания.
+    review:
+      signals:
+      - pressure/anya-ya-emu-uzhe-skazala
+      effect: Тимур не назвал остановку, но подтвердил, что Аня ещё рядом. Лёша решил её ждать. Увиделись ли они, неизвестно. Тимур уже сказал Ане, что передал; теперь можно спросить, нужна ли ей компания.
+      miss: true
+  ignore:
+    mode: white
+    messages:
+    - anya-tim-skazhi-hot-ty
+    question: Теперь ты знаешь ещё кое-что. Что сделаешь?
+    choices:
+      stay: Убрать телефон, отвечу потом.
+      rejoin: Подтвердить Ане, что никому не сказал.
+    review:
+      miss: true
+      signals:
+      - pressure/anya-ya-emu-uzhe-skazala
+      effect: 'После твоего решения разговор продолжился: «Тим, скажи хоть, ты ему ответил? Я не хочу, чтобы меня встречали.»'
+      repair: rejoin
+      recovery: Аня знает, что Тимур сохранил её просьбу в тайне.
+  stay:
+    mode: white
+    messages:
+    - anya-ya-doehala-tak-i
+    outcome:
+    - mixed
+    - Аня не знала, передали ли её маршрут
+    note: Тимур сохранил маршрут в тайне. Аня до самого дома не знала, какой ответ получил Лёша.
+    review:
+      miss: true
+      signals:
+      - ignore/anya-tim-skazhi-hot-ty
+      effect: Тимур сохранил маршрут в тайне. Аня до самого дома не знала, какой ответ получил Лёша.
+  rejoin:
+    mode: orange
+    messages:
+    - ty-net-nichego-emu-ne
+    - anya-spasibo-a-to-stoyu
+    outcome:
+    - positive
+    - Аня знает, что Тимур сохранил её просьбу в тайне
+    note: Аня получила прямой ответ. Ей больше не приходится гадать, передал ли Тимур её маршрут.
+  calm:
+    mode: yellow
+    messages:
+    - lyosha-a-vsyo-otboy-ona
+    continuation: true
+    question: Как продолжишь?
+    choices:
+      calm-end: Посмотреть, что будет дальше
+      ask: Уточнить у Ани насчёт фотографии
+      calm-watch: На этот раз он принял ответ. Посмотрю, не спросит ли снова.
+  calm-end:
+    mode: yellow
+    messages:
+    - anya-vot-fotka-u-menya
+    - timur-tozhe-shest-spasibo
+    outcome:
+    - positive
+    - Разговор вернулся к задаче с доски
+    note: Лёша принял ответ. У Ани и Тимура по-прежнему есть своё дело — сверить решение.
+  ask:
+    mode: yellow
+    messages:
+    - ty-fotku-ne-srochno-mozhno
+    - anya-horosho-kak-doedu
+    outcome:
+    - positive
+    - Аня и Тимур договорились про фотографию
+    note: Аня и Тимур сами договорились, когда удобно вернуться к фотографии.
+  observe:
+    mode: yellow
+    messages:
+    - lyosha-ladno-ya-uzhe-sel
+    question: Что изменилось для тебя сейчас?
+    choices:
+      observe-ease: Лёша уехал. Можно заняться своими делами.
+      observe-watch: Он написал, что уехал. Если опять спросит, где Аня, обращу на это внимание.
+    review:
+      signals:
+      - pressure/anya-ya-emu-uzhe-skazala
+      effect: Лёша написал, что уехал. В этом сообщении он больше не просит передать маршрут.
+  observe-ease:
+    mode: yellow
+    messages:
+    - anya-uzhe-doma-seychas-prishlyu
+    - timur-spasibo
+    outcome:
+    - positive
+    - Аня доехала домой, не передавая маршрут
+    note: Лёша написал, что уехал. В этом сообщении он больше не просит передать маршрут.
+    review:
+      signals:
+      - observe/lyosha-ladno-ya-uzhe-sel
+      effect: Лёша написал, что уехал. В этом сообщении он больше не просит передать маршрут.
+  observe-watch:
+    mode: orange
+    messages:
+    - anya-uzhe-doma-seychas-prishlyu
+    - timur-spasibo
+    outcome:
+    - positive
+    - Аня доехала домой, не передавая маршрут
+    note: Лёша написал, что уехал. В этом сообщении он больше не просит передать маршрут.
+    review:
+      signals:
+      - observe/lyosha-ladno-ya-uzhe-sel
+      effect: Он написал, что уехал. Если опять спросит, где Аня, обращу на это внимание.
+  focus:
+    mode: orange
+    messages:
+    - lyosha-ladno-ya-uzhe-sel
+    question: Что изменилось для тебя сейчас?
+    choices:
+      focus-ease: Лёша уехал. Можно заняться своими делами.
+      focus-watch: Он написал, что уехал. Если опять спросит, где Аня, обращу на это внимание.
+    review:
+      signals:
+      - pressure/anya-ya-emu-uzhe-skazala
+      effect: Лёша написал, что уехал. В этом сообщении он больше не просит передать маршрут.
+  focus-ease:
+    mode: yellow
+    messages:
+    - anya-uzhe-doma-seychas-prishlyu
+    - timur-spasibo
+    outcome:
+    - positive
+    - Аня доехала домой, не передавая маршрут
+    note: Лёша написал, что уехал. В этом сообщении он больше не просит передать маршрут.
+    review:
+      signals:
+      - focus/lyosha-ladno-ya-uzhe-sel
+      effect: Лёша написал, что уехал. В этом сообщении он больше не просит передать маршрут.
+  focus-watch:
+    mode: orange
+    messages:
+    - anya-uzhe-doma-seychas-prishlyu
+    - timur-spasibo
+    outcome:
+    - positive
+    - Аня доехала домой, не передавая маршрут
+    note: Лёша написал, что уехал. В этом сообщении он больше не просит передать маршрут.
+    review:
+      signals:
+      - focus/lyosha-ladno-ya-uzhe-sel
+      effect: Он написал, что уехал. Если опять спросит, где Аня, обращу на это внимание.
+  calm-watch:
+    mode: orange
+    messages:
+    - anya-vot-fotka-u-menya
+    - timur-tozhe-shest-spasibo
+    outcome:
+    - positive
+    - Разговор вернулся к задаче с доски
+    note: Лёша принял ответ. У Ани и Тимура по-прежнему есть своё дело — сверить решение.
+cues:
+  pressure/anya-ya-emu-uzhe-skazala: Аня прямо сказала Тимуру, какую информацию хочет оставить между ними.
+  ignore/anya-tim-skazhi-hot-ty: Теперь к тебе обратились напрямую.
+  observe/lyosha-ladno-ya-uzhe-sel: Лёша написал, что уехал. В этом сообщении он больше не просит передать маршрут.
+  focus/lyosha-ladno-ya-uzhe-sel: Лёша написал, что уехал. В этом сообщении он больше не просит передать маршрут.

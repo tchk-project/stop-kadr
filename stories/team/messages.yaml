@@ -1,0 +1,188 @@
+kostya-tim-u-nas-novichki:
+  speaker: Костя
+  channel: scene
+  caption: У автобуса
+  text: Тим, у нас новички в автобусе поют. Микрофон у меня, начнёшь?
+timur-ya-by-prosto-poehal:
+  speaker: Тимур
+  text: Я бы просто поехал на игру.
+kostya-togda-sadish-sya-otdel-no-s:
+  speaker: Костя
+  channel: scene
+  caption: У автобуса
+  text: '[[Тогда садишься отдельно]], с нами мест нет.'
+timur-ya-voobsche-uzhe-ehat:
+  speaker: Тимур
+  aside: лично тебе
+  channel: lichnaya-perepiska-s-timurom
+  text: '[[Я вообще уже ехать не хочу]].'
+trener-cherez-pyat-minut-edem:
+  speaker: Тренер
+  channel: scene
+  caption: У автобуса
+  text: Через пять минут едем. Сумки в багажник!
+ty-tim-tut-svobodno-syadesh:
+  speaker: Ты
+  channel: scene
+  caption: В автобусе
+  text: Тим, тут свободно. Сядешь со мной? Петь не надо.
+timur-aga-mne-luchshe-u:
+  speaker: Тимур
+  text: Ага. Мне лучше у окна, можно?
+remarka-ty-peresazhivaesh-sya-k-prohodu:
+  speaker: Ремарка
+  text: Ты пересаживаешься к проходу. Тимур ставит рюкзак под сиденье.
+remarka-iz-kolonki-vdrug-slyshno:
+  speaker: Ремарка
+  text: Из колонки вдруг слышно имя Тимура. Несколько ребят оборачиваются к вашему окну.
+remarka-timur-priotkryl-rot-i:
+  speaker: Ремарка
+  text: Тимур приоткрыл рот и замолчал. Его рука так и лежит на застёжке рюкзака.
+trener-mish-ya-u-peredney:
+  speaker: Тренер
+  text: '[[Миш, я у передней двери, если нужен.]]'
+ty-trener-timuru-skazali-ne:
+  speaker: Ты
+  channel: scene
+  caption: У автобуса · разговор с тренером
+  text: 'Тренер, Тимуру сказали: не споёшь — сиди один. У меня рядом свободно. Можно мы вместе?'
+trener-sadites-s-kostey-ya:
+  speaker: Тренер
+  text: Садитесь. С Костей я поговорю.
+timur-mish-kin-mne-kurtku:
+  speaker: Тимур
+  text: Миш, кинь мне куртку к окну, ладно? Сейчас зайду.
+ty-tim-davay-odnu-pesnyu:
+  speaker: Ты
+  text: Тим, давай одну песню, и поедем все вместе. Я даже подпою.
+timur-ya-i-tebe-dolzhen:
+  speaker: Тимур
+  text: Я и тебе должен объяснять, почему не хочу?
+remarka-kogda-otkryvayutsya-dveri-avtobusa:
+  speaker: Ремарка
+  text: Когда открываются двери автобуса, Тимур проходит мимо места, которое ты ему держал. Садится один.
+timur-mish-u-tebya-ryadom:
+  speaker: Тимур
+  channel: scene
+  caption: У автобуса
+  text: '[[Миш, у тебя рядом свободно или тут тоже только с песней?]]'
+sasha-tim-idi-ko-mne:
+  speaker: Саша
+  text: Тим, иди ко мне. Тут просто садятся.
+ty-svobodno-s-pesney-kostya:
+  speaker: Ты
+  text: Свободно. С песней Костя придумал. Хочешь у окна?
+timur-aga-poderzhish-myach:
+  speaker: Тимур
+  text: Ага. Подержишь мяч?
+kostya-nu-ladno-kto-sam:
+  speaker: Костя
+  text: Ну ладно. Кто сам хочет микрофон?
+sasha-davay-syuda-tim-u:
+  speaker: Саша
+  text: Давай сюда. Тим, у окна свободно.
+remarka-timur-saditsya-u-okna:
+  speaker: Ремарка
+  text: Тимур садится у окна. Саша выбирает песню, автобус трогается.
+ty-tim-tut-tozhe-svobodno:
+  speaker: Ты
+  text: Тим, тут тоже свободно. Куда хочешь?
+timur-ya-u-okna-uvidimsya:
+  speaker: Тимур
+  text: Я у окна. Увидимся на поле!
+sasha-tim-ya-kurtku-ubral:
+  speaker: Саша
+  channel: scene
+  caption: В автобусе
+  text: Тим, я куртку убрал. Тут у окна свободно, садись.
+remarka-timur-saditsya-ryadom-s:
+  speaker: Ремарка
+  text: '[[Тимур садится рядом с Сашей]]. Костя уносит микрофон в конец автобуса.'
+trener-vse-na-mestah-poehali:
+  speaker: Тренер
+  text: Все на местах? Поехали.
+remarka-timur-kivaet-ty-peredayosh:
+  speaker: Ремарка
+  text: Тимур кивает. Ты передаёшь просьбу тренеру. Тот выключает колонку.
+remarka-timur-dostayot-telefon-na:
+  speaker: Ремарка
+  text: 'Тимур достаёт телефон. На твоём экране появляется: «Посиди со мной до выезда».'
+ty-ya-by-prosto-poehal:
+  speaker: Ты
+  text: Я бы просто поехал на игру.
+ty-ya-voobsche-uzhe-ehat:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-mishey
+  text: '[[Я вообще уже ехать не хочу]].'
+ty-mozhno-s-vami-kostya:
+  speaker: Ты
+  channel: scene
+  caption: У багажника · разговор с тренером
+  text: 'Можно с вами? Костя говорит: не споёшь — сиди отдельно. А я хочу с ребятами.'
+trener-konechno-sadis-s-kem:
+  speaker: Тренер
+  text: Конечно. Садись с кем хочешь. Я сам подойду к Косте.
+sasha-tim-syuda-kurtku-seychas:
+  speaker: Саша
+  channel: scene
+  caption: В автобусе
+  text: Тим, сюда! Куртку сейчас уберу.
+ty-mish-u-tebya-ryadom:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-mishey
+  text: Миш, у тебя рядом свободно? Можно с тобой сесть?
+misha-mozhno-ya-tebe-u:
+  speaker: Миша
+  text: Можно. Я тебе у окна оставил.
+remarka-u-okna-na-siden-e:
+  speaker: Ремарка
+  channel: scene
+  caption: В автобусе
+  text: У окна на сиденье лежит Мишин рюкзак. Когда ты заходишь, он переставляет его себе под ноги.
+remarka-u-okna-ty-slyshish:
+  speaker: Ремарка
+  text: У окна ты слышишь из автобусной колонки своё имя. Несколько ребят разом поворачиваются к тебе.
+remarka-ya-hochu-skazat-mishe:
+  speaker: Ремарка
+  text: Я хочу сказать Мише, чтобы он попросил убрать микрофон. Рот открыл, а голоса нет.
+misha-tim-ya-tut-hochesh:
+  speaker: Миша
+  text: '[[Тим, я тут. Хочешь, попрошу выключить? Можешь просто кивнуть.]]'
+remarka-v-kolonke-snova-tiho:
+  speaker: Ремарка
+  text: В колонке снова тихо. Миша сидит рядом и ждёт. Получается повернуться к нему.
+ty-ladno-tol-ko-pripev-i:
+  speaker: Ты
+  channel: scene
+  caption: В автобусе
+  text: Ладно, только припев. И всё, едем.
+remarka-ty-dopevaesh-i-vozvraschaesh:
+  speaker: Ремарка
+  text: Ты допеваешь и возвращаешь Косте микрофон.
+kostya-sleduyuschiy-novichok-sash-tvoya:
+  speaker: Костя
+  text: Следующий новичок! Саш, твоя очередь.
+sasha-ya-to-pri-chyom-dayte:
+  speaker: Саша
+  text: Я-то при чём? [[Дайте доехать спокойно]].
+ty-sash-ko-mne-syadesh:
+  speaker: Ты
+  text: Саш, ко мне сядешь? Тут есть место.
+sasha-davay-mikrofon-koste-ostav:
+  speaker: Саша
+  text: Давай. Микрофон Косте оставь.
+remarka-na-etom-dubl-zakanchivaetsya:
+  speaker: Ремарка
+  text: На этом дубль заканчивается.
+ty-sash-syadu-s-toboy:
+  speaker: Ты
+  text: Саш, сяду с тобой. Мяч под сиденьем твой?
+sasha-aga-seychas-uberu:
+  speaker: Саша
+  text: Ага, сейчас уберу.
+remarka-misha-prosit-ubrat-mikrofon:
+  speaker: Ремарка
+  text: Миша просит убрать микрофон. Тренер выключает колонку до конца посадки.
+remarka-ty-nadevaesh-naushniki-misha:
+  speaker: Ремарка
+  text: Ты надеваешь наушники. Миша освобождает место для твоей сумки.

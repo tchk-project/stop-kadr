@@ -1,0 +1,192 @@
+remarka-na-peremene-sasha-idyot:
+  speaker: Ремарка
+  text: На перемене Саша идёт к лестнице. Ребята ещё спорят о вчерашнем матче.
+sasha-ya-ne-hochu-dal-she:
+  speaker: Саша
+  text: Я не хочу дальше спорить, мне на урок.
+timur-on-zhe-uzhe-ushyol:
+  speaker: Тимур
+  text: Он же уже ушёл.
+remarka-lyosha-vstayot-poperyok-prohoda:
+  speaker: Ремарка
+  text: Лёша встаёт поперёк прохода. Дверь в соседний класс открыта, там ребята. У соседней двери [[дежурит Марина Сергеевна]].
+sasha-propusti-ya-hochu-k:
+  speaker: Саша
+  text: Пропусти, я хочу к учителю.
+lyosha-eschyo-shag-udaryu:
+  speaker: Лёша
+  text: '[[Ещё шаг — ударю]].'
+ty-marina-sergeevna-k-lestnitse:
+  speaker: Ты
+  text: Марина Сергеевна, к лестнице! Лёша Сашу не выпускает, грозится ударить.
+marina-sergeevna-ya-slyshu-idu:
+  speaker: Марина Сергеевна
+  text: Я слышу, иду.
+remarka-dezhurnaya-podhodit-lyosha-othodit:
+  speaker: Ремарка
+  text: Дежурная подходит. Лёша отходит от лестницы. Саша становится рядом с Тимуром.
+remarka-za-spinoy-u-sashi:
+  speaker: Ремарка
+  text: За спиной у Саши хлопает дверь на лестницу.
+remarka-sasha-vzdrognul-i-stoit:
+  speaker: Ремарка
+  text: Саша вздрогнул и стоит на месте, хотя проход уже свободен. Марина Сергеевна остановилась рядом с ним.
+marina-sergeevna-sash-ya-pobudu:
+  speaker: Марина Сергеевна
+  text: '[[Саш, я побуду тут с тобой. Про матч можно потом.]]'
+remarka-ty-othodish-k-dveri:
+  speaker: Ремарка
+  text: Ты отходишь к двери кабинета и звонишь 112. Называешь адрес школы и этаж, рассказываешь, что видишь у лестницы.
+remarka-operator-prinimaet-soobschenie-i:
+  speaker: Ремарка
+  text: Оператор принимает сообщение и задаёт вопросы. Пока ты отвечаешь, Тимур зовёт дежурную, и она подходит к Саше.
+ty-u-lestnitsy-sashu-ne:
+  speaker: Ты
+  channel: obschiy-chat-klassa
+  text: У лестницы Сашу не выпускают! Кто-нибудь, позовите взрослого.
+vera-a-uzhe-pozvali-ya:
+  speaker: Вера
+  text: А уже позвали? Я в другом конце школы.
+timur-ya-dumal-dezhurnaya-uzhe:
+  speaker: Тимур
+  text: Я думал, дежурная уже идёт.
+remarka-u-lestnitsy-vsyo-eschyo:
+  speaker: Ремарка
+  channel: scene
+  caption: У лестницы
+  text: У лестницы всё ещё никто из взрослых. Саша снова просит пропустить его.
+timur-kost-dezhurnaya-tebya-vidit:
+  speaker: Тимур
+  channel: scene
+  caption: В коридоре
+  text: '[[Кость, дежурная тебя видит! Позови её, он Сашу не пускает.]]'
+timur-marina-sergeevna-k-lestnitse:
+  speaker: Тимур
+  channel: scene
+  caption: В коридоре у лестницы
+  text: Марина Сергеевна! К лестнице, пожалуйста!
+ty-marina-sergeevna-sashe-u:
+  speaker: Ты
+  channel: scene
+  caption: В коридоре у лестницы
+  text: Марина Сергеевна, Саше у лестницы угрожают. Подойдите!
+marina-sergeevna-slyshu-idu:
+  speaker: Марина Сергеевна
+  text: Слышу. Иду.
+lyosha-ladno-na-urok-tak:
+  speaker: Лёша
+  text: Ладно, на урок так на урок.
+remarka-lyosha-otoshyol-k-oknu:
+  speaker: Ремарка
+  text: Лёша отошёл к окну. Саша проходит к лестнице.
+timur-sash-u-nas-na:
+  speaker: Тимур
+  text: Саш, у нас на третьем?
+sasha-aga-geografiya:
+  speaker: Саша
+  text: Ага, география.
+ty-sash-ya-tozhe-na:
+  speaker: Ты
+  text: Саш, я тоже на третий. Вместе?
+sasha-davay-do-zvonka-minuta:
+  speaker: Саша
+  text: Давай, до звонка минута.
+ty-sash-syuda-mozhno-dver:
+  speaker: Ты
+  text: Саш, сюда можно. Дверь открыта.
+remarka-sasha-othodit-ot-lestnitsy:
+  speaker: Ремарка
+  text: Саша отходит от лестницы и заходит в класс. [[Дежурная встаёт в дверях]].
+marina-sergeevna-ya-pobudu-zdes:
+  speaker: Марина Сергеевна
+  text: Я побуду здесь. Тимур, прикрой дверь, пожалуйста.
+remarka-sasha-kivaet-na-skameyku:
+  speaker: Ремарка
+  text: Саша кивает на скамейку. Вы остаётесь рядом с ним и дежурной.
+remarka-ty-prohodish-v-klass:
+  speaker: Ремарка
+  text: Ты проходишь в класс. С порога видишь, как Саша и дежурная садятся на скамейку.
+ty-ya-ne-hochu-dal-she:
+  speaker: Ты
+  text: Я не хочу дальше спорить, мне на урок.
+remarka-ty-idyosh-k-lestnitse:
+  speaker: Ремарка
+  text: Ты идёшь к лестнице. За спиной всё ещё спорят о вчерашнем матче.
+remarka-lyosha-vstayot-poperyok-prohoda-2:
+  speaker: Ремарка
+  text: Лёша встаёт поперёк прохода. Дверь в соседний класс открыта, там ребята. У соседней двери [[дежурит Марина Сергеевна]]. Тимур остановился рядом у окна.
+ty-propusti-ya-hochu-k:
+  speaker: Ты
+  text: Пропусти, я хочу к учителю.
+ty-marina-sergeevna-pomogite-mne:
+  speaker: Ты
+  text: Марина Сергеевна, помогите! Мне угрожают, не дают пройти.
+marina-sergeevna-sasha-ya-zdes:
+  speaker: Марина Сергеевна
+  text: Саша, я здесь.
+remarka-dezhurnaya-podhodit-lyosha-otstupaet:
+  speaker: Ремарка
+  text: Дежурная подходит. Лёша отступает, и ты выходишь к ней.
+remarka-ty-uzhe-ryadom-s:
+  speaker: Ремарка
+  text: Ты уже рядом с дежурной. За спиной хлопает дверь на лестницу.
+remarka-ya-dyornulsya-i-zastyl:
+  speaker: Ремарка
+  text: Я дёрнулся и застыл. Слышу рядом голос Марины Сергеевны. Хочу повернуться к ней, а ноги будто приклеились.
+remarka-ya-uznayu-eyo-golos:
+  speaker: Ремарка
+  text: Я узнаю её голос. Получается отвести взгляд от двери и посмотреть на скамейку.
+ty-timur-pozovi-dezhurnuyu-seychas:
+  speaker: Ты
+  text: Тимур, позови дежурную сейчас!
+timur-marina-sergeevna-syuda-u:
+  speaker: Тимур
+  text: Марина Сергеевна, сюда! У лестницы!
+remarka-dezhurnaya-podhodit-lyosha-dayot:
+  speaker: Ремарка
+  text: Дежурная подходит. Лёша даёт тебе пройти.
+ty-tim-pobudesh-so-mnoy:
+  speaker: Ты
+  text: Тим, побудешь со мной?
+timur-do-zvonka-tochno-idyom:
+  speaker: Тимур
+  text: До звонка точно. Идём.
+ty-lyosh-day-skazhu-chto:
+  speaker: Ты
+  text: Лёш, дай скажу, что вчера на матче было. Потом разойдёмся.
+lyosha-ty-vchera-uzhe-vsyo:
+  speaker: Лёша
+  text: Ты вчера уже всё сказал.
+remarka-dezhurnaya-podhodit-prohod-osvobozhdaetsya:
+  speaker: Ремарка
+  text: Дежурная подходит, проход освобождается.
+ty-tim-mozhno-s-toboy:
+  speaker: Ты
+  text: Тим, можно с тобой [[до звонка]]? Мне пока туда одному вообще не хочется.
+timur-da-davay-vmeste:
+  speaker: Тимур
+  text: Да, давай вместе.
+ty-tim-poydyosh-so-mnoy:
+  speaker: Ты
+  text: Тим, пойдёшь со мной рассказать про лестницу?
+timur-konechno-ya-sam-slyshal:
+  speaker: Тимур
+  text: Конечно. Я сам слышал, как он тебе угрожал.
+remarka-na-etom-dubl-zakanchivaetsya:
+  speaker: Ремарка
+  text: На этом дубль заканчивается.
+ty-tim-podozhdi-u-tebya:
+  speaker: Ты
+  text: Тим, подожди. У тебя атлас с собой?
+timur-da-poshli:
+  speaker: Тимур
+  text: Да. Пошли.
+remarka-ty-othodish-ot-lestnitsy:
+  speaker: Ремарка
+  text: Ты отходишь от лестницы и заходишь в класс к ребятам. [[Дежурная встаёт в дверях]].
+remarka-vy-sadites-marina-sergeevna:
+  speaker: Ремарка
+  text: Вы садитесь. Марина Сергеевна остаётся с тобой до звонка.
+remarka-dezhurnaya-prohodit-s-toboy:
+  speaker: Ремарка
+  text: Дежурная проходит с тобой до класса. У порога ты сам берёшься за ручку двери.

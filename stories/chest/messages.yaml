@@ -1,0 +1,59 @@
+papa-ler-priderzhi-dver-poslednyaya:
+  speaker: Папа
+  channel: scene
+  caption: После школьной ярмарки
+  text: Лер, придержи дверь. Последняя коробка.
+lera-davay-syuda-mashina-u:
+  speaker: Лера
+  text: Давай сюда. Машина у крыльца.
+papa-podozhdi-snizu-skotch-otkleilsya:
+  speaker: Папа
+  text: Подожди, снизу скотч отклеился. Сейчас всё вывалится.
+lera-davay-postavim-u-menya:
+  speaker: Лера
+  text: Давай поставим. У меня в рюкзаке ещё рулон.
+remarka-korobku-donesli-do-mashiny:
+  speaker: Ремарка
+  text: Коробку донесли до машины. На ступеньках ничего не рассыпалось.
+papa-postav-korobku-u-menya:
+  speaker: Папа
+  text: Поставь коробку. У меня [[в середине груди сдавило]]. И в руку отдаёт.
+remarka-papa-saditsya-na-stupen-ku:
+  speaker: Ремарка
+  text: Папа садится на ступеньку. На лбу выступил пот, он тяжело дышит.
+papa-ler-nu-kakuyu-skoruyu:
+  speaker: Папа
+  text: Лер, ну какую скорую? Я же мужик. Сейчас отдышусь и [[сам за руль]].
+remarka-papa-svyazyvaet-bol-s:
+  speaker: Ремарка
+  text: '[[Папа связывает боль с коробками и собирается вести машину. Боль всё ещё есть.]]'
+remarka-sdavlenie-v-grudi-s:
+  speaker: Ремарка
+  text: Сдавление в груди с болью, отдающей в руку, одышкой и потом может означать сердечный приступ. Скорую вызывают сразу. За руль при таких симптомах садиться опасно. В России можно позвонить 103 или 112.
+remarka-lera-nabiraet-103-i:
+  speaker: Ремарка
+  text: Лера набирает 103 и называет город, улицу и номер школы.
+ty-my-na-kryl-tse-shkoly:
+  speaker: Ты
+  text: Мы на крыльце школы у главного входа.
+dispetcher-chto-sluchilos:
+  speaker: Диспетчер
+  text: '[[Что случилось]]?'
+ty-u-papy-sdavilo-v:
+  speaker: Ты
+  text: У папы сдавило в середине груди и отдаёт в руку. Он вспотел, тяжело дышит. Началось только что, когда мы несли коробку.
+dispetcher-brigada-napravlena-ostavaytes-na:
+  speaker: Диспетчер
+  text: Бригада направлена. Оставайтесь на линии.
+remarka-lera-ostayotsya-ryadom-papa:
+  speaker: Ремарка
+  text: Лера остаётся рядом. Папа сидит на ступеньке, ключи от машины лежат в кармане.
+lera-my-na-kryl-tse-shkoly:
+  speaker: Лера
+  text: Мы на крыльце школы у главного входа.
+ty-ler-skazhi-chto-v:
+  speaker: Ты
+  text: Лер, скажи, что в груди давит и в руку отдаёт. Началось, когда мы несли коробку.
+lera-u-papy-tol-ko-chto:
+  speaker: Лера
+  text: У папы только что сдавило в груди, боль отдаёт в руку. Он сел, вспотел и тяжело дышит.

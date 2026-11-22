@@ -1,0 +1,23 @@
+id: vision
+title: Две буквы вместо одной
+order: 13
+place: У школьной афиши
+article: ./stroke.html
+roles:
+  witness:
+    name: Тимур
+    viewpoint: Тимура
+    intro: Ты помогаешь Марине Сергеевне повесить афишу в школе.
+  self:
+    name: Марина Сергеевна
+    viewpoint: Марины Сергеевны
+    intro: Вы с Тимуром вешаете афишу в школьном вестибюле.
+cast:
+- Вера
+- Диспетчер
+- Марина Сергеевна
+- Тимур
+channels:
+  scene:
+    kind: scene
+    title: ''

@@ -7,34 +7,9 @@ const role = isAttentionPilot ? (params.get('role') === 'self' ? 'self' : 'witne
 const personalRole = role === 'self';
 const currentFile = isAttentionPilot ? (personalRole ? './self.html' : './index.html') : selectedRole.getAttribute('href');
 const selection = params.get('case') || (isAttentionPilot ? 'money' : null);
-const episode = [...scenarios,...healthScenes].find(item => item.id === selection);
-const rehearsal = {id:'dubl', title:'Дубль для своих', place:'Школьная музыкальная группа', actors:{witness:'Тимур', self:'Миша'}};
-const allStories = [rehearsal, ...scenarios, ...healthScenes];
-const activeStory = episode || rehearsal;
-const playerName = activeStory.actors[role];
-
-const roleIntroductions = {
-  dubl: {witness:'Ты читаешь чат своей музыкальной группы после репетиции.', self:'На репетиции ты вступил раньше времени. У друзей осталась запись.'},
-  locker: {witness:'Ты в коридоре. Вера спрашивает, видел ли ты Мишин рюкзак.', self:'Ты оставил рюкзак на лавке в раздевалке и вернулся за ним.'},
-  sticker: {witness:'Вы с классом делаете стенгазету. Вчера Лера прислала в чат голосовое о встрече.', self:'Вчера ты отправила в чат класса голосовое о том, где вы встретитесь делать стенгазету.'},
-  project: {witness:'Через пять минут защита. Тебя попросили открыть презентацию на школьном ноутбуке.', self:'Вы с ребятами готовили проект о школьном дворе. Скоро ваша очередь выступать.'},
-  geopoint: {witness:'Ты пишешь Ане после кружка. У неё осталась фотография с доски.', self:'После кружка ты ждёшь автобус. Тебе пишет Лёша.'},
-  team: {witness:'Ты едешь с секцией на игру. У автобуса ребята встречают новичка Тимура.', self:'Ты впервые едешь на игру с этой командой.'},
-  dance: {witness:'Ты на школьной дискотеке. Вера пишет тебе, что подойдёт к Ане.', self:'Ты на школьной дискотеке. Лёша приглашает тебя танцевать.'},
-  voice: {witness:'Ты в голосовом чате команды. Слышишь, как Миша и Лёша договариваются, куда идти.', self:'Ты играешь с друзьями. Вы с Лёшей говорите по микрофону.'},
-  money: {witness:'Ты читаешь чат секции. Даня собирает деньги на подарок тренеру.', self:'В чате секции собирают деньги на подарок тренеру. В этот раз ты решил пропустить сбор.'},
-  stairs: {witness:'На перемене ты видишь Сашу у лестницы. Рядом ребята спорят о матче.', self:'Перемена заканчивается. Ты идёшь к лестнице, а ребята всё ещё спорят о матче.'},
-  rumour: {witness:'После тренировки Костя присылает тебе кусок переписки.', self:'После тренировки Вера присылает тебе скрин с твоими словами.'},
-  invite: {witness:'Ты в беседе «После отбоя». Ребята собирают команду на ночной турнир.', self:'В беседе «После отбоя» собирают команду на турнир. Ты решаешь выйти из чата.'},
-  speech: {witness:'После игры ты ставишь телефон на таймер для командного фото.', self:'После игры ты собираешь команду для общего фото.'},
-  vision: {witness:'Ты помогаешь Марине Сергеевне повесить афишу в школе.', self:'Вы с Тимуром вешаете афишу в школьном вестибюле.'},
-  abdomen: {witness:'До матча десять минут. Ты встречаешь Мишу у раздевалки.', self:'Скоро матч. Ты сидишь на ступеньках у раздевалки, когда подходит Тимур.'},
-  chest: {witness:'После школьной ярмарки вы с папой выносите коробки к машине.', self:'Вы с дочкой Лерой выносите коробки после школьной ярмарки.'}
-};
-const viewpointNames = {
-  Вера:'Веры', Миша:'Миши', Костя:'Кости', Саша:'Саши', Даня:'Дани', Аня:'Ани',
-  Тимур:'Тимура', Лера:'Леры', Тренер:'тренера', Папа:'папы Леры', 'Марина Сергеевна':'Марины Сергеевны'
-};
+const episode = allStories.find(item => item.id === selection);
+const activeStory = episode || allStories[0];
+const playerName = activeStory.roles[role].name;
 const originalSelected = selection === 'dubl' || (!selection && location.hash.length > 1 && location.hash !== '#home-guide-title');
 const isCatalogue = !isAttentionPilot && !episode && !originalSelected;
 function focusLink(id, pointOfView) {
@@ -118,22 +93,31 @@ function addAvatar(bubble) {
   bubble.prepend(avatar);
 }
 
-function bubbleFromPair([who, words, context, reactions]) {
-  const bubble = element('div', who.startsWith('Ты') ? 'msg you' : 'msg');
-  if (context) bubble.dataset.context = context;
+function messageBubble(message) {
+  const {speaker, aside, reactions, media:words, parts} = message;
+  const who = aside ? speaker+' · '+aside : speaker;
+  const bubble = element('div', speaker === 'Ты' ? 'msg you' : 'msg');
+  function paragraph(text) {
+    const p = element('p', '', text);
+    if (parts?.quote && (text === parts.text || text.includes('[['))) {
+      const span = element('span', 'cue-words', parts.quote);
+      p.replaceChildren(parts.before, span, parts.after);
+    }
+    return p;
+  }
   if (reactions) bubble.dataset.reactions = JSON.stringify(reactions);
   bubble.append(element('strong', '', who));
-  if (typeof words === 'string') {
-    bubble.append(element('p', '', words));
+  if (!words) {
+    bubble.append(paragraph(parts.text));
     return bubble;
   }
   bubble.classList.add(words.kind);
   const media = element('div', 'chat-media');
-  if (words.caption) media.append(element('p', '', words.caption));
+  if (words.caption) media.append(paragraph(words.caption));
   if (words.kind === 'voice') {
     if (words.live) {
       bubble.classList.add('live-voice');
-      media.append(element('p', '', words.transcript));
+      media.append(paragraph(words.transcript));
     }
     const audio = element('audio');
     audio.controls = true;
@@ -141,7 +125,7 @@ function bubbleFromPair([who, words, context, reactions]) {
     audio.src = words.live ? words.src + '?v=cast-1' : words.src;
     audio.setAttribute('aria-label', (words.live ? 'Реплика в голосовом канале · ' : 'Голосовое · ') + (who === 'Ты' ? playerName : who));
     const transcript = element('details', 'transcript');
-    transcript.append(element('summary', '', 'Текст голосового'), element('p', '', words.transcript));
+    transcript.append(element('summary', '', 'Текст голосового'), paragraph(words.transcript));
     media.append(audio);
     if (!words.live) media.append(transcript);
   } else if (words.kind === 'video') {
@@ -157,7 +141,8 @@ function bubbleFromPair([who, words, context, reactions]) {
     image.src = words.src;
     image.alt = words.alt;
     image.width = image.height = 100;
-    media.append(element('span', 'reply-to', personalRole ? 'На твоё голосовое' : 'На голосовое Леры'), image);
+    if (message.reply) media.append(element('span', 'reply-to', message.reply));
+    media.append(image);
   } else {
     const image = element('img', 'preview');
     image.src = words.src;
@@ -179,66 +164,6 @@ function bubbleFromPair([who, words, context, reactions]) {
   }
   bubble.append(media);
   return bubble;
-}
-
-function loadEpisode(pages, item) {
-  pages.clear();
-  const story = item[role];
-  const options = story.observations.map(([label], i) => ({label, id:'notice-'+i}));
-  const branching = Boolean(story.otherContinuation);
-  const versions = branching ? [
-    {id:'later', label:story.continuationLabel},
-    {id:'other-later', label:story.otherContinuation.label}
-  ] : [];
-  pages.set('start', {
-    title:item.title, question:story.question, note:'',
-    lines:story.opening.map(bubbleFromPair), links:options
-  });
-
-  function endings(part, prefix, parent, compare) {
-    const links = part.actions.map(([label], i) => ({label, id:prefix+'act-'+i}));
-    part.actions.forEach(([title, words, note, context, headline], i) => {
-      const who = typeof words === 'string' && words.startsWith('Ты ') ? 'Ремарка' : 'Ты';
-      const lines = Array.isArray(words) ? words : [[who, words, context]];
-      pages.set(links[i].id, {
-        title, parent, question:'', note, outcome:{kind:'positive', headline},
-        lines:lines.map(bubbleFromPair), links:compare, review:true
-      });
-    });
-    const alternative = part.alternative;
-    if (alternative) {
-      const id = prefix+'consequence';
-      links.splice(alternative.position, 0, {id, label:alternative.label});
-      pages.set(id, {
-        title:alternative.label, parent, question:'', note:alternative.note,
-        outcome:{kind:alternative.kind || 'negative', headline:alternative.headline},
-        lines:alternative.lines.map(bubbleFromPair), links:compare, review:true
-      });
-    }
-    return links;
-  }
-
-  let choices = versions;
-  if (branching) {
-    versions.forEach((version, i) => {
-      const part = i === 0 ? story : story.otherContinuation;
-      const other = versions[1-i];
-      const compare = [{id:other.id, label:'Сравнить: '+other.label}];
-      const links = endings(part, i === 0 ? '' : 'other-', version.id, compare);
-      pages.set(version.id, {
-        title:item.title, question:part.prompt, note:'', continuation:version.label,
-        lines:part.later.map(bubbleFromPair), links
-      });
-    });
-  } else {
-    choices = endings(story, '', undefined, []);
-  }
-  story.observations.forEach(([, note], i) => {
-    pages.set(options[i].id, {
-      title:item.title, question:branching ? 'Что сделает Миша? Выбери продолжение, потом можно посмотреть второе.' : story.prompt, note,
-      lines:branching ? [] : story.later.map(bubbleFromPair), links:choices
-    });
-  });
 }
 
 function makeTakePreview() {
@@ -357,7 +282,7 @@ function showCatalogue(panel) {
   allStories.forEach(item => {
     const card = element('a','case-card');
     card.href = focusLink(item.id,role);
-    const health = healthScenes.includes(item);
+    const health = item.article;
     const context = health ? item.place+' · '+(personalRole ? 'Симптомы у меня' : 'Я очевидец') : item.place;
     card.append(element('span','case-place',context), element('span','case-name',item.title));
     cards.append(card);
@@ -370,10 +295,10 @@ function showCatalogue(panel) {
 }
 
 function linkCurrentEpisode() {
-  const id = episode?.id || 'dubl';
+  const id = activeStory.id;
   document.querySelectorAll('.roles a').forEach(a => {
     a.href = focusLink(id,a.dataset.role);
-    if (healthScenes.includes(episode) && a.dataset.role === 'self') a.textContent = 'Симптомы у меня';
+    if (episode?.article && a.dataset.role === 'self') a.textContent = 'Симптомы у меня';
     if (a.dataset.role === role) a.setAttribute('aria-current','page');
     else a.removeAttribute('aria-current');
   });

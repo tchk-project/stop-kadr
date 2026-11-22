@@ -1,0 +1,27 @@
+id: stairs
+title: У лестницы
+order: 9
+place: Перемена
+roles:
+  witness:
+    name: Костя
+    viewpoint: Кости
+    intro: На перемене ты видишь Сашу у лестницы. Рядом ребята спорят о матче.
+  self:
+    name: Саша
+    viewpoint: Саши
+    intro: Перемена заканчивается. Ты идёшь к лестнице, а ребята всё ещё спорят о матче.
+cast:
+- Вера
+- Костя
+- Лёша
+- Марина Сергеевна
+- Саша
+- Тимур
+channels:
+  obschiy-chat-klassa:
+    kind: group
+    title: Общий чат класса
+  scene:
+    kind: scene
+    title: ''

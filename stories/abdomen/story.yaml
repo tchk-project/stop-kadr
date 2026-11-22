@@ -1,0 +1,22 @@
+id: abdomen
+title: Десять минут до матча
+order: 14
+place: У раздевалки
+article: ./abdominal-pain.html
+roles:
+  witness:
+    name: Тимур
+    viewpoint: Тимура
+    intro: До матча десять минут. Ты встречаешь Мишу у раздевалки.
+  self:
+    name: Миша
+    viewpoint: Миши
+    intro: Скоро матч. Ты сидишь на ступеньках у раздевалки, когда подходит Тимур.
+cast:
+- Диспетчер
+- Миша
+- Тимур
+channels:
+  scene:
+    kind: scene
+    title: ''

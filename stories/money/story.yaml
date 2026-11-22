@@ -1,0 +1,37 @@
+id: money
+title: Сбор после уроков
+order: 8
+place: Школьная столовая
+roles:
+  witness:
+    name: Миша
+    viewpoint: Миши
+    intro: Ты читаешь чат секции. Даня собирает деньги на подарок тренеру.
+  self:
+    name: Саша
+    viewpoint: Саши
+    intro: В чате секции собирают деньги на подарок тренеру. В этот раз ты решил пропустить сбор.
+cast:
+- Вера
+- Даня
+- Мама Саши
+- Марина Сергеевна
+- Миша
+- Саша
+- Тренер
+channels:
+  chat-sektsii:
+    kind: group
+    title: Чат секции
+  lichnaya-perepiska-s-sashey:
+    kind: private
+    title: Личная переписка с Сашей
+  scene:
+    kind: scene
+    title: ''
+  lichnaya-perepiska-s-mishey:
+    kind: private
+    title: Личная переписка с Мишей
+  lichnaya-perepiska-s-mamoy:
+    kind: private
+    title: Личная переписка с мамой

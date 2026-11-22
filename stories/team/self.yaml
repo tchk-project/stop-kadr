@@ -1,0 +1,246 @@
+scenes:
+  start:
+    mode: yellow
+    messages:
+    - kostya-tim-u-nas-novichki
+    - ty-ya-by-prosto-poehal
+    choices:
+      pressure: Читать дальше
+      calm: Спокойный дубль
+  pressure:
+    mode: yellow
+    messages:
+    - kostya-togda-sadish-sya-otdel-no-s
+    - ty-ya-voobsche-uzhe-ehat
+    - trener-cherez-pyat-minut-edem
+    continuation: true
+    question: Автобус скоро отъедет. Что скажешь?
+    choices:
+      pressure-act-0: Из-за песни я уже не хочу ехать. Подойду к тренеру.
+      alternative: Спою только припев. Хочу просто доехать до игры.
+      pressure-act-1: Хочу сесть с ребятами. У Миши спрошу про место.
+      observe: Автобус ещё закрыт. Посмотрю, кто куда сядет.
+      focus: Место теперь зависит от песни. Посмотрю, что будет, когда откроют двери.
+  pressure-act-0:
+    mode: orange
+    messages:
+    - ty-mozhno-s-vami-kostya
+    - trener-konechno-sadis-s-kem
+    - sasha-tim-syuda-kurtku-seychas
+    outcome:
+    - positive
+    - Ты сел рядом с Сашей
+    note: Ты рассказал тренеру ровно о том, что мешало сесть. Саша освободил соседнее место.
+    review:
+      signals:
+      - pressure/kostya-togda-sadish-sya-otdel-no-s
+      - pressure/ty-ya-voobsche-uzhe-ehat
+      effect: Ты рассказал тренеру ровно о том, что мешало сесть. Саша освободил соседнее место.
+  pressure-act-1:
+    mode: orange
+    messages:
+    - ty-mish-u-tebya-ryadom
+    - misha-mozhno-ya-tebe-u
+    - remarka-u-okna-na-siden-e
+    - remarka-u-okna-ty-slyshish
+    - remarka-ya-hochu-skazat-mishe
+    - misha-tim-ya-tut-hochesh
+    - remarka-v-kolonke-snova-tiho
+    question: Что тебе сейчас удобнее?
+    reaction:
+      from: remarka-ya-hochu-skazat-mishe
+      through: misha-tim-ya-tut-hochesh
+      summary: Я хочу сказать Мише, чтобы он попросил убрать микрофон. Рот открыл, а голоса нет.
+    choices:
+      pressure-act-1-next-0: Кивну Мише, пусть попросит выключить микрофон.
+      pressure-act-1-next-1: Колонка уже стихла. Покажу на наушники и останусь у окна.
+    review:
+      signals:
+      - pressure/kostya-togda-sadish-sya-otdel-no-s
+      - pressure/ty-ya-voobsche-uzhe-ehat
+      effect: Ты обратился к человеку, с которым хотел ехать. Миша придержал место, и для этого тебе не пришлось брать микрофон.
+  alternative:
+    mode: orange
+    messages:
+    - ty-ladno-tol-ko-pripev-i
+    - remarka-ty-dopevaesh-i-vozvraschaesh
+    - kostya-sleduyuschiy-novichok-sash-tvoya
+    - sasha-ya-to-pri-chyom-dayte
+    question: Что тебе сейчас подходит?
+    choices:
+      follow-up: Позвать Сашу к себе
+      pause: Закончить этот дубль здесь
+    review:
+      signals:
+      - pressure/kostya-togda-sadish-sya-otdel-no-s
+      - pressure/ty-ya-voobsche-uzhe-ehat
+      effect: Ты хотел поскорее закончить. Когда ты спел, Костя сам решил вызвать Сашу. За его решение ты не отвечаешь. Теперь и Саша просит оставить его в покое.
+      miss: false
+  follow-up:
+    mode: orange
+    messages:
+    - ty-sash-ko-mne-syadesh
+    - sasha-davay-mikrofon-koste-ostav
+    outcome:
+    - positive
+    - Саша выбрал место рядом с Тимуром
+    note: Тимур предложил место, и Саша принял приглашение. За условие про песню отвечает Костя.
+    review:
+      signals:
+      - alternative/sasha-ya-to-pri-chyom-dayte
+      effect: Тимур предложил место, и Саша принял приглашение. За условие про песню отвечает Костя.
+  pause:
+    mode: orange
+    messages:
+    - remarka-na-etom-dubl-zakanchivaetsya
+    outcome:
+    - mixed
+    - Ты вернул микрофон. Костя позвал Сашу
+    note: Ты хотел поскорее закончить. Когда ты спел, Костя сам решил вызвать Сашу. За его решение ты не отвечаешь. Теперь и Саша просит оставить его в покое.
+    review:
+      signals:
+      - alternative/sasha-ya-to-pri-chyom-dayte
+      effect: Можно взять паузу. Решать, возвращаться ли к этому разговору, по-прежнему тебе.
+  calm:
+    mode: yellow
+    messages:
+    - kostya-nu-ladno-kto-sam
+    - sasha-davay-syuda-tim-u
+    continuation: true
+    question: Как продолжишь?
+    choices:
+      calm-end: Посмотреть, что будет дальше
+      ask: Выбрать место у окна
+      calm-watch: Место дали без песни. Посмотрю, останется ли оно свободным.
+  calm-end:
+    mode: yellow
+    messages:
+    - remarka-timur-saditsya-u-okna
+    outcome:
+    - positive
+    - Тимур поехал на игру со всеми
+    note: После отказа место осталось свободным. Петь вызвался Саша.
+  ask:
+    mode: yellow
+    messages:
+    - ty-sash-syadu-s-toboy
+    - sasha-aga-seychas-uberu
+    outcome:
+    - positive
+    - Тимур выбрал место у окна
+    note: Для места в автобусе не пришлось ничего исполнять. Ребята сами выбрали, куда сесть.
+  observe:
+    mode: yellow
+    messages:
+    - sasha-tim-ya-kurtku-ubral
+    - remarka-timur-saditsya-ryadom-s
+    question: Что изменилось для тебя сейчас?
+    choices:
+      observe-ease: С местом разобрались. Поехали.
+      observe-watch: Место нашлось. Ещё посмотрю, к кому Костя подойдёт с микрофоном.
+    review:
+      signals:
+      - pressure/kostya-togda-sadish-sya-otdel-no-s
+      - pressure/ty-ya-voobsche-uzhe-ehat
+      effect: Рядом нашлось место без условия про песню.
+  observe-ease:
+    mode: yellow
+    messages:
+    - trener-vse-na-mestah-poehali
+    outcome:
+    - positive
+    - Тимур едет на игру рядом с Сашей
+    note: Рядом нашлось место без условия про песню.
+    review:
+      signals:
+      - observe/remarka-timur-saditsya-ryadom-s
+      effect: Рядом нашлось место без условия про песню.
+  observe-watch:
+    mode: orange
+    messages:
+    - trener-vse-na-mestah-poehali
+    outcome:
+    - positive
+    - Тимур едет на игру рядом с Сашей
+    note: Рядом нашлось место без условия про песню.
+    review:
+      signals:
+      - observe/remarka-timur-saditsya-ryadom-s
+      effect: Место нашлось. Ещё посмотрю, к кому Костя подойдёт с микрофоном.
+  focus:
+    mode: orange
+    messages:
+    - sasha-tim-ya-kurtku-ubral
+    - remarka-timur-saditsya-ryadom-s
+    question: Что изменилось для тебя сейчас?
+    choices:
+      focus-ease: С местом разобрались. Поехали.
+      focus-watch: Место нашлось. Ещё посмотрю, к кому Костя подойдёт с микрофоном.
+    review:
+      signals:
+      - pressure/kostya-togda-sadish-sya-otdel-no-s
+      - pressure/ty-ya-voobsche-uzhe-ehat
+      effect: Рядом нашлось место без условия про песню.
+  focus-ease:
+    mode: yellow
+    messages:
+    - trener-vse-na-mestah-poehali
+    outcome:
+    - positive
+    - Тимур едет на игру рядом с Сашей
+    note: Рядом нашлось место без условия про песню.
+    review:
+      signals:
+      - focus/remarka-timur-saditsya-ryadom-s
+      effect: Рядом нашлось место без условия про песню.
+  focus-watch:
+    mode: orange
+    messages:
+    - trener-vse-na-mestah-poehali
+    outcome:
+    - positive
+    - Тимур едет на игру рядом с Сашей
+    note: Рядом нашлось место без условия про песню.
+    review:
+      signals:
+      - focus/remarka-timur-saditsya-ryadom-s
+      effect: Место нашлось. Ещё посмотрю, к кому Костя подойдёт с микрофоном.
+  calm-watch:
+    mode: orange
+    messages:
+    - remarka-timur-saditsya-u-okna
+    outcome:
+    - positive
+    - Тимур поехал на игру со всеми
+    note: После отказа место осталось свободным. Петь вызвался Саша.
+  pressure-act-1-next-0:
+    mode: orange
+    messages:
+    - remarka-misha-prosit-ubrat-mikrofon
+    outcome:
+    - positive
+    - В автобусе выключили колонку
+    note: Ты спросил про место ещё у автобуса. Когда ребята обернулись, Миша уже сидел рядом и мог заметить даже твой кивок.
+    review:
+      signals:
+      - pressure-act-1/misha-tim-ya-tut-hochesh
+      effect: Миша просит убрать микрофон. Тренер выключает колонку до конца посадки.
+  pressure-act-1-next-1:
+    mode: yellow
+    messages:
+    - remarka-ty-nadevaesh-naushniki-misha
+    outcome:
+    - positive
+    - Ты едешь у окна рядом с Мишей
+    note: Ты спросил про место ещё у автобуса. Когда ребята обернулись, Миша уже сидел рядом и мог заметить даже твой кивок.
+    review:
+      signals:
+      - pressure-act-1/misha-tim-ya-tut-hochesh
+      effect: Ты надеваешь наушники. Миша освобождает место для твоей сумки.
+cues:
+  pressure/kostya-togda-sadish-sya-otdel-no-s: После отказа Костя поставил условие даже для места в автобусе.
+  pressure/ty-ya-voobsche-uzhe-ehat: Тимур написал в личку, что теперь думает пропустить поездку.
+  pressure-act-1/misha-tim-ya-tut-hochesh: Ты спросил про место ещё у автобуса. Когда ребята обернулись, Миша уже сидел рядом и мог заметить даже твой кивок.
+  alternative/sasha-ya-to-pri-chyom-dayte: Саша сам сказал, что хочет спокойно доехать. Костя передал очередь ему без спроса.
+  observe/remarka-timur-saditsya-ryadom-s: Рядом нашлось место без условия про песню.
+  focus/remarka-timur-saditsya-ryadom-s: Рядом нашлось место без условия про песню.

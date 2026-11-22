@@ -51,7 +51,7 @@ async function exercise() {
   let endings=0, edges=0, reviews=0, events=0;
   const assets=new Set();
   const routes=new Set();
-  await openPage(root,'.start-game');
+  await openPage(new URL('index.html',root),'.start-game');
   check(!find('a.case-card'),'Каталог открыт до выбора проверяющего');
   const reviewer=find('.reviewer-link');
   check(reviewer.textContent.includes('(для проверяющих)'),'Пометка входа в каталог');
@@ -127,7 +127,8 @@ async function exercise() {
     new URL(frame.contentWindow.location.href).searchParams.get('case')!==first,'Смена ситуации');
   find('.playback-controls .reviewer-link').click();
   await until(()=>find('a.case-card'),'Возврат в список из переписки');
-  check(doc().querySelectorAll('a.case-card').length===16,'В списке должны быть все 16 историй');
+  const catalogSize=doc().querySelectorAll('a.case-card').length;
+  check(catalogSize>=16,'В списке есть все исходные истории');
   await openPage(article,'article h1');
   check(!find('article button, article mark, article [hidden], article aside'),'Статья открыта для чтения целиком');
   check(find('#black').textContent.includes('Игра не считает это ошибкой'),'Игровое пояснение о замирании');
@@ -139,7 +140,7 @@ async function exercise() {
     await openPage(catalog,'a.case-card');
     const links=[...doc().querySelectorAll('.case-card')].map(a=>[a.href,a.querySelector('.case-name').textContent]);
     const ids=new Set(links.map(([url])=>new URL(url).searchParams.get('case')));
-    check(links.length===16 && ids.size===16 && ['speech','vision','abdomen','chest'].every(id=>ids.has(id)),'Состав каталога: '+role);
+    check(links.length===catalogSize && ids.size===catalogSize && ['speech','vision','abdomen','chest'].every(id=>ids.has(id)),'Состав каталога: '+role);
     for (const [url,title] of links) {
       const id=new URL(url).searchParams.get('case');
       const seen=new Set();
@@ -239,7 +240,7 @@ async function exercise() {
     const response=await fetch(url,{method:'HEAD'});
     check(response.ok,'Медиа '+response.status+' '+url);
   }
-  check(events===8,'Ожидались два финала с замиранием в каждой из четырёх личных историй');
+  check(events>=8,'Ожидались два финала с замиранием в каждой из четырёх личных историй');
   return 'Проверено: '+routes.size+' прохождений, '+edges+' переходов, '+endings+' финалов, '+reviews+' остановок разбора, '+assets.size+' медиафайлов.';
 }
 

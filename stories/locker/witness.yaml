@@ -1,0 +1,232 @@
+scenes:
+  start:
+    mode: yellow
+    messages:
+    - vera-ty-videl-ryukzak-mishi
+    - danya-vernyom-k-zvonku-u
+    choices:
+      pressure: Читать дальше
+      calm: Спокойный дубль
+  pressure:
+    mode: yellow
+    messages:
+    - danya-proydyosh-nash-kvest
+    - misha-kakoy-eschyo-kvest-mne
+    - vera-do-zvonka-pyat-minut
+    continuation: true
+    question: До звонка пять минут. Что ты сделаешь?
+    choices:
+      pressure-act-0: До звонка пять минут, а форма у Дани. Позову учительницу.
+      alternative: Может, пройти квест быстрее. Предложу Мише доиграть.
+      pressure-act-1: Миша вчера тоже ждал. Спрошу, что ему сейчас нужно.
+      ignore: Пойду переодеваться. Наверняка сами успеют.
+      observe: До звонка ещё есть время. Посмотрю, принесут ли рюкзак.
+      focus: Форма всё ещё у Дани. Не отойду от лавки, пока не увижу рюкзак.
+  pressure-act-0:
+    mode: orange
+    messages:
+    - ty-marina-sergeevna-podoydite-k
+    - marina-sergeevna-idu-mish-pokazhi
+    - remarka-danya-snimaet-ryukzak-s
+    - misha-vot-on-ya-pereodevat-sya
+    outcome:
+    - positive
+    - Миша получил рюкзак до звонка
+    note: Ты назвал, что случилось и где вы стоите. Пока учительница шла к вам, Даня вернул рюкзак.
+    review:
+      signals:
+      - pressure/danya-proydyosh-nash-kvest
+      - pressure/misha-kakoy-eschyo-kvest-mne
+      effect: Ты назвал, что случилось и где вы стоите. Пока учительница шла к вам, Даня вернул рюкзак.
+  pressure-act-1:
+    mode: orange
+    messages:
+    - ty-mish-poydyom-vmeste-k
+    - misha-pozovyosh-eyo-syuda-a
+    - ty-aga-seychas
+    - remarka-ty-nahodish-marinu-sergeevnu
+    outcome:
+    - positive
+    - Миша ждёт у раздевалки, ты идёшь к нему с учительницей
+    note: Миша хотел остаться там, где ему обещали вернуть рюкзак. Он смог попросить тебя сходить за помощью.
+    review:
+      signals:
+      - pressure/danya-proydyosh-nash-kvest
+      - pressure/misha-kakoy-eschyo-kvest-mne
+      effect: Миша хотел остаться там, где ему обещали вернуть рюкзак. Он смог попросить тебя сходить за помощью.
+  alternative:
+    mode: yellow
+    messages:
+    - ty-mish-davay-doigraem-tak
+    - misha-a-mne-kogda-pereodet-sya
+    - remarka-zvenit-zvonok-ryukzak-snova
+    outcome:
+    - negative
+    - Миша пропустил выбор пары
+    note: Ты рассчитывал выиграть время. Когда ты предложил доиграть, Даня так и остался с рюкзаком до звонка. Мише ещё может пригодиться твоя помощь — например, рассказать учителю, почему он опоздал.
+    review:
+      signals:
+      - pressure/danya-proydyosh-nash-kvest
+      - pressure/misha-kakoy-eschyo-kvest-mne
+      effect: Ты рассчитывал выиграть время. Когда ты предложил доиграть, Даня так и остался с рюкзаком до звонка. Мише ещё может пригодиться твоя помощь — например, рассказать учителю, почему он опоздал.
+      miss: true
+  ignore:
+    mode: white
+    messages:
+    - misha-kost-ty-slyshal-kuda
+    question: Теперь ты знаешь ещё кое-что. Что сделаешь?
+    choices:
+      stay: Махнуть рукой и уйти в зал.
+      rejoin: Сходить за учителем, пока Миша ждёт у лавки.
+    review:
+      miss: true
+      signals:
+      - pressure/danya-proydyosh-nash-kvest
+      - pressure/misha-kakoy-eschyo-kvest-mne
+      effect: 'После твоего решения разговор продолжился: «Кость, ты слышал, куда они его спрятали? У меня там форма.»'
+      repair: rejoin
+      recovery: Учительница идёт к Мише.
+  stay:
+    mode: white
+    messages:
+    - misha-ya-uchitelya-sam-pozval
+    outcome:
+    - mixed
+    - Мише пришлось самому искать учителя
+    note: Миша успел обратиться к учителю сам. Когда рюкзак вернули, разминка уже началась.
+    review:
+      miss: true
+      signals:
+      - ignore/misha-kost-ty-slyshal-kuda
+      effect: Миша успел обратиться к учителю сам. Когда рюкзак вернули, разминка уже началась.
+  rejoin:
+    mode: orange
+    messages:
+    - ty-marina-sergeevna-u-mishi
+    - marina-sergeevna-poydyom-pokazhesh
+    outcome:
+    - positive
+    - Учительница идёт к Мише
+    note: Костя объяснил, где ждёт Миша. Учительница согласилась пойти с ним к раздевалке.
+  calm:
+    mode: yellow
+    messages:
+    - danya-mish-on-za-dver-yu
+    - remarka-danya-kladyot-ryukzak-na
+    continuation: true
+    question: Как продолжишь?
+    choices:
+      calm-end: Посмотреть, что будет дальше
+      ask: Спросить Мишу, всё ли на месте
+      calm-watch: Рюкзак на лавке. Хочу ещё убедиться, что форма внутри.
+  calm-end:
+    mode: yellow
+    messages:
+    - vera-poshli-v-zal-eschyo
+    outcome:
+    - positive
+    - Рюкзак вернули до звонка
+    note: Миша получил рюкзак и достал форму до урока. На этот раз никто не потребовал пройти квест.
+  ask:
+    mode: yellow
+    messages:
+    - ty-mish-formu-nashyol
+    - misha-aga-vsyo-tut-dogonyu
+    outcome:
+    - positive
+    - Миша успевает на урок
+    note: С рюкзаком уже всё в порядке. Осталось время спросить про форму или договориться, где оставлять вещи.
+  observe:
+    mode: yellow
+    messages:
+    - vera-dan-uzhe-pora-pereodevat-sya
+    - remarka-danya-stavit-ryukzak-ryadom
+    question: Что изменилось для тебя сейчас?
+    choices:
+      observe-ease: Форма нашлась. Пора на урок.
+      observe-watch: Сегодня рюкзак вернули. На следующей перемене обращу внимание, где он лежит.
+    review:
+      signals:
+      - pressure/danya-proydyosh-nash-kvest
+      - pressure/misha-kakoy-eschyo-kvest-mne
+      effect: Рюкзак вернули. Миша может сам достать свои вещи.
+  observe-ease:
+    mode: yellow
+    messages:
+    - vera-ya-v-zal-vy
+    - remarka-v-razdevalke-zvonit-zvonok
+    outcome:
+    - positive
+    - Рюкзак вернулся к хозяину до звонка
+    note: Рюкзак вернули. Миша может сам достать свои вещи.
+    review:
+      signals:
+      - observe/remarka-danya-stavit-ryukzak-ryadom
+      effect: Рюкзак вернули. Миша может сам достать свои вещи.
+  observe-watch:
+    mode: orange
+    messages:
+    - vera-ya-v-zal-vy
+    - remarka-v-razdevalke-zvonit-zvonok
+    outcome:
+    - positive
+    - Рюкзак вернулся к хозяину до звонка
+    note: Рюкзак вернули. Миша может сам достать свои вещи.
+    review:
+      signals:
+      - observe/remarka-danya-stavit-ryukzak-ryadom
+      effect: Сегодня рюкзак вернули. На следующей перемене обращу внимание, где он лежит.
+  focus:
+    mode: orange
+    messages:
+    - vera-dan-uzhe-pora-pereodevat-sya
+    - remarka-danya-stavit-ryukzak-ryadom
+    question: Что изменилось для тебя сейчас?
+    choices:
+      focus-ease: Форма нашлась. Пора на урок.
+      focus-watch: Сегодня рюкзак вернули. На следующей перемене обращу внимание, где он лежит.
+    review:
+      signals:
+      - pressure/danya-proydyosh-nash-kvest
+      - pressure/misha-kakoy-eschyo-kvest-mne
+      effect: Рюкзак вернули. Миша может сам достать свои вещи.
+  focus-ease:
+    mode: yellow
+    messages:
+    - vera-ya-v-zal-vy
+    - remarka-v-razdevalke-zvonit-zvonok
+    outcome:
+    - positive
+    - Рюкзак вернулся к хозяину до звонка
+    note: Рюкзак вернули. Миша может сам достать свои вещи.
+    review:
+      signals:
+      - focus/remarka-danya-stavit-ryukzak-ryadom
+      effect: Рюкзак вернули. Миша может сам достать свои вещи.
+  focus-watch:
+    mode: orange
+    messages:
+    - vera-ya-v-zal-vy
+    - remarka-v-razdevalke-zvonit-zvonok
+    outcome:
+    - positive
+    - Рюкзак вернулся к хозяину до звонка
+    note: Рюкзак вернули. Миша может сам достать свои вещи.
+    review:
+      signals:
+      - focus/remarka-danya-stavit-ryukzak-ryadom
+      effect: Сегодня рюкзак вернули. На следующей перемене обращу внимание, где он лежит.
+  calm-watch:
+    mode: orange
+    messages:
+    - vera-poshli-v-zal-eschyo
+    outcome:
+    - positive
+    - Рюкзак вернули до звонка
+    note: Миша получил рюкзак и достал форму до урока. На этот раз никто не потребовал пройти квест.
+cues:
+  pressure/danya-proydyosh-nash-kvest: Даня поставил условие, прежде чем вернуть чужую вещь.
+  pressure/misha-kakoy-eschyo-kvest-mne: Миша говорит, что это повторилось.
+  ignore/misha-kost-ty-slyshal-kuda: Теперь к тебе обратились напрямую.
+  observe/remarka-danya-stavit-ryukzak-ryadom: Рюкзак вернули. Миша может сам достать свои вещи.
+  focus/remarka-danya-stavit-ryukzak-ryadom: Рюкзак вернули. Миша может сам достать свои вещи.

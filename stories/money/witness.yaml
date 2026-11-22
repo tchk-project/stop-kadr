@@ -1,0 +1,356 @@
+scenes:
+  start:
+    mode: yellow
+    messages:
+    - danya-rebyat-po-sotke-na
+    - sasha-ya-v-etot-raz
+    question: Саша отказался. Посмотри, как Даня на это ответит.
+    choices:
+      pressure: Читать дальше
+      calm: Посмотреть спокойный дубль
+  pressure:
+    mode: yellow
+    messages:
+    - danya-togda-s-tebya-dvesti
+    - sasha-mish-oni-vchera-tozhe
+    continuation: Даня настаивает
+    question: До звонка ещё есть время. Что ты сделаешь?
+    choices:
+      check: Напишу Саше. Узнаю, где он хочет встретиться.
+      ignore: Да сами разберутся. [[Закрою чат]].
+      pay: Предложу заплатить за Сашу. Может, отстанут.
+      observe: Может, Даня передумает. Посмотрю, что он скажет дальше.
+      focus: После отказа сумма удвоилась. Дочитаю, что Даня напишет про встречу.
+  ignore:
+    mode: white
+    messages:
+    - remarka-ty-zakryl-chat-posle
+    - sasha-mish-ty-uzhe-ushyol
+    question: Саша всё ещё ждёт ответа. Как поступишь теперь?
+    choices:
+      back-in: '[[Всё-таки отвечу]]. Спрошу, куда к нему подойти.'
+      silence: Уберу телефон и пойду домой.
+    review:
+      miss: true
+      signals:
+      - pressure/danya-togda-s-tebya-dvesti
+      - pressure/sasha-mish-oni-vchera-tozhe
+      effect: Ты закрыл чат. Саша остался у кабинета и написал ещё раз, потому что не знал, придёшь ли ты.
+      repair: back-in
+      recovery: Позже ты всё-таки ответил, спросил, куда подойти, и побыл рядом.
+  silence:
+    mode: white
+    messages:
+    - sasha-ya-trenera-u-kabineta
+    - sasha-ya-dumal-ty-hot
+    outcome:
+    - negative
+    - Саша ждал тебя и искал помощь сам
+    note: Ты слышал условие про двести и получил прямую просьбу. Пока ответа не было, Саша оставался у кабинета и не знал, придёшь ли ты. За угрозу отвечает Даня. Миша мог хотя бы ответить Саше.
+    review:
+      miss: true
+      signals:
+      - ignore/sasha-mish-ty-uzhe-ushyol
+      effect: Ты ушёл домой. Саша сам дождался тренера. До последнего он не знал, стоит ли ждать ещё и тебя.
+  back-in:
+    mode: orange
+    messages:
+    - ty-sash-ya-tut-zrya
+    - sasha-k-kabinetu-geografii-ya
+    - ty-aga-uzhe-na-lestnitse
+    question: Ты подошёл. В коридоре показались Вера с тренером.
+    choices:
+      together: Останусь, пока Саша сам поговорит с тренером.
+  together:
+    mode: yellow
+    messages:
+    - sasha-spasibo-chto-prishyol-ya
+    - remarka-vy-sidite-u-kabineta
+    outcome:
+    - positive
+    - Саша дождался помощи вместе с тобой
+    note: Миша сначала отмахнулся, а потом вернулся и спросил, что нужно. Саша сам выбрал, кто побудет рядом и кто расскажет тренеру.
+  pay:
+    mode: orange
+    messages:
+    - ty-dan-davay-ya-za
+    - danya-mish-ya-zhe-skazal
+    - sasha-ya-ne-prosil-platit
+    outcome:
+    - mixed
+    - Миша заметил давление, но Саша всё ещё ждёт ответа
+    note: Ты попытался снять напряжение деньгами. Условие осталось в силе, и Саше пришлось снова спросить о том, что ему важно. В личке он просил о компании.
+    review:
+      miss: true
+      signals:
+      - pressure/danya-togda-s-tebya-dvesti
+      - pressure/sasha-mish-oni-vchera-tozhe
+      effect: Ты предложил деньги. Даня продолжил требовать двести, а Саше пришлось второй раз просить тебя выйти вместе.
+  check:
+    mode: orange
+    messages:
+    - ty-da-podozhdu-ty-gde
+    - sasha-u-razdevalki-danya-vstal
+    - remarka-ty-u-sportzala-v
+    question: Саше перекрыли выход. Тренер в нескольких шагах. Что сделаешь?
+    choices:
+      call: Сразу скажу тренеру, у какой двери Саша.
+      send-vera: Попрошу Веру отвести тренера к Саше. Сам останусь с ним на связи.
+      doubt: Да это Даня [[прикалывается]]. Уберу телефон.
+      meet-at-door: Саша ждёт меня. Расскажу тренеру и подойду к двери вместе с ним.
+    review:
+      signals:
+      - pressure/danya-togda-s-tebya-dvesti
+      - pressure/sasha-mish-oni-vchera-tozhe
+      effect: Ты согласился подождать и спросил, где Саша. Так ты узнал, что происходит у раздевалки.
+  doubt:
+    mode: white
+    messages:
+    - sasha-mish-skazhi-treneru-pozhaluysta
+    - remarka-ty-snova-vidish-soobschenie
+    question: Саша прямо попросил позвать тренера.
+    choices:
+      late-call: Подойду к тренеру и покажу сообщение.
+    review:
+      miss: true
+      signals:
+      - check/sasha-u-razdevalki-danya-vstal
+      - check/remarka-ty-u-sportzala-v
+      effect: Ты решил, что Даня прикалывается. Саша всё ещё не мог выйти и был вынужден попросить о помощи ещё раз.
+      repair: late-call
+      recovery: Потом ты показал тренеру сообщение и назвал место. Тренер подошёл к Саше.
+  late-call:
+    mode: red
+    messages:
+    - ty-posmotrite-sasha-u-razdevalki
+    - trener-ponyal-idu-tuda
+    - sasha-on-prishyol-ya-s
+    outcome:
+    - positive
+    - Тренер дошёл до раздевалки
+    note: Саше пришлось попросить ещё раз. Когда ты показал сообщение и назвал место, тренер смог прийти. Вернуться к разговору имело смысл, даже если в первый раз ты отмахнулся.
+  call:
+    mode: red
+    messages:
+    - ty-sasha-u-razdevalki-danya
+    - trener-da-u-razdevalki-ponyal
+    - sasha-vsyo-ya-vyshel-trener
+    question: Саша вышел и сам написал, что рядом тренер. Что ответишь?
+    choices:
+      meet: «Ага, я у зала». Подожду, как он попросил.
+    review:
+      signals:
+      - check/sasha-u-razdevalki-danya-vstal
+      - check/remarka-ty-u-sportzala-v
+      effect: Ты назвал тренеру дверь, у которой стоит Саша. Тренер сразу понял, куда идти.
+  meet:
+    mode: yellow
+    messages:
+    - ty-aga-ya-u-zala
+    - sasha-idu-slushay-davay-zavtra
+    outcome:
+    - positive
+    - Саша вышел и сам договорился с тобой о встрече
+    note: В красном режиме ты позвал человека, который мог помочь сразу. Теперь Саша сам подтвердил, что проход свободен. Можно выдохнуть и просто побыть рядом.
+    review:
+      signals:
+      - call/sasha-vsyo-ya-vyshel-trener
+      effect: Саша уже вышел и попросил дождаться его у зала. Ты ответил, где будешь.
+  send-vera:
+    mode: red
+    messages:
+    - ty-ver-otvedi-trenera-k
+    - vera-ponyala-my-idyom
+    - ty-sash-trener-uzhe-idyot
+    - sasha-vizhu-ih-da-vyshel
+    outcome:
+    - positive
+    - Вера привела тренера, а Саша знал, что помощь идёт
+    note: 'Ты обратился к конкретному человеку, назвал место и дождался ответа от Саши. Ты видел непосредственную угрозу: Саше перекрыли выход. Вера с тренером подошли, и Саша сам подтвердил, что вышел.'
+    review:
+      signals:
+      - check/sasha-u-razdevalki-danya-vstal
+      - check/remarka-ty-u-sportzala-v
+      effect: Вера отвела тренера к нужной двери, а ты остался с Сашей на связи.
+  calm:
+    mode: yellow
+    messages:
+    - danya-ok-sash-vycherknul-ver
+    - vera-sem-sot-na-otkrytku-hvatit
+    continuation: Даня принимает отказ
+    question: Сбор продолжается. Как ты понял ответ Дани?
+    choices:
+      calm-end: Отказ приняли. Дочитаю чат.
+      ask: Хочу узнать у Саши, как он сам это воспринял.
+      calm-watch: Даня принял отказ. Посмотрю, попросят ли ещё денег.
+  calm-end:
+    mode: yellow
+    messages:
+    - sasha-otkrytku-potom-prinesite-na
+    - danya-aga-zahvachu
+    outcome:
+    - positive
+    - Саша сам выбрал, как участвовать
+    note: Даня принял отказ, деньги больше не требовал. Саша остался в разговоре и предложил подписать открытку. Здесь можно было спокойно наблюдать.
+  ask:
+    mode: orange
+    messages:
+    - ty-sash-ya-pro-sbor
+    - sasha-aga-ya-na-butsy
+    question: Саша ответил за себя. Что ему напишешь?
+    choices:
+      ease: «Увидимся». Вернусь к своим делам.
+  ease:
+    mode: yellow
+    messages:
+    - ty-uvidimsya-myach-tol-ko-ne
+    - sasha-uzhe-v-ryukzake
+    outcome:
+    - positive
+    - Разговор вернулся к тренировке
+    note: Саша сам рассказал столько, сколько хотел. Его ответ дал повод снизить настороженность и переключиться на обычный разговор.
+  observe:
+    mode: yellow
+    messages:
+    - trener-pro-podarok-uvidel-sash
+    - sasha-da-ya-s-vami
+    question: Что изменилось для тебя сейчас?
+    choices:
+      observe-ease: Тренер уже рядом. Сейчас можно выдохнуть.
+      observe-watch: Сейчас Саша с тренером. Запомню про деньги на случай, если Даня снова потребует.
+    review:
+      signals:
+      - pressure/danya-togda-s-tebya-dvesti
+      - pressure/sasha-mish-oni-vchera-tozhe
+      effect: Саша подтвердил, что тренер рядом. Слова Дани про деньги при этом никуда не делись.
+  observe-ease:
+    mode: yellow
+    messages:
+    - remarka-trener-i-sasha-vmeste
+    outcome:
+    - positive
+    - Саша выходит из школы с тренером
+    note: Саша подтвердил, что тренер рядом. Слова Дани про деньги при этом никуда не делись.
+    review:
+      signals:
+      - observe/sasha-da-ya-s-vami
+      effect: Саша подтвердил, что тренер рядом. Слова Дани про деньги при этом никуда не делись.
+  observe-watch:
+    mode: orange
+    messages:
+    - remarka-trener-i-sasha-vmeste
+    outcome:
+    - positive
+    - Саша выходит из школы с тренером
+    note: Саша подтвердил, что тренер рядом. Слова Дани про деньги при этом никуда не делись.
+    review:
+      signals:
+      - observe/sasha-da-ya-s-vami
+      effect: Сейчас Саша с тренером. Запомню про деньги на случай, если Даня снова потребует.
+  focus:
+    mode: orange
+    messages:
+    - trener-pro-podarok-uvidel-sash
+    - sasha-da-ya-s-vami
+    question: Что изменилось для тебя сейчас?
+    choices:
+      focus-ease: Тренер уже рядом. Сейчас можно выдохнуть.
+      focus-watch: Сейчас Саша с тренером. Запомню про деньги на случай, если Даня снова потребует.
+    review:
+      signals:
+      - pressure/danya-togda-s-tebya-dvesti
+      - pressure/sasha-mish-oni-vchera-tozhe
+      effect: Саша подтвердил, что тренер рядом. Слова Дани про деньги при этом никуда не делись.
+  focus-ease:
+    mode: yellow
+    messages:
+    - remarka-trener-i-sasha-vmeste
+    outcome:
+    - positive
+    - Саша выходит из школы с тренером
+    note: Саша подтвердил, что тренер рядом. Слова Дани про деньги при этом никуда не делись.
+    review:
+      signals:
+      - focus/sasha-da-ya-s-vami
+      effect: Саша подтвердил, что тренер рядом. Слова Дани про деньги при этом никуда не делись.
+  focus-watch:
+    mode: orange
+    messages:
+    - remarka-trener-i-sasha-vmeste
+    outcome:
+    - positive
+    - Саша выходит из школы с тренером
+    note: Саша подтвердил, что тренер рядом. Слова Дани про деньги при этом никуда не делись.
+    review:
+      signals:
+      - focus/sasha-da-ya-s-vami
+      effect: Сейчас Саша с тренером. Запомню про деньги на случай, если Даня снова потребует.
+  calm-watch:
+    mode: orange
+    messages:
+    - sasha-otkrytku-potom-prinesite-na
+    - danya-aga-zahvachu
+    outcome:
+    - positive
+    - Саша сам выбрал, как участвовать
+    note: Даня принял отказ, деньги больше не требовал. Саша остался в разговоре и предложил подписать открытку. Здесь можно было спокойно наблюдать.
+  meet-at-door:
+    mode: red
+    messages:
+    - ty-trener-sasha-u-razdevalki
+    - remarka-vy-podhodite-vmeste-trener
+    - danya-sash-a-den-gi
+    - remarka-sasha-ostanovilsya-guby-shevel-nulis
+    - trener-dver-svobodna-ya-zdes
+    question: Ты видишь Сашу у двери. Что предложишь?
+    choices:
+      meet-at-door-next-0: «Саш, вместе выйдем?» Подожду, пока он ответит.
+      meet-at-door-next-1: Скажу, что могу остаться с ним у тренера.
+    review:
+      signals:
+      - check/sasha-u-razdevalki-danya-vstal
+      - check/remarka-ty-u-sportzala-v
+      effect: Саша заранее просил тебя побыть рядом. Он смог ответить жестом, когда ты предложил конкретный вариант.
+  meet-at-door-next-0:
+    mode: orange
+    messages:
+    - remarka-sasha-kivaet-ty-podstraivaesh
+    outcome:
+    - positive
+    - Саша вышел вместе с тобой
+    note: Саша заранее просил тебя побыть рядом. Он смог ответить жестом, когда ты предложил конкретный вариант.
+    review:
+      signals:
+      - meet-at-door/trener-dver-svobodna-ya-zdes
+      effect: Саша кивает. Ты подстраиваешь шаг, и вы идёте рядом.
+  meet-at-door-next-1:
+    mode: orange
+    messages:
+    - remarka-sasha-pokazyvaet-na-skam-yu
+    outcome:
+    - positive
+    - Вы остались рядом с тренером
+    note: Саша заранее просил тебя побыть рядом. Он смог ответить жестом, когда ты предложил конкретный вариант.
+    review:
+      signals:
+      - meet-at-door/trener-dver-svobodna-ya-zdes
+      effect: Саша показывает на скамью. Вы садитесь рядом, тренер остаётся у двери.
+cues:
+  start/sasha-ya-v-etot-raz: Саша отказался. В этот момент ещё неизвестно, как Даня отнесётся к его решению.
+  pressure/danya-togda-s-tebya-dvesti: После отказа цена удвоилась. Именно ответ на «нет» превратил сбор в давление.
+  pressure/sasha-mish-oni-vchera-tozhe: Саша назвал помощь, которая ему нужна.
+  ignore/sasha-mish-ty-uzhe-ushyol: Саша всё ещё у кабинета. Он спрашивает, ждать ли тебя.
+  silence/sasha-ya-dumal-ty-hot: Пока Миша молчал, Саша не знал, может ли на него рассчитывать.
+  pay/sasha-ya-ne-prosil-platit: Миша предложил деньги. Сашина просьба была о другом.
+  check/sasha-u-razdevalki-danya-vstal: Теперь речь о том, что происходит прямо сейчас у конкретной двери.
+  check/remarka-ty-u-sportzala-v: Тренер совсем рядом. Ты можешь точно объяснить ему, где Саша.
+  call/sasha-vsyo-ya-vyshel-trener: Саша сам подтвердил, что вышел и рядом есть взрослый. Появилось основание снизить настороженность.
+  send-vera/sasha-vizhu-ih-da-vyshel: Это подтверждение от самого Саши. Раньше ты знал только, что Вера пошла с тренером.
+  calm/danya-ok-sash-vycherknul-ver: В этом дубле Даня принял отказ и перешёл к общему сбору.
+  ask/sasha-aga-ya-na-butsy: Саша сам объяснил, как воспринял ответ. Первое впечатление можно пересмотреть.
+  observe/sasha-da-ya-s-vami: Саша подтвердил, что тренер рядом. Слова Дани про деньги при этом никуда не делись.
+  focus/sasha-da-ya-s-vami: Саша подтвердил, что тренер рядом. Слова Дани про деньги при этом никуда не делись.
+  meet-at-door/trener-dver-svobodna-ya-zdes: Саша заранее просил тебя побыть рядом. Он смог ответить жестом, когда ты предложил конкретный вариант.
+  ignore/@choice: Жёлтый → белый. У тебя уже есть два сигнала, но ты решил закрыть переписку. Ситуация у Саши от этого не изменилась.
+  back-in/@choice: Белый → оранжевый. Ты вернулся к просьбе, которую пропустил.
+  doubt/@choice: Оранжевый → белый. Миша решил отмахнуться даже после сообщения о закрытом выходе.

@@ -1,0 +1,22 @@
+id: chest
+title: Последняя коробка
+order: 15
+place: После школьной ярмарки
+article: ./heart-attack.html
+roles:
+  witness:
+    name: Лера
+    viewpoint: Леры
+    intro: После школьной ярмарки вы с папой выносите коробки к машине.
+  self:
+    name: Папа
+    viewpoint: папы Леры
+    intro: Вы с дочкой Лерой выносите коробки после школьной ярмарки.
+cast:
+- Диспетчер
+- Лера
+- Папа
+channels:
+  scene:
+    kind: scene
+    title: ''

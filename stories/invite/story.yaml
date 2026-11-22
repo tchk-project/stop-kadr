@@ -1,0 +1,30 @@
+id: invite
+title: Снова в беседе
+order: 11
+place: Чат одноклассников «После отбоя»
+roles:
+  witness:
+    name: Лера
+    viewpoint: Леры
+    intro: Ты в беседе «После отбоя». Ребята собирают команду на ночной турнир.
+  self:
+    name: Аня
+    viewpoint: Ани
+    intro: В беседе «После отбоя» собирают команду на турнир. Ты решаешь выйти из чата.
+cast:
+- Аня
+- Вера
+- Даня
+- Костя
+- Лера
+- Миша
+channels:
+  chat-posle-otboya:
+    kind: group
+    title: Чат «После отбоя»
+  lichnaya-perepiska-s-aney:
+    kind: private
+    title: Личная переписка с Аней
+  lichnaya-perepiska-s-veroy:
+    kind: private
+    title: Личная переписка с Верой

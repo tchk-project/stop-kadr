@@ -1,0 +1,30 @@
+id: project
+title: В списке авторов
+order: 3
+place: Командный проект
+roles:
+  witness:
+    name: Лера
+    viewpoint: Леры
+    intro: Через пять минут защита. Тебя попросили открыть презентацию на школьном ноутбуке.
+  self:
+    name: Тимур
+    viewpoint: Тимура
+    intro: Вы с ребятами готовили проект о школьном дворе. Скоро ваша очередь выступать.
+cast:
+- Аня
+- Вера
+- Лера
+- Марина Сергеевна
+- Миша
+- Тимур
+channels:
+  chat-proekta:
+    kind: group
+    title: Чат проекта
+  scene:
+    kind: scene
+    title: ''
+  lichnaya-perepiska-s-timurom:
+    kind: private
+    title: Личная переписка с Тимуром

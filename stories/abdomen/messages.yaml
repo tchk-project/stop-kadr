@@ -1,0 +1,59 @@
+misha-tim-u-nas-eschyo:
+  speaker: Миша
+  channel: scene
+  caption: У раздевалки школьного стадиона
+  text: Тим, у нас ещё есть время до выхода на поле?
+timur-minut-desyat-ty-chego:
+  speaker: Тимур
+  text: Минут десять. Ты чего на ступеньках сидишь?
+misha-shnurok-v-uzel-zatyanulsya:
+  speaker: Миша
+  text: Шнурок в узел затянулся. Всё, распутал.
+timur-derzhi-manishku-ya-tvoyu:
+  speaker: Тимур
+  text: Держи манишку, я твою тоже взял.
+remarka-rebyata-dognali-komandu-u:
+  speaker: Ремарка
+  text: Ребята догнали команду у ворот.
+misha-s-utra-u-pupka:
+  speaker: Миша
+  text: С утра у пупка ныло. Теперь справа внизу [[так сильно болит, что шагнуть больно]]. И мутит.
+remarka-misha-probuet-vstat-i:
+  speaker: Ремарка
+  text: Миша пробует встать и садится обратно.
+misha-tol-ko-treneru-ne-govori:
+  speaker: Миша
+  text: Только тренеру не говори. [[Меня ж снимут с игры]]. Я потерплю.
+remarka-misha-boitsya-propustit-igru:
+  speaker: Ремарка
+  text: '[[Миша боится пропустить игру. Он по-прежнему с трудом встаёт.]]'
+remarka-sil-naya-narastayuschaya-bol-v:
+  speaker: Ремарка
+  text: Сильная нарастающая боль в животе требует экстренной оценки. Так может проявляться аппендицит. Даже если место боли другое, сильная боль сама по себе — повод вызвать скорую. В России можно позвонить 103 или 112.
+remarka-timur-nabiraet-103-i:
+  speaker: Ремарка
+  text: Тимур набирает 103 и называет город, улицу и номер школы.
+ty-my-u-razdevalki-shkol-nogo:
+  speaker: Ты
+  text: Мы у раздевалки школьного стадиона, вход через калитку у поля.
+dispetcher-chto-sluchilos:
+  speaker: Диспетчер
+  text: '[[Что случилось]]?'
+ty-drugu-15-let-s:
+  speaker: Ты
+  text: Другу 15 лет. С утра у него болел живот около пупка, сейчас сильно болит справа внизу. Ему больно двигаться, его тошнит.
+dispetcher-brigada-napravlena-ostavaytes-na:
+  speaker: Диспетчер
+  text: Бригада направлена. Оставайтесь на линии.
+remarka-timur-ostayotsya-s-mishey:
+  speaker: Ремарка
+  text: Тимур остаётся с Мишей. Тренер встречает бригаду у калитки.
+timur-my-u-razdevalki-shkol-nogo:
+  speaker: Тимур
+  text: Мы у раздевалки школьного стадиона, вход через калитку у поля.
+ty-tim-skazhi-chto-snachala:
+  speaker: Ты
+  text: Тим, скажи, что сначала болело у пупка, а теперь справа внизу. Мне даже встать больно.
+timur-mishe-15-let-on:
+  speaker: Тимур
+  text: Мише 15 лет. Он говорит, что с утра болело у пупка, а теперь сильно болит справа внизу и тошнит. Когда попробовал встать, снова сел.

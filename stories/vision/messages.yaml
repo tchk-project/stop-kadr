@@ -1,0 +1,91 @@
+marina-sergeevna-timur-poderzhi-afishu:
+  speaker: Марина Сергеевна
+  channel: scene
+  caption: Вестибюль школы · 12:25
+  text: Тимур, подержи афишу, я посмотрю, ровно ли висит.
+timur-derzhu-zdes-svetlee-chem:
+  speaker: Тимур
+  text: Держу. Здесь светлее, чем у окна.
+timur-tak-tut-dva-lista:
+  speaker: Тимур
+  text: Так тут два листа! Старый под новым торчит.
+remarka-timur-vyravnivaet-listy-na:
+  speaker: Ремарка
+  text: Тимур выравнивает листы. На каждой афише по одной чёткой строчке. Марина Сергеевна ровно стоит рядом.
+remarka-staruyu-afishu-ubrali-marina:
+  speaker: Ремарка
+  text: Старую афишу убрали. Марина Сергеевна читает дату на новом листе.
+marina-sergeevna-stranno-vot-tol-ko:
+  speaker: Марина Сергеевна
+  text: Странно. Вот только что видела одну строчку, а [[теперь всё двоится]].
+remarka-uchitel-nitsa-poshatnulas-i-vzyalas:
+  speaker: Ремарка
+  text: Учительница пошатнулась и взялась за спинку скамьи. Говорит она по-прежнему чётко. Вера стоит рядом.
+remarka-marina-sergeevna-sidit-na:
+  speaker: Ремарка
+  text: '[[Марина Сергеевна сидит на скамье. Говорит, что буквы больше не двоятся.]]'
+remarka-pri-takih-vnezapnyh-priznakah:
+  speaker: Ремарка
+  text: При таких внезапных признаках скорую вызывают сразу, даже если стало легче. В России — 103 или 112.
+remarka-vyzov-112-prinyat:
+  speaker: Ремарка
+  text: Вызов 112 принят.
+ty-u-uchitel-nitsy-vnezapno-dvoitsya:
+  speaker: Ты
+  channel: scene
+  caption: Разговор с диспетчером 112
+  text: У учительницы внезапно двоится в глазах, она теряет равновесие. Мы в вестибюле школы.
+remarka-dispetcheru-nazyvayut-gorod-ulitsu:
+  speaker: Ремарка
+  text: Диспетчеру называют город, улицу, номер дома и вход в школу.
+dispetcher-zapisal-adres-shkoly-i:
+  speaker: Диспетчер
+  text: Записал адрес школы и куда подойти. [[Когда это началось]]?
+ty-v-12-25-my-veshali:
+  speaker: Ты
+  text: В 12:25 мы вешали афишу. Сразу после этого Марина Сергеевна пошатнулась и взялась за спинку скамьи.
+dispetcher-brigada-napravlena-ostavaytes-na:
+  speaker: Диспетчер
+  text: Бригада направлена. Оставайтесь на связи, я скажу, что делать до её приезда.
+remarka-ryadom-s-toboy-nabrali:
+  speaker: Ремарка
+  text: Рядом с тобой набрали 112.
+vera-u-uchitel-nitsy-vnezapno-dvoitsya:
+  speaker: Вера
+  channel: scene
+  caption: Разговор с диспетчером 112
+  text: У учительницы внезапно двоится в глазах, она теряет равновесие. Мы в вестибюле школы.
+ty-my-kak-raz-veshali:
+  speaker: Ты
+  text: Мы как раз вешали афишу. В 12:25 всё было как обычно.
+vera-v-12-25-my-veshali:
+  speaker: Вера
+  text: В 12:25 мы вешали афишу. Сразу после этого Марина Сергеевна пошатнулась и взялась за спинку скамьи.
+ty-seychas-stalo-luchshe-rasskazhu:
+  speaker: Ты
+  text: Сейчас стало лучше. Расскажу, какие признаки были вначале.
+remarka-tol-ko-chto-ty-videla:
+  speaker: Ремарка
+  text: Только что ты видела одну афишу. Теперь [[буквы вдруг двоятся]]. Ты теряешь равновесие и хватаешься за спинку скамьи.
+timur-davayte-ya-pobudu-ryadom:
+  speaker: Тимур
+  text: Давайте я побуду рядом. У меня телефон.
+remarka-poka-ty-sidish-bukvy:
+  speaker: Ремарка
+  text: '[[Пока ты сидишь, буквы снова сходятся в одну строчку. Тимур рядом.]]'
+ty-u-menya-vnezapno-stalo:
+  speaker: Ты
+  channel: scene
+  caption: Разговор с диспетчером 112
+  text: У меня внезапно стало двоиться в глазах и трудно удержать равновесие. Я сижу в школьном вестибюле.
+ty-v-12-25-ya-eschyo:
+  speaker: Ты
+  text: В 12:25 я ещё видела одну афишу. Сразу после этого буквы раздвоились, и я пошатнулась.
+timur-u-uchitel-nitsy-vnezapno-zadvoilis:
+  speaker: Тимур
+  channel: scene
+  caption: Разговор с диспетчером 112
+  text: У учительницы внезапно задвоились буквы и нарушилось равновесие. Мы в школьном вестибюле.
+timur-v-12-25-my-veshali:
+  speaker: Тимур
+  text: В 12:25 мы вешали афишу. Сразу после этого Марина Сергеевна пошатнулась и взялась за спинку скамьи.

@@ -1,0 +1,209 @@
+scenes:
+  start:
+    mode: yellow
+    messages:
+    - ty-rebyat-zavtra-vstrechaemsya-v
+    - danya-sticker-3
+    - ty-dan-mozhesh-bol-she-ne
+    choices:
+      pressure: Читать дальше
+      calm: Спокойный дубль
+  pressure:
+    mode: yellow
+    messages:
+    - ty-my-uzhe-na-meste
+    - danya-sticker-4
+    - ty-ya-emu-vchera-napisala
+    - vera-u-menya-kley-ya
+    continuation: true
+    question: Вера предложила помощь. Что ответишь?
+    choices:
+      pressure-act-0: В общем чате пока не ответили про клей. Попрошу Веру написать только об этом.
+      alternative: Похоже, он не понимает, как это звучит. Попрошу Веру пошутить в ответ.
+      pressure-act-1: Кот появился снова после моей просьбы. Поговорю с админом вместе с Верой.
+      observe: Может, сейчас ответят про клей. Секунду почитаю чат.
+      focus: Кот уже второй раз под голосовым. Посмотрю, ответит ли кто-нибудь про клей.
+  pressure-act-0:
+    mode: orange
+    messages:
+    - ty-da-napishi-v-klasse
+    - vera-ler-kley-u-menya
+    - ty-o-super-my-za
+    outcome:
+    - positive
+    - Клей нашёлся, ваша переписка осталась в личке
+    note: Вера написала только про клей, как ты просила. Ваша переписка осталась между вами. Даня пока не ответил на просьбу прекратить со стикерами.
+    review:
+      signals:
+      - pressure/ty-ya-emu-vchera-napisala
+      effect: Вера написала только про клей, как ты просила. Ваша переписка осталась между вами. Даня пока не ответил на просьбу прекратить со стикерами.
+  pressure-act-1:
+    mode: orange
+    messages:
+    - ty-spasibo-a-posle-stengazety
+    - vera-davay-podozhdu-tebya-poka
+    - ty-dogovorilis-tut-glavnoe
+    outcome:
+    - positive
+    - Вера поможет тебе после стенгазеты
+    note: Вера согласилась побыть рядом. Какие сообщения показать и что попросить у админа, ты сможешь решить сама.
+    review:
+      signals:
+      - pressure/ty-ya-emu-vchera-napisala
+      effect: Вера согласилась побыть рядом. Какие сообщения показать и что попросить у админа, ты сможешь решить сама.
+  alternative:
+    mode: orange
+    messages:
+    - ty-ver-mozhesh-tozhe-nad
+    - vera-dan-a-ty-u
+    - danya-a-ty-zdes-pri
+    - vera-on-teper-i-mne
+    question: Что тебе сейчас подходит?
+    choices:
+      follow-up: Договориться с Верой в личке
+      pause: Закончить этот дубль здесь
+    review:
+      signals:
+      - pressure/ty-ya-emu-vchera-napisala
+      effect: Вера попробовала пошутить в ответ, и Даня стал выяснять отношения ещё и с ней. За его стикеры отвечает он. Вы с Верой всё ещё можете остановить перепалку и решить между собой, что делать дальше.
+      miss: false
+  follow-up:
+    mode: orange
+    messages:
+    - ty-ver-davay-bol-she-emu
+    - vera-da-nesu-pro-kotov
+    outcome:
+    - positive
+    - Лера и Вера вернулись к стенгазете
+    note: Вы договорились про клей и отложили разговор о стикерах до конца работы.
+    review:
+      signals:
+      - alternative/vera-on-teper-i-mne
+      effect: Вы договорились про клей и отложили разговор о стикерах до конца работы.
+  pause:
+    mode: orange
+    messages:
+    - remarka-na-etom-dubl-zakanchivaetsya
+    outcome:
+    - mixed
+    - Веру тоже втянули в ссору
+    note: Вера попробовала пошутить в ответ, и Даня стал выяснять отношения ещё и с ней. За его стикеры отвечает он. Вы с Верой всё ещё можете остановить перепалку и решить между собой, что делать дальше.
+    review:
+      signals:
+      - alternative/vera-on-teper-i-mne
+      effect: Можно взять паузу. Решать, возвращаться ли к этому разговору, по-прежнему тебе.
+  calm:
+    mode: yellow
+    messages:
+    - lera-my-uzhe-na-meste
+    - danya-ya-kley-prinesu-odin
+    continuation: true
+    question: Как продолжишь?
+    choices:
+      calm-end: Посмотреть, что будет дальше
+      ask: Договориться, куда принести клей
+      calm-watch: На вопрос про клей ответили. Посмотрю, вернётся ли шутка.
+  calm-end:
+    mode: yellow
+    messages:
+    - lera-hvatit-my-u-kabineta
+    outcome:
+    - positive
+    - Лере ответили про клей
+    note: Сегодня Даня ответил на вопрос из голосового. Лере больше не пришлось искать клей.
+  ask:
+    mode: yellow
+    messages:
+    - ty-hvatit-nesi-pryamo-k
+    - danya-begu
+    outcome:
+    - positive
+    - Клей принесут к кабинету
+    note: Ребята договорились, кто принесёт материалы. В этот раз обсуждают стенгазету.
+  observe:
+    mode: yellow
+    messages:
+    - anya-rebyat-vy-golosovoe-slushali
+    - danya-u-menya-tyubik-seychas
+    question: Что изменилось для тебя сейчас?
+    choices:
+      observe-ease: С клеем разобрались. Вернусь к стенгазете.
+      observe-watch: Посмотрю, ответит ли Даня ещё и про кота.
+    review:
+      signals:
+      - pressure/ty-ya-emu-vchera-napisala
+      effect: Появился ответ на вопрос из голосового. Про вчерашнюю просьбу Даня пока ничего не сказал.
+  observe-ease:
+    mode: yellow
+    messages:
+    - remarka-danya-kladyot-kley-na
+    outcome:
+    - mixed
+    - Клей принесли. Услышал ли Даня просьбу Леры — пока непонятно
+    note: Появился ответ на вопрос из голосового. Про вчерашнюю просьбу Даня пока ничего не сказал.
+    review:
+      signals:
+      - observe/danya-u-menya-tyubik-seychas
+      effect: Появился ответ на вопрос из голосового. Про вчерашнюю просьбу Даня пока ничего не сказал.
+  observe-watch:
+    mode: orange
+    messages:
+    - remarka-danya-kladyot-kley-na
+    outcome:
+    - mixed
+    - Клей принесли. Услышал ли Даня просьбу Леры — пока непонятно
+    note: Появился ответ на вопрос из голосового. Про вчерашнюю просьбу Даня пока ничего не сказал.
+    review:
+      signals:
+      - observe/danya-u-menya-tyubik-seychas
+      effect: Посмотрю, ответит ли Даня ещё и про кота.
+  focus:
+    mode: orange
+    messages:
+    - anya-rebyat-vy-golosovoe-slushali
+    - danya-u-menya-tyubik-seychas
+    question: Что изменилось для тебя сейчас?
+    choices:
+      focus-ease: С клеем разобрались. Вернусь к стенгазете.
+      focus-watch: Посмотрю, ответит ли Даня ещё и про кота.
+    review:
+      signals:
+      - pressure/ty-ya-emu-vchera-napisala
+      effect: Появился ответ на вопрос из голосового. Про вчерашнюю просьбу Даня пока ничего не сказал.
+  focus-ease:
+    mode: yellow
+    messages:
+    - remarka-danya-kladyot-kley-na
+    outcome:
+    - mixed
+    - Клей принесли. Услышал ли Даня просьбу Леры — пока непонятно
+    note: Появился ответ на вопрос из голосового. Про вчерашнюю просьбу Даня пока ничего не сказал.
+    review:
+      signals:
+      - focus/danya-u-menya-tyubik-seychas
+      effect: Появился ответ на вопрос из голосового. Про вчерашнюю просьбу Даня пока ничего не сказал.
+  focus-watch:
+    mode: orange
+    messages:
+    - remarka-danya-kladyot-kley-na
+    outcome:
+    - mixed
+    - Клей принесли. Услышал ли Даня просьбу Леры — пока непонятно
+    note: Появился ответ на вопрос из голосового. Про вчерашнюю просьбу Даня пока ничего не сказал.
+    review:
+      signals:
+      - focus/danya-u-menya-tyubik-seychas
+      effect: Посмотрю, ответит ли Даня ещё и про кота.
+  calm-watch:
+    mode: orange
+    messages:
+    - lera-hvatit-my-u-kabineta
+    outcome:
+    - positive
+    - Лере ответили про клей
+    note: Сегодня Даня ответил на вопрос из голосового. Лере больше не пришлось искать клей.
+cues:
+  pressure/ty-ya-emu-vchera-napisala: Лера уже просила об этом в личке. Сегодня тот же кот снова появился под голосовым.
+  alternative/vera-on-teper-i-mne: Вера сказала в личке, что теперь Даня пишет и ей. Лера может выбрать, продолжать ли перепалку.
+  observe/danya-u-menya-tyubik-seychas: Появился ответ на вопрос из голосового. Про вчерашнюю просьбу Даня пока ничего не сказал.
+  focus/danya-u-menya-tyubik-seychas: Появился ответ на вопрос из голосового. Про вчерашнюю просьбу Даня пока ничего не сказал.

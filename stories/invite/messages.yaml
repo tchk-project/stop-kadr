@@ -1,0 +1,152 @@
+misha-kto-zavtra-v-nochnoy:
+  speaker: Миша
+  channel: chat-posle-otboya
+  caption: Вчера вечером
+  reactions:
+    🔥:
+    - Даня
+    - Костя
+  text: Кто завтра в ночной турнир? Собираем команды здесь!
+sistema-anya-vyshla-iz-besedy:
+  speaker: Система
+  text: Аня вышла из беседы.
+sistema-kostya-dobavil-anyu-v:
+  speaker: Система
+  text: Костя добавил Аню в беседу.
+kostya-ty-pohozhe-sluchayno-vyshla:
+  speaker: Костя
+  text: Ты, похоже, случайно вышла? Я тебя вернул.
+anya-ya-sama-vyshla-ot:
+  speaker: Аня
+  text: Я сама вышла. От мемов телефон всю ночь жужжит. Я утром на тренировку. [[Больше не добавляйте]], ладно?
+sistema-kostya-dobavil-anyu-v-2:
+  speaker: Система
+  channel: chat-posle-otboya
+  caption: Сегодня вечером
+  text: Костя добавил Аню в беседу.
+kostya-an-nas-pyatero-na:
+  speaker: Костя
+  reactions:
+    🎮:
+    - Даня
+  text: '[[Ань, нас пятеро]]. На один матч останешься?'
+ty-kost-anya-vchera-sama:
+  speaker: Ты
+  channel: chat-posle-otboya
+  text: Кость, Аня вчера сама попросила её не добавлять. Напиши в класс, может, кто хочет на один матч.
+kostya-a-tochno-an-ponyal:
+  speaker: Костя
+  text: А, точно. Ань, понял. Поищу ещё одного.
+ty-an-videla-tebya-opyat:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-aney
+  text: Ань, видела, тебя опять вернули. Хочешь, попрошу Костю больше так не делать?
+anya-ne-nado-poka-ya:
+  speaker: Аня
+  text: Не надо пока. Я просто выйду. Спасибо, что спросила.
+ty-ladno-do-zavtra:
+  speaker: Ты
+  text: Ладно. До завтра!
+ty-an-tol-ko-na-etot:
+  speaker: Ты
+  text: Ань, только на этот турнир останься, ладно? Без тебя команды не сходятся.
+anya-ya-vchera-uzhe-prosila:
+  speaker: Аня
+  text: Я вчера уже просила. Я утром на тренировку.
+anya-ler-ty-zhe-videla:
+  speaker: Аня
+  aside: лично тебе
+  channel: lichnaya-perepiska-s-aney
+  text: Лер, ты же видела, что я вчера написала. Теперь ещё тебе объяснять.
+anya-ler-menya-uzhe-vtoroy:
+  speaker: Аня
+  channel: lichnaya-perepiska-s-aney
+  text: '[[Лер, меня уже второй раз вернули. Ты можешь им сказать, что я точно не играю?]]'
+anya-ya-vere-napisala-ona:
+  speaker: Аня
+  channel: lichnaya-perepiska-s-aney
+  text: Я Вере написала, она передала. Я спать.
+ty-kost-anya-tochno-ne:
+  speaker: Ты
+  channel: chat-posle-otboya
+  text: Кость, Аня точно не играет. Поищи шестого среди тех, кто здесь.
+kostya-ladno-dan-u-tebya:
+  speaker: Костя
+  text: Ладно. Дань, у тебя кто есть?
+anya-ya-sama-vyshla-ot-2:
+  speaker: Аня
+  channel: chat-posle-otboya
+  text: Я сама вышла. От мемов телефон всю ночь жужжит. Больше не добавляйте, ладно?
+kostya-ponyal-an-na-turnir:
+  speaker: Костя
+  text: Понял, Ань. На турнир поищем кого-нибудь ещё.
+danya-ya-s-vami-kuda:
+  speaker: Даня
+  text: Я с вами. Куда записываться?
+ty-kost-ya-mogu-na:
+  speaker: Ты
+  text: Кость, я могу на первую игру.
+kostya-zapisal-ler:
+  speaker: Костя
+  text: Записал, Лер.
+kostya-an-vizhu-vcherashnee-bol-she:
+  speaker: Костя
+  channel: chat-posle-otboya
+  text: Ань, вижу вчерашнее. [[Больше добавлять не буду]]. На шестое место Даню позвал.
+sistema-ty-vyshla-iz-besedy:
+  speaker: Система
+  text: Ты вышла из беседы.
+sistema-kostya-dobavil-tebya-v:
+  speaker: Система
+  text: Костя добавил тебя в беседу.
+ty-ya-sama-vyshla-ot:
+  speaker: Ты
+  text: Я сама вышла. От мемов телефон всю ночь жужжит. Я утром на тренировку. [[Больше не добавляйте]], ладно?
+sistema-kostya-dobavil-tebya-v-2:
+  speaker: Система
+  channel: chat-posle-otboya
+  caption: Сегодня вечером
+  text: Костя добавил тебя в беседу.
+vera-mogu-utrom-kinut-tebe:
+  speaker: Вера
+  channel: lichnaya-perepiska-s-veroy
+  text: Могу утром кинуть тебе расписание игр отдельно. Надо?
+ty-ya-vchera-spetsial-no-vyshla:
+  speaker: Ты
+  channel: chat-posle-otboya
+  text: Я вчера специально вышла. Больше не добавляй меня, пожалуйста.
+sistema-ty-vyshla-iz-besedy-2:
+  speaker: Система
+  channel: chat-posle-otboya
+  text: Ты вышла из беседы.
+ty-ladno-odin-i-vsyo:
+  speaker: Ты
+  channel: chat-posle-otboya
+  text: Ладно, один. И всё, я спать.
+kostya-spasibo-an-togda-ty:
+  speaker: Костя
+  text: Спасибо, Ань! Тогда ты со мной.
+kostya-nu-chto-revansh-sostav:
+  speaker: Костя
+  channel: chat-posle-otboya
+  caption: Через полчаса
+  text: Ну что, [[реванш]]? Состав тот же, я уже нажал.
+remarka-pervyy-match-uzhe-zakonchilsya:
+  speaker: Ремарка
+  text: 'Первый матч уже закончился. Ты смотришь на время и снова набираешь: «Кость, я же на один…»'
+ty-ya-na-odin-soglashalas:
+  speaker: Ты
+  text: Я на один соглашалась. Спокойной ночи.
+remarka-na-etom-dubl-zakanchivaetsya:
+  speaker: Ремарка
+  text: На этом дубль заканчивается.
+remarka-utrom-v-spiske-chatov:
+  speaker: Ремарка
+  text: Утром в списке чатов «После отбоя» больше нет.
+ty-ver-kinesh-mne-zavtra:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-veroy
+  text: Вер, кинешь мне завтра время игры в личку?
+vera-aga-s-utra-prishlyu:
+  speaker: Вера
+  text: Ага, с утра пришлю.

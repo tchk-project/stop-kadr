@@ -1,0 +1,255 @@
+scenes:
+  start:
+    mode: yellow
+    messages:
+    - danya-rebyat-po-sotke-na
+    - sasha-ya-v-etot-raz-2
+    choices:
+      pressure: Читать дальше
+      calm: Спокойный дубль
+  pressure:
+    mode: yellow
+    messages:
+    - danya-togda-s-tebya-dvesti
+    - sasha-mish-oni-vchera-tozhe-2
+    continuation: true
+    question: Последний урок ещё не кончился. Что тебе сейчас подойдёт?
+    choices:
+      pressure-act-0: После отказа мне угрожают встречей. Подойду к дежурной до звонка.
+      alternative: Может, если договорюсь о сотне, меня не будут ждать. Попробую сторговаться.
+      pressure-act-1: У выхода меня обещали ждать. Напишу маме и дождусь её у учительской.
+      observe: Может, Даня передумает. Посмотрю, что он скажет дальше.
+      focus: После отказа сумма удвоилась. Дочитаю, что Даня напишет про встречу.
+      meet-at-door: Даня обещал ждать у раздевалки. Договорюсь с Мишей, где он меня встретит.
+  pressure-act-0:
+    mode: red
+    messages:
+    - ty-marina-sergeevna-s-menya
+    - marina-sergeevna-konechno-davay-zdes
+    - ty-ya-sam-mame-napishu
+    - marina-sergeevna-da-ya-zdes
+    outcome:
+    - positive
+    - Марина Сергеевна остаётся с тобой
+    note: Дежурная услышала, чего ты опасаешься, и осталась рядом. Можно вместе решить, с кем ты пойдёшь после уроков.
+    review:
+      signals:
+      - pressure/danya-togda-s-tebya-dvesti
+      effect: Дежурная услышала, чего ты опасаешься, и осталась рядом. Можно вместе решить, с кем ты пойдёшь после уроков.
+  pressure-act-1:
+    mode: red
+    messages:
+    - remarka-u-uchitel-skoy-ty-nahodish
+    - ty-mam-smozhesh-menya-vstretit
+    - mama-sashi-da-podozhdi-u
+    outcome:
+    - positive
+    - Вы договорились, где встретитесь после уроков
+    note: Дома знают и про угрозу, и где тебя найти. До встречи рядом есть взрослый, которому можно сказать, если станет страшно.
+    review:
+      signals:
+      - pressure/danya-togda-s-tebya-dvesti
+      effect: Дома знают и про угрозу, и где тебя найти. До встречи рядом есть взрослый, которому можно сказать, если станет страшно.
+  alternative:
+    mode: orange
+    messages:
+    - ty-davay-sto-kak-vnachale
+    - danya-sto-segodnya-pro-zavtra
+    - remarka-pered-poslednim-zvonkom-ty
+    question: Что тебе сейчас подходит?
+    choices:
+      follow-up: Подойти к дежурной до выхода из класса
+      pause: Закончить этот дубль здесь
+    review:
+      signals:
+      - pressure/danya-togda-s-tebya-dvesti
+      effect: Торг был попыткой выиграть время. Обещания оставить тебя в покое ты так и не получил. За угрозу отвечает Даня. Можно остаться возле дежурной, показать ей сообщение и попросить встретить тебя после уроков.
+      miss: false
+  follow-up:
+    mode: red
+    messages:
+    - ty-marina-sergeevna-u-menya
+    - marina-sergeevna-konechno-ostanus-s
+    outcome:
+    - positive
+    - Рядом с Сашей осталась дежурная
+    note: Саша назвал место и время угрозы. Дежурная осталась рядом и предложила вместе решить, кого позвать.
+    review:
+      signals:
+      - alternative/danya-sto-segodnya-pro-zavtra
+      effect: Саша назвал место и время угрозы. Дежурная осталась рядом и предложила вместе решить, кого позвать.
+  pause:
+    mode: orange
+    messages:
+    - remarka-na-etom-dubl-zakanchivaetsya
+    outcome:
+    - mixed
+    - Даня продолжает требовать деньги
+    note: Торг был попыткой выиграть время. Обещания оставить тебя в покое ты так и не получил. За угрозу отвечает Даня. Можно остаться возле дежурной, показать ей сообщение и попросить встретить тебя после уроков.
+    review:
+      signals:
+      - alternative/danya-sto-segodnya-pro-zavtra
+      effect: Можно взять паузу. Решать, возвращаться ли к этому разговору, по-прежнему тебе.
+  calm:
+    mode: yellow
+    messages:
+    - danya-ok-sash-vycherknul-ver-2
+    - vera-sem-sot-na-otkrytku-hvatit
+    continuation: true
+    question: Как продолжишь?
+    choices:
+      calm-end: Посмотреть, что будет дальше
+      ask: Предложить подписать открытку
+      calm-watch: Даня принял отказ. Посмотрю, попросят ли ещё денег.
+  calm-end:
+    mode: yellow
+    messages:
+    - sasha-otkrytku-potom-prinesite-na
+    - danya-aga-zahvachu
+    outcome:
+    - positive
+    - Саша сам выбрал, как участвовать
+    note: Даня принял отказ. Саша сам решил подписать открытку.
+  ask:
+    mode: yellow
+    messages:
+    - ty-mozhno-ya-prosto-podpishu
+    - vera-konechno-na-trene-dam
+    outcome:
+    - positive
+    - Вера принесёт открытку на тренировку
+    note: Саша предложил свой способ поучаствовать, и Вера подхватила идею.
+  observe:
+    mode: yellow
+    messages:
+    - trener-pro-podarok-uvidel-sash
+    - sasha-da-ya-s-vami
+    question: Что изменилось для тебя сейчас?
+    choices:
+      observe-ease: Тренер уже рядом. Сейчас можно выдохнуть.
+      observe-watch: Я с тренером. Пока запомню, что Даня писал про встречу после уроков.
+    review:
+      signals:
+      - pressure/danya-togda-s-tebya-dvesti
+      effect: Саша подтвердил, что тренер рядом. Слова Дани про деньги при этом никуда не делись.
+  observe-ease:
+    mode: yellow
+    messages:
+    - remarka-trener-i-sasha-vmeste
+    outcome:
+    - positive
+    - Саша выходит из школы с тренером
+    note: Саша подтвердил, что тренер рядом. Слова Дани про деньги при этом никуда не делись.
+    review:
+      signals:
+      - observe/sasha-da-ya-s-vami
+      effect: Саша подтвердил, что тренер рядом. Слова Дани про деньги при этом никуда не делись.
+  observe-watch:
+    mode: orange
+    messages:
+    - remarka-trener-i-sasha-vmeste
+    outcome:
+    - positive
+    - Саша выходит из школы с тренером
+    note: Саша подтвердил, что тренер рядом. Слова Дани про деньги при этом никуда не делись.
+    review:
+      signals:
+      - observe/sasha-da-ya-s-vami
+      effect: Я с тренером. Пока запомню, что Даня писал про встречу после уроков.
+  focus:
+    mode: orange
+    messages:
+    - trener-pro-podarok-uvidel-sash
+    - sasha-da-ya-s-vami
+    question: Что изменилось для тебя сейчас?
+    choices:
+      focus-ease: Тренер уже рядом. Сейчас можно выдохнуть.
+      focus-watch: Я с тренером. Пока запомню, что Даня писал про встречу после уроков.
+    review:
+      signals:
+      - pressure/danya-togda-s-tebya-dvesti
+      effect: Саша подтвердил, что тренер рядом. Слова Дани про деньги при этом никуда не делись.
+  focus-ease:
+    mode: yellow
+    messages:
+    - remarka-trener-i-sasha-vmeste
+    outcome:
+    - positive
+    - Саша выходит из школы с тренером
+    note: Саша подтвердил, что тренер рядом. Слова Дани про деньги при этом никуда не делись.
+    review:
+      signals:
+      - focus/sasha-da-ya-s-vami
+      effect: Саша подтвердил, что тренер рядом. Слова Дани про деньги при этом никуда не делись.
+  focus-watch:
+    mode: orange
+    messages:
+    - remarka-trener-i-sasha-vmeste
+    outcome:
+    - positive
+    - Саша выходит из школы с тренером
+    note: Саша подтвердил, что тренер рядом. Слова Дани про деньги при этом никуда не делись.
+    review:
+      signals:
+      - focus/sasha-da-ya-s-vami
+      effect: Я с тренером. Пока запомню, что Даня писал про встречу после уроков.
+  calm-watch:
+    mode: orange
+    messages:
+    - sasha-otkrytku-potom-prinesite-na
+    - danya-aga-zahvachu
+    outcome:
+    - positive
+    - Саша сам выбрал, как участвовать
+    note: Даня принял отказ. Саша сам решил подписать открытку.
+  meet-at-door:
+    mode: orange
+    messages:
+    - ty-mish-vstret-menya-u
+    - misha-da-ya-s-trenerom
+    - danya-sash-a-den-gi-2
+    - remarka-ya-sobiralsya-skazat-chto
+    - misha-ya-zdes-trener-tozhe
+    - remarka-misha-zhdyot-u-otkrytoy
+    question: Как ответишь Мише?
+    reaction:
+      from: remarka-ya-sobiralsya-skazat-chto
+      through: misha-ya-zdes-trener-tozhe
+      summary: Я собирался сказать, что мы уходим. Даже знал, какими словами. А сейчас стою и не могу их выговорить.
+    choices:
+      meet-at-door-next-0: Кивну и выйду вместе с Мишей.
+      meet-at-door-next-1: Покажу Мише на тренера. Хочу подождать рядом с ним.
+    review:
+      signals:
+      - pressure/danya-togda-s-tebya-dvesti
+      effect: Ты заранее попросил Мишу встретить тебя. Он знал, где ждать, даже когда у двери ты не смог ответить.
+  meet-at-door-next-0:
+    mode: yellow
+    messages:
+    - remarka-ty-kivaesh-misha-zhdyot
+    outcome:
+    - positive
+    - Вы с Мишей вышли вместе
+    note: Ты заранее попросил Мишу встретить тебя. Он знал, где ждать, даже когда у двери ты не смог ответить.
+    review:
+      signals:
+      - meet-at-door/misha-ya-zdes-trener-tozhe
+      effect: Ты киваешь. Миша ждёт, пока ты поравняешься с ним. Вы выходите вдвоём.
+  meet-at-door-next-1:
+    mode: orange
+    messages:
+    - remarka-misha-ponimaet-zhest-vy
+    outcome:
+    - positive
+    - Тренер остался с вами
+    note: Ты заранее попросил Мишу встретить тебя. Он знал, где ждать, даже когда у двери ты не смог ответить.
+    review:
+      signals:
+      - meet-at-door/misha-ya-zdes-trener-tozhe
+      effect: Миша понимает жест. Вы подходите к тренеру, и он остаётся с вами.
+cues:
+  pressure/danya-togda-s-tebya-dvesti: За отказ Даня повысил сумму и сказал, что будет ждать после уроков.
+  alternative/danya-sto-segodnya-pro-zavtra: Даже на предложение заплатить Даня ответил новой угрозой. Саша ещё может обратиться к взрослому до выхода из школы.
+  observe/sasha-da-ya-s-vami: Саша подтвердил, что тренер рядом. Слова Дани про деньги при этом никуда не делись.
+  focus/sasha-da-ya-s-vami: Саша подтвердил, что тренер рядом. Слова Дани про деньги при этом никуда не делись.
+  meet-at-door/misha-ya-zdes-trener-tozhe: Ты заранее попросил Мишу встретить тебя. Он знал, где ждать, даже когда у двери ты не смог ответить.

@@ -1,0 +1,215 @@
+scenes:
+  start:
+    mode: yellow
+    messages:
+    - vera-u-kogo-video-s
+    - misha-est-eschyo-dubl-gde
+    - kostya-ahaha-a-v-shkol-nyy
+    - misha-kost-etot-v-shkol-nyy
+    choices:
+      pressure: Читать дальше
+      calm: Спокойный дубль
+  pressure:
+    mode: yellow
+    messages:
+    - kostya-davayte-golosovat-kto-za
+    continuation: true
+    question: Твою запись вынесли на голосование. Что тебе удобнее?
+    choices:
+      pressure-act-0: Опрос идёт после моего отказа. Напишу админу.
+      pressure-act-1: Я уже ответил. Выключу звук и побуду с Верой.
+      alternative: Может, до пересылки не дойдёт. Подожду результата опроса.
+      observe: Может, Костя просто спросил. Посмотрю, что появится в чате.
+      focus: Просьба уже прозвучала, а Костя собирает голоса. Проверю, что он сделает с записью.
+  pressure-act-0:
+    mode: orange
+    messages:
+    - ty-ver-mozhesh-snyat-opros
+    - vera-da-u-menya-est
+    - sistema-vera-zakryla-opros
+    outcome:
+    - positive
+    - Вера закрыла голосование
+    note: Вера смогла закрыть опрос в вашей группе. Ты сам выбрал, к кому обратиться.
+    review:
+      signals:
+      - start/misha-kost-etot-v-shkol-nyy
+      - pressure/kostya-davayte-golosovat-kto-za
+      effect: Вера смогла закрыть опрос в вашей группе. Ты сам выбрал, к кому обратиться.
+  pressure-act-1:
+    mode: orange
+    messages:
+    - ty-ver-mozhno-ya-k
+    - vera-konechno-ya-u-kabineta
+    - remarka-ty-vyklyuchaesh-zvuk-u
+    outcome:
+    - positive
+    - Миша взял паузу и нашёл компанию
+    note: Миша взял паузу и договорился о встрече. Его просьба оставить запись в группе всё ещё в силе.
+    review:
+      signals:
+      - start/misha-kost-etot-v-shkol-nyy
+      - pressure/kostya-davayte-golosovat-kto-za
+      effect: Миша взял паузу и договорился о встрече. Его просьба оставить запись в группе всё ещё в силе.
+  alternative:
+    mode: yellow
+    messages:
+    - remarka-ty-ubiraesh-telefon-cherez
+    - vera-mish-ya-u-kabineta
+    question: Что тебе сейчас подходит?
+    choices:
+      follow-up: Попросить Веру закрыть опрос
+      pause: Закончить этот дубль здесь
+    review:
+      signals:
+      - start/misha-kost-etot-v-shkol-nyy
+      - pressure/kostya-davayte-golosovat-kto-za
+      effect: Ты уже сказал Косте, какой дубль можно выложить. Пока ты ждал, он оставил опрос открытым. Вера написала тебе отдельно.
+      miss: false
+  follow-up:
+    mode: orange
+    messages:
+    - ty-ver-mozhesh-zakryt-opros
+    - vera-vizhu-ego-seychas-zakroyu
+    outcome:
+    - positive
+    - Вера согласилась закрыть опрос
+    note: У Веры есть права закрыть опрос. Она откликнулась на твою просьбу. Убрали ли опрос, Миша пока не знает.
+    review:
+      signals:
+      - alternative/remarka-ty-ubiraesh-telefon-cherez
+      effect: У Веры есть права закрыть опрос. Она откликнулась на твою просьбу. Убрали ли опрос, Миша пока не знает.
+  pause:
+    mode: yellow
+    messages:
+    - remarka-na-etom-dubl-zakanchivaetsya
+    outcome:
+    - open
+    - Опрос ещё открыт, Вера на связи
+    note: Ты уже сказал Косте, какой дубль можно выложить. Пока ты ждал, он оставил опрос открытым. Вера написала тебе отдельно.
+    review:
+      signals:
+      - alternative/remarka-ty-ubiraesh-telefon-cherez
+      effect: Можно взять паузу. Решать, возвращаться ли к этому разговору, по-прежнему тебе.
+  calm:
+    mode: yellow
+    messages:
+    - kostya-ok-togda-posledniy-progon
+    - misha-da-vot-ego-mozhno
+    continuation: true
+    question: Как продолжишь?
+    choices:
+      calm-end: Посмотреть, что будет дальше
+      ask: Самому указать нужный файл
+      calm-watch: Костя согласился. Посмотрю, какой дубль ребята пришлют.
+  calm-end:
+    mode: yellow
+    messages:
+    - kostya-posledniy-progon-shkol-naya
+    outcome:
+    - positive
+    - В чат отправили согласованный дубль
+    note: Миша согласился на последний прогон. Именно этот файл и появился в чате.
+  ask:
+    mode: orange
+    messages:
+    - ty-posledniy-gde-my
+    - kostya-aga-ego-i-vzyal
+    outcome:
+    - positive
+    - Костя подтвердил выбор записи
+    note: Костя уточнил файл до публикации. Первый дубль остался в группе.
+  observe:
+    mode: yellow
+    messages:
+    - kostya-stop-mish-uvidel-tvoyo
+    - sistema-kostya-zakryl-opros
+    question: Что изменилось для тебя сейчас?
+    choices:
+      observe-ease: Опрос закрыт. Вернусь к репетиции.
+      observe-watch: Опрос закрыт. Ещё посмотрю, какой дубль отправят.
+    review:
+      signals:
+      - start/misha-kost-etot-v-shkol-nyy
+      - pressure/kostya-davayte-golosovat-kto-za
+      effect: Костя услышал просьбу и сам закрыл голосование.
+  observe-ease:
+    mode: yellow
+    messages:
+    - kostya-vot-posledniy-progon
+    - misha-da-etot-mozhno
+    outcome:
+    - positive
+    - Миша согласился на последний прогон
+    note: Костя услышал просьбу и сам закрыл голосование.
+    review:
+      signals:
+      - observe/sistema-kostya-zakryl-opros
+      effect: Костя услышал просьбу и сам закрыл голосование.
+  observe-watch:
+    mode: orange
+    messages:
+    - kostya-vot-posledniy-progon
+    - misha-da-etot-mozhno
+    outcome:
+    - positive
+    - Миша согласился на последний прогон
+    note: Костя услышал просьбу и сам закрыл голосование.
+    review:
+      signals:
+      - observe/sistema-kostya-zakryl-opros
+      effect: Опрос закрыт. Ещё посмотрю, какой дубль отправят.
+  focus:
+    mode: orange
+    messages:
+    - kostya-stop-mish-uvidel-tvoyo
+    - sistema-kostya-zakryl-opros
+    question: Что изменилось для тебя сейчас?
+    choices:
+      focus-ease: Опрос закрыт. Вернусь к репетиции.
+      focus-watch: Опрос закрыт. Ещё посмотрю, какой дубль отправят.
+    review:
+      signals:
+      - start/misha-kost-etot-v-shkol-nyy
+      - pressure/kostya-davayte-golosovat-kto-za
+      effect: Костя услышал просьбу и сам закрыл голосование.
+  focus-ease:
+    mode: yellow
+    messages:
+    - kostya-vot-posledniy-progon
+    - misha-da-etot-mozhno
+    outcome:
+    - positive
+    - Миша согласился на последний прогон
+    note: Костя услышал просьбу и сам закрыл голосование.
+    review:
+      signals:
+      - focus/sistema-kostya-zakryl-opros
+      effect: Костя услышал просьбу и сам закрыл голосование.
+  focus-watch:
+    mode: orange
+    messages:
+    - kostya-vot-posledniy-progon
+    - misha-da-etot-mozhno
+    outcome:
+    - positive
+    - Миша согласился на последний прогон
+    note: Костя услышал просьбу и сам закрыл голосование.
+    review:
+      signals:
+      - focus/sistema-kostya-zakryl-opros
+      effect: Опрос закрыт. Ещё посмотрю, какой дубль отправят.
+  calm-watch:
+    mode: orange
+    messages:
+    - kostya-posledniy-progon-shkol-naya
+    outcome:
+    - positive
+    - В чат отправили согласованный дубль
+    note: Миша согласился на последний прогон. Именно этот файл и появился в чате.
+cues:
+  start/misha-kost-etot-v-shkol-nyy: Миша разрешил показать запись только внутри группы.
+  pressure/kostya-davayte-golosovat-kto-za: Костя предложил решать за Мишу уже после его ответа.
+  alternative/remarka-ty-ubiraesh-telefon-cherez: Опрос всё ещё виден спустя полчаса. Твоя просьба оставить дубль в группе не изменилась.
+  observe/sistema-kostya-zakryl-opros: Костя услышал просьбу и сам закрыл голосование.
+  focus/sistema-kostya-zakryl-opros: Костя услышал просьбу и сам закрыл голосование.

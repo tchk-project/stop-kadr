@@ -1,0 +1,139 @@
+vera-u-kogo-video-s:
+  speaker: Вера
+  channel: chat-shkol-noy-gruppy
+  text: У кого видео с репетиции? Хочу посмотреть, как мы вышли.
+misha-est-eschyo-dubl-gde:
+  speaker: Миша
+  reactions:
+    😂:
+    - Даня
+    - Саша
+  text: Есть ещё дубль, где я начинаю припев на куплет раньше 😅
+kostya-ahaha-a-v-shkol-nyy:
+  speaker: Костя
+  text: Ахаха. А в школьный чат этот скинем?
+misha-kost-etot-v-shkol-nyy:
+  speaker: Миша
+  text: Кость, [[этот в школьный не кидай]]. Сюда можно.
+kostya-davayte-golosovat-kto-za:
+  speaker: Костя
+  text: '[[Давайте голосовать]]. Кто за то, чтобы в школьный кинуть?'
+ty-kost-misha-uzhe-otvetil:
+  speaker: Ты
+  text: Кость, Миша уже ответил. Вер, какой ещё дубль есть?
+misha-posledniy-mozhno:
+  speaker: Миша
+  text: Последний можно.
+kostya-ok-beru-posledniy:
+  speaker: Костя
+  text: Ок, беру последний.
+ty-mish-hochesh-ya-napishu:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-mishey
+  text: Миш, хочешь, я напишу в общий?
+misha-v-obschiy-poka-ne:
+  speaker: Миша
+  text: В общий пока не пиши. Просто посиди со мной.
+ty-aga-ya-ryadom:
+  speaker: Ты
+  text: Ага, я рядом.
+ty-ya-za-ya-tam:
+  speaker: Ты
+  text: Я за. Я там тоже не вовремя вступил.
+kostya-vsyo-kidayu:
+  speaker: Костя
+  text: Всё, кидаю.
+misha-v-stolovoy-teper-prosyat:
+  speaker: Миша
+  channel: lichnaya-perepiska-s-mishey
+  caption: На следующий день
+  text: В столовой теперь просят спеть «как на видео». Сегодня без меня.
+misha-tim-oni-vsyo-eschyo:
+  speaker: Миша
+  channel: lichnaya-perepiska-s-mishey
+  text: '[[Тим, они всё ещё голосуют? Я же просил не выкладывать.]]'
+kostya-nu-troe-za-otpravil:
+  speaker: Костя
+  channel: chat-shkol-noy-gruppy
+  text: Ну, трое за. Отправил в школьный.
+ty-mish-videl-hochesh-poproshu:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-mishey
+  text: Миш, видел. Хочешь, попрошу Костю снять голосование?
+misha-da-pozhaluysta-ya-emu:
+  speaker: Миша
+  text: Да, пожалуйста. Я ему уже написал.
+kostya-ok-togda-posledniy-progon:
+  speaker: Костя
+  text: Ок. Тогда последний прогон?
+misha-da-vot-ego-mozhno:
+  speaker: Миша
+  text: Да, вот его можно.
+kostya-posledniy-progon-shkol-naya:
+  speaker: Костя
+  media:
+    kind: video
+    src: ./assets/rehearsal.mp4
+    poster: ./assets/rehearsal.webp
+    caption: Последний прогон · школьная музыкальная группа
+ty-kost-tot-gde-vstupili:
+  speaker: Ты
+  text: Кость, тот, где вступили вместе?
+kostya-da-pervyy-ostavil-u:
+  speaker: Костя
+  text: Да. Первый оставил у нас.
+kostya-stop-mish-uvidel-tvoyo:
+  speaker: Костя
+  text: Стоп, Миш, увидел твоё сообщение. Опрос снимаю. Берём последний прогон.
+sistema-kostya-zakryl-opros:
+  speaker: Система
+  text: '[[Костя закрыл опрос]].'
+kostya-vot-posledniy-progon:
+  speaker: Костя
+  text: Вот последний прогон.
+misha-da-etot-mozhno:
+  speaker: Миша
+  text: Да, этот можно.
+ty-ver-mozhesh-snyat-opros:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-veroy
+  text: Вер, можешь снять опрос? Я не хочу этот дубль в школьный.
+vera-da-u-menya-est:
+  speaker: Вера
+  text: Да, у меня есть права. Сейчас уберу.
+sistema-vera-zakryla-opros:
+  speaker: Система
+  channel: chat-shkol-noy-gruppy
+  text: Вера закрыла опрос.
+ty-ver-mozhno-ya-k:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-veroy
+  text: Вер, можно я к тебе? Не хочу сейчас это читать.
+vera-konechno-ya-u-kabineta:
+  speaker: Вера
+  text: Конечно. Я у кабинета музыки.
+remarka-ty-vyklyuchaesh-zvuk-u:
+  speaker: Ремарка
+  text: Ты выключаешь звук у чата и идёшь к Вере.
+remarka-ty-ubiraesh-telefon-cherez:
+  speaker: Ремарка
+  text: Ты убираешь телефон. Через полчаса на экране [[всё тот же опрос]].
+vera-mish-ya-u-kabineta:
+  speaker: Вера
+  channel: lichnaya-perepiska-s-veroy
+  text: Миш, я у кабинета музыки. Хочешь, зайди.
+ty-ver-mozhesh-zakryt-opros:
+  speaker: Ты
+  text: Вер, можешь закрыть опрос? Я уже отвечал.
+vera-vizhu-ego-seychas-zakroyu:
+  speaker: Вера
+  text: Вижу его. Сейчас закрою.
+remarka-na-etom-dubl-zakanchivaetsya:
+  speaker: Ремарка
+  text: На этом дубль заканчивается.
+ty-posledniy-gde-my:
+  speaker: Ты
+  text: Последний — где мы все вместе вступаем.
+kostya-aga-ego-i-vzyal:
+  speaker: Костя
+  text: Ага, его и взял.

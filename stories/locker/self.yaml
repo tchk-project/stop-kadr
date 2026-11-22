@@ -1,0 +1,216 @@
+scenes:
+  start:
+    mode: yellow
+    messages:
+    - ty-gde-moy-ryukzak-ya
+    - danya-podozhdi-my-potom-otdadim
+    choices:
+      pressure: Читать дальше
+      calm: Спокойный дубль
+  pressure:
+    mode: yellow
+    messages:
+    - danya-proydyosh-nash-kvest-2
+    - ty-kakoy-eschyo-kvest-mne
+    - vera-do-zvonka-pyat-minut
+    continuation: true
+    question: Как тебе удобнее поступить?
+    choices:
+      pressure-act-0: Форма нужна прямо сейчас. Потребую рюкзак обратно.
+      pressure-act-1: Это уже второй день. Попрошу Веру сходить со мной.
+      alternative: Может, один раунд и правда быстрее. Соглашусь на один.
+      observe: До звонка ещё есть время. Посмотрю, принесут ли рюкзак.
+      focus: Форма всё ещё у Дани. Не отойду от лавки, пока не увижу рюкзак.
+  pressure-act-0:
+    mode: orange
+    messages:
+    - ty-dan-otday-ya-v
+    - danya-ladno-za-dver-yu-na
+    - remarka-ty-snimaesh-ryukzak-forma
+    outcome:
+    - positive
+    - Ты забрал форму до звонка
+    note: На этот раз Даня сказал, где рюкзак. Если захочешь рассказать учителю и про вчерашний случай, ты можешь это сделать.
+    review:
+      signals:
+      - pressure/danya-proydyosh-nash-kvest-2
+      - pressure/ty-kakoy-eschyo-kvest-mne
+      effect: На этот раз Даня сказал, где рюкзак. Если захочешь рассказать учителю и про вчерашний случай, ты можешь это сделать.
+  pressure-act-1:
+    mode: orange
+    messages:
+    - ty-ver-poydyom-vmeste-k
+    - vera-poshli-ya-videla-gde
+    - marina-sergeevna-vy-ko-mne
+    outcome:
+    - positive
+    - Вы с Верой дошли до учительницы
+    note: Тебе было проще подойти вдвоём. Теперь можно рассказать учительнице, когда ты оставил рюкзак и что Даня сказал про «квест».
+    review:
+      signals:
+      - pressure/danya-proydyosh-nash-kvest-2
+      - pressure/ty-kakoy-eschyo-kvest-mne
+      effect: Тебе было проще подойти вдвоём. Теперь можно рассказать учительнице, когда ты оставил рюкзак и что Даня сказал про «квест».
+  alternative:
+    mode: yellow
+    messages:
+    - ty-ladno-odin-raund-potom
+    - danya-tak-podozhdi-my-eschyo
+    - remarka-danya-otdayot-ryukzak-posle
+    question: Что тебе сейчас подходит?
+    choices:
+      follow-up: Рассказать учительнице, почему опоздал
+      pause: Закончить этот дубль здесь
+    review:
+      signals:
+      - pressure/danya-proydyosh-nash-kvest-2
+      - pressure/ty-kakoy-eschyo-kvest-mne
+      effect: Казалось, так получится быстрее. Но срок по-прежнему назначал Даня, который забрал рюкзак. Можно рассказать учителю, почему ты опоздал, и попросить помочь вернуть вещи сразу, если это повторится.
+      miss: false
+  follow-up:
+    mode: orange
+    messages:
+    - ty-ya-formu-zhdal-danya
+    - marina-sergeevna-spasibo-chto-skazal
+    outcome:
+    - positive
+    - Учительница знает, почему Миша опоздал
+    note: Учительница услышала, где была форма, и договорилась подойти после урока.
+    review:
+      signals:
+      - alternative/remarka-danya-otdayot-ryukzak-posle
+      effect: Учительница услышала, где была форма, и договорилась подойти после урока.
+  pause:
+    mode: yellow
+    messages:
+    - remarka-na-etom-dubl-zakanchivaetsya
+    outcome:
+    - mixed
+    - Из-за чужой «игры» ты пропустил разминку
+    note: Казалось, так получится быстрее. Но срок по-прежнему назначал Даня, который забрал рюкзак. Можно рассказать учителю, почему ты опоздал, и попросить помочь вернуть вещи сразу, если это повторится.
+    review:
+      signals:
+      - alternative/remarka-danya-otdayot-ryukzak-posle
+      effect: Можно взять паузу. Решать, возвращаться ли к этому разговору, по-прежнему тебе.
+  calm:
+    mode: yellow
+    messages:
+    - danya-mish-on-za-dver-yu
+    - remarka-danya-kladyot-ryukzak-na
+    continuation: true
+    question: Как продолжишь?
+    choices:
+      calm-end: Посмотреть, что будет дальше
+      ask: Сказать Дане про рюкзак
+      calm-watch: Рюкзак на лавке. Хочу ещё убедиться, что форма внутри.
+  calm-end:
+    mode: yellow
+    messages:
+    - vera-poshli-v-zal-eschyo
+    outcome:
+    - positive
+    - Рюкзак вернули до звонка
+    note: Миша получил рюкзак и достал форму до урока. На этот раз никто не потребовал пройти квест.
+  ask:
+    mode: yellow
+    messages:
+    - ty-dan-ostavlyay-ego-na
+    - danya-ladno
+    outcome:
+    - positive
+    - Миша успевает на урок
+    note: С рюкзаком уже всё в порядке. Осталось время спросить про форму или договориться, где оставлять вещи.
+  observe:
+    mode: yellow
+    messages:
+    - vera-dan-uzhe-pora-pereodevat-sya
+    - remarka-danya-stavit-ryukzak-ryadom
+    question: Что изменилось для тебя сейчас?
+    choices:
+      observe-ease: Форма нашлась. Пора на урок.
+      observe-watch: Сегодня рюкзак вернули. На следующей перемене обращу внимание, где он лежит.
+    review:
+      signals:
+      - pressure/danya-proydyosh-nash-kvest-2
+      - pressure/ty-kakoy-eschyo-kvest-mne
+      effect: Рюкзак вернули. Миша может сам достать свои вещи.
+  observe-ease:
+    mode: yellow
+    messages:
+    - vera-ya-v-zal-vy
+    - remarka-v-razdevalke-zvonit-zvonok
+    outcome:
+    - positive
+    - Рюкзак вернулся к хозяину до звонка
+    note: Рюкзак вернули. Миша может сам достать свои вещи.
+    review:
+      signals:
+      - observe/remarka-danya-stavit-ryukzak-ryadom
+      effect: Рюкзак вернули. Миша может сам достать свои вещи.
+  observe-watch:
+    mode: orange
+    messages:
+    - vera-ya-v-zal-vy
+    - remarka-v-razdevalke-zvonit-zvonok
+    outcome:
+    - positive
+    - Рюкзак вернулся к хозяину до звонка
+    note: Рюкзак вернули. Миша может сам достать свои вещи.
+    review:
+      signals:
+      - observe/remarka-danya-stavit-ryukzak-ryadom
+      effect: Сегодня рюкзак вернули. На следующей перемене обращу внимание, где он лежит.
+  focus:
+    mode: orange
+    messages:
+    - vera-dan-uzhe-pora-pereodevat-sya
+    - remarka-danya-stavit-ryukzak-ryadom
+    question: Что изменилось для тебя сейчас?
+    choices:
+      focus-ease: Форма нашлась. Пора на урок.
+      focus-watch: Сегодня рюкзак вернули. На следующей перемене обращу внимание, где он лежит.
+    review:
+      signals:
+      - pressure/danya-proydyosh-nash-kvest-2
+      - pressure/ty-kakoy-eschyo-kvest-mne
+      effect: Рюкзак вернули. Миша может сам достать свои вещи.
+  focus-ease:
+    mode: yellow
+    messages:
+    - vera-ya-v-zal-vy
+    - remarka-v-razdevalke-zvonit-zvonok
+    outcome:
+    - positive
+    - Рюкзак вернулся к хозяину до звонка
+    note: Рюкзак вернули. Миша может сам достать свои вещи.
+    review:
+      signals:
+      - focus/remarka-danya-stavit-ryukzak-ryadom
+      effect: Рюкзак вернули. Миша может сам достать свои вещи.
+  focus-watch:
+    mode: orange
+    messages:
+    - vera-ya-v-zal-vy
+    - remarka-v-razdevalke-zvonit-zvonok
+    outcome:
+    - positive
+    - Рюкзак вернулся к хозяину до звонка
+    note: Рюкзак вернули. Миша может сам достать свои вещи.
+    review:
+      signals:
+      - focus/remarka-danya-stavit-ryukzak-ryadom
+      effect: Сегодня рюкзак вернули. На следующей перемене обращу внимание, где он лежит.
+  calm-watch:
+    mode: orange
+    messages:
+    - vera-poshli-v-zal-eschyo
+    outcome:
+    - positive
+    - Рюкзак вернули до звонка
+    note: Миша получил рюкзак и достал форму до урока. На этот раз никто не потребовал пройти квест.
+cues:
+  pressure/danya-proydyosh-nash-kvest-2: Даня поставил условие, прежде чем вернуть чужую вещь.
+  pressure/ty-kakoy-eschyo-kvest-mne: Миша говорит, что это повторилось.
+  alternative/remarka-danya-otdayot-ryukzak-posle: Пока рюкзак был у Дани, разминка закончилась. Миша может объяснить учителю своё опоздание.
+  observe/remarka-danya-stavit-ryukzak-ryadom: Рюкзак вернули. Миша может сам достать свои вещи.
+  focus/remarka-danya-stavit-ryukzak-ryadom: Рюкзак вернули. Миша может сам достать свои вещи.

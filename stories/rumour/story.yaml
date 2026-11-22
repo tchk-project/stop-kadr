@@ -1,0 +1,39 @@
+id: rumour
+title: Скрин в личке
+order: 10
+place: После тренировки
+roles:
+  witness:
+    name: Тимур
+    viewpoint: Тимура
+    intro: После тренировки Костя присылает тебе кусок переписки.
+  self:
+    name: Аня
+    viewpoint: Ани
+    intro: После тренировки Вера присылает тебе скрин с твоими словами.
+cast:
+- Аня
+- Вера
+- Костя
+- Саша
+- Тимур
+- Тренер
+channels:
+  lichnaya-perepiska-s-kostey:
+    kind: private
+    title: Личная переписка с Костей
+  lichnaya-perepiska-s-aney:
+    kind: private
+    title: Личная переписка с Аней
+  lichnaya-perepiska-s-trenerom:
+    kind: private
+    title: Личная переписка с тренером
+  chat-komandy:
+    kind: group
+    title: Чат команды
+  lichnaya-perepiska-s-veroy:
+    kind: private
+    title: Личная переписка с Верой
+  lichnaya-perepiska-s-timurom:
+    kind: private
+    title: Личная переписка с Тимуром

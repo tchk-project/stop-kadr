@@ -1,0 +1,27 @@
+id: geopoint
+title: Точка на карте
+order: 4
+place: Личная переписка
+roles:
+  witness:
+    name: Тимур
+    viewpoint: Тимура
+    intro: Ты пишешь Ане после кружка. У неё осталась фотография с доски.
+  self:
+    name: Аня
+    viewpoint: Ани
+    intro: После кружка ты ждёшь автобус. Тебе пишет Лёша.
+cast:
+- Аня
+- Лёша
+- Тимур
+channels:
+  lichnaya-perepiska-s-aney:
+    kind: private
+    title: Личная переписка с Аней
+  lichnaya-perepiska-s-lyoshey:
+    kind: private
+    title: Личная переписка с Лёшей
+  lichnaya-perepiska-s-timurom:
+    kind: private
+    title: Личная переписка с Тимуром

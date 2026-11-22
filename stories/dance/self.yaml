@@ -1,0 +1,212 @@
+scenes:
+  start:
+    mode: yellow
+    messages:
+    - lyosha-potantsuem
+    - ty-spasibo-ya-posizhu
+    choices:
+      pressure: Читать дальше
+      calm: Спокойный дубль
+  pressure:
+    mode: yellow
+    messages:
+    - lyosha-nu-odin-tanets-i
+    - ty-ya-skazala-chto-ne
+    - remarka-ty-othodish-k-stene
+    continuation: true
+    question: Лёша держит тебя за руку. Что сделаешь?
+    choices:
+      alternative: Хочу, чтобы меня отпустили. Попробую переключить его внимание на Веру.
+      pressure-act-0: Лёша держит меня за руку. Попрошу Веру привести дежурную.
+      pressure-act-1: Мне не дают отойти. Позову дежурную у двери.
+      observe: Вера рядом. Окликну её, хочу сесть за стол.
+      focus: Он всё ещё держит меня за руку. Окликну Веру прямо сейчас.
+  pressure-act-0:
+    mode: red
+    messages:
+    - ty-vera-pomogi-menya-derzhat
+    - remarka-dezhurnaya-podhodit-lyosha-otpuskaet
+    - vera-ya-tvoyu-kurtku-vzyala
+    - ty-davay-posidim-tantsevat-uzhe
+    outcome:
+    - positive
+    - Лёша отпустил руку. Вера рядом
+    note: Вера услышала просьбу, и дежурная помогла. Даже когда ты в безопасности, настроение не обязано тут же вернуться. Ты можешь остаться с Верой и решить, чего хочется дальше.
+    review:
+      signals:
+      - pressure/remarka-ty-othodish-k-stene
+      effect: Вера услышала просьбу, и дежурная помогла. Даже когда ты в безопасности, настроение не обязано тут же вернуться. Ты можешь остаться с Верой и решить, чего хочется дальше.
+  pressure-act-1:
+    mode: red
+    messages:
+    - ty-marina-sergeevna-pomogite
+    - marina-sergeevna-ya-zdes-lyosha
+    - remarka-lyosha-otpuskaet-ruku-vera
+    - vera-zdes-postoim-ili-k
+    - ty-k-nashim-ya-dane
+    outcome:
+    - positive
+    - Лёша отпустил руку. Ты можешь уйти к друзьям
+    note: Марина Сергеевна услышала и подошла. Ты смогла отойти и выбрать, где тебе сейчас спокойнее.
+    review:
+      signals:
+      - pressure/remarka-ty-othodish-k-stene
+      effect: Марина Сергеевна услышала и подошла. Ты смогла отойти и выбрать, где тебе сейчас спокойнее.
+  alternative:
+    mode: orange
+    messages:
+    - ty-lyosh-otpusti-von-vera
+    - remarka-lyosha-otpuskaet-tvoyu-ruku
+    - vera-ya-k-tebe-podoshla
+    - remarka-vy-sadites-u-steny
+    question: Что тебе сейчас подходит?
+    choices:
+      follow-up: Предложить Вере вместе подойти к дежурной
+      pause: Закончить этот дубль здесь
+    review:
+      signals:
+      - pressure/remarka-ty-othodish-k-stene
+      effect: За то, что Лёша тебя держал, отвечает он. Желание поскорее освободиться понятно. Когда ты предложила Веру, ей тоже пришлось отказываться. Ей можно прямо сказать, какая помощь тебе нужна, например попросить позвать дежурную.
+      miss: false
+  follow-up:
+    mode: red
+    messages:
+    - ty-ver-poydyosh-so-mnoy
+    - vera-poydyom-ya-videla-mogu
+    outcome:
+    - positive
+    - Аня и Вера пошли к дежурной
+    note: Вера сама видела, как Лёша держал Аню. Она согласилась вместе подойти к дежурной.
+    review:
+      signals:
+      - alternative/vera-ya-k-tebe-podoshla
+      effect: Вера сама видела, как Лёша держал Аню. Она согласилась вместе подойти к дежурной.
+  pause:
+    mode: orange
+    messages:
+    - remarka-na-etom-dubl-zakanchivaetsya
+    outcome:
+    - mixed
+    - Вере тоже пришлось отказываться от танца
+    note: За то, что Лёша тебя держал, отвечает он. Желание поскорее освободиться понятно. Когда ты предложила Веру, ей тоже пришлось отказываться. Ей можно прямо сказать, какая помощь тебе нужна, например попросить позвать дежурную.
+    review:
+      signals:
+      - alternative/vera-ya-k-tebe-podoshla
+      effect: Можно взять паузу. Решать, возвращаться ли к этому разговору, по-прежнему тебе.
+  calm:
+    mode: yellow
+    messages:
+    - lyosha-ladno-ya-togda-k
+    - vera-an-ya-za-vodoy
+    continuation: true
+    question: Как продолжишь?
+    choices:
+      calm-end: Посмотреть, что будет дальше
+      ask: Позвать Веру посидеть рядом
+      calm-watch: Они разошлись. Ещё немного посмотрю, как пойдёт вечер.
+  calm-end:
+    mode: yellow
+    messages:
+    - remarka-anya-i-vera-berut
+    outcome:
+    - positive
+    - Аня провела эту песню с Верой
+    note: Аня пошла за водой с Верой. Лёша занялся танцами.
+  ask:
+    mode: yellow
+    messages:
+    - ty-davay-potom-za-stol
+    - vera-davay-tam-dva-stula
+    outcome:
+    - positive
+    - Вера согласилась посидеть с Аней
+    note: Аня и Вера сами договорились, что делать дальше. Уговаривать Аню никто не стал.
+  observe:
+    mode: orange
+    messages:
+    - ty-ver-syuda-pozhaluysta
+    - remarka-vera-podhodit-lyosha-otpuskaet
+    - vera-ya-s-toboy-poydyom
+    question: Что изменилось для тебя сейчас?
+    choices:
+      observe-ease: Теперь можно спокойно посидеть с ребятами.
+      observe-watch: Пока останусь поближе к своим и посмотрю, не подойдёт ли он снова.
+    review:
+      signals:
+      - pressure/remarka-ty-othodish-k-stene
+      effect: Аня может отойти к друзьям. Лёша остался у колонок.
+  observe-ease:
+    mode: yellow
+    messages:
+    - remarka-za-stolom-slyshno-kak
+    outcome:
+    - positive
+    - Вера и Аня остались вместе у стола
+    note: Аня может отойти к друзьям. Лёша остался у колонок.
+    review:
+      signals:
+      - observe/remarka-vera-podhodit-lyosha-otpuskaet
+      effect: Аня может отойти к друзьям. Лёша остался у колонок.
+  observe-watch:
+    mode: orange
+    messages:
+    - remarka-za-stolom-slyshno-kak
+    outcome:
+    - positive
+    - Вера и Аня остались вместе у стола
+    note: Аня может отойти к друзьям. Лёша остался у колонок.
+    review:
+      signals:
+      - observe/remarka-vera-podhodit-lyosha-otpuskaet
+      effect: Пока останусь поближе к своим и посмотрю, не подойдёт ли он снова.
+  focus:
+    mode: red
+    messages:
+    - ty-ver-syuda-pozhaluysta
+    - remarka-vera-podhodit-lyosha-otpuskaet
+    - vera-ya-s-toboy-poydyom
+    question: Что изменилось для тебя сейчас?
+    choices:
+      focus-ease: Теперь можно спокойно посидеть с ребятами.
+      focus-watch: Пока останусь поближе к своим и посмотрю, не подойдёт ли он снова.
+    review:
+      signals:
+      - pressure/remarka-ty-othodish-k-stene
+      effect: Аня может отойти к друзьям. Лёша остался у колонок.
+  focus-ease:
+    mode: yellow
+    messages:
+    - remarka-za-stolom-slyshno-kak
+    outcome:
+    - positive
+    - Вера и Аня остались вместе у стола
+    note: Аня может отойти к друзьям. Лёша остался у колонок.
+    review:
+      signals:
+      - focus/remarka-vera-podhodit-lyosha-otpuskaet
+      effect: Аня может отойти к друзьям. Лёша остался у колонок.
+  focus-watch:
+    mode: orange
+    messages:
+    - remarka-za-stolom-slyshno-kak
+    outcome:
+    - positive
+    - Вера и Аня остались вместе у стола
+    note: Аня может отойти к друзьям. Лёша остался у колонок.
+    review:
+      signals:
+      - focus/remarka-vera-podhodit-lyosha-otpuskaet
+      effect: Пока останусь поближе к своим и посмотрю, не подойдёт ли он снова.
+  calm-watch:
+    mode: orange
+    messages:
+    - remarka-anya-i-vera-berut
+    outcome:
+    - positive
+    - Аня провела эту песню с Верой
+    note: Аня пошла за водой с Верой. Лёша занялся танцами.
+cues:
+  pressure/remarka-ty-othodish-k-stene: Лёша удерживает тебя после отказа. Вера и дежурная рядом.
+  alternative/vera-ya-k-tebe-podoshla: Вера объяснила, зачем подошла. Она тоже не хотела танцевать.
+  observe/remarka-vera-podhodit-lyosha-otpuskaet: Аня может отойти к друзьям. Лёша остался у колонок.
+  focus/remarka-vera-podhodit-lyosha-otpuskaet: Аня может отойти к друзьям. Лёша остался у колонок.

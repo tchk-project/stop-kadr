@@ -1,0 +1,29 @@
+id: team
+title: Первый выезд
+order: 5
+place: Спортивная секция
+roles:
+  witness:
+    name: Миша
+    viewpoint: Миши
+    intro: Ты едешь с секцией на игру. У автобуса ребята встречают новичка Тимура.
+  self:
+    name: Тимур
+    viewpoint: Тимура
+    intro: Ты впервые едешь на игру с этой командой.
+cast:
+- Костя
+- Миша
+- Саша
+- Тимур
+- Тренер
+channels:
+  scene:
+    kind: scene
+    title: ''
+  lichnaya-perepiska-s-timurom:
+    kind: private
+    title: Личная переписка с Тимуром
+  lichnaya-perepiska-s-mishey:
+    kind: private
+    title: Личная переписка с Мишей

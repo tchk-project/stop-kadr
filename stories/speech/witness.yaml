@@ -1,0 +1,142 @@
+scenes:
+  start:
+    mode: yellow
+    messages:
+    - trener-vera-peredvin-pozhaluysta-skameyku
+    - vera-tak-togda-ya-stavlyu
+    question: Что произойдёт дальше?
+    choices:
+      pressure: Продолжить
+      calm: Спокойный дубль
+  calm:
+    mode: yellow
+    messages:
+    - remarka-telefon-schyolkaet-ran-she-chem
+    - trener-vera-davay-eschyo-raz
+    continuation: true
+    question: Что сейчас происходит?
+    choices:
+      calm-end: В кадр попало пол-лица. Переснимем фото.
+  calm-end:
+    mode: yellow
+    messages:
+    - remarka-na-vtorom-snimke-vse
+    outcome:
+    - positive
+    - Командное фото готово
+    note: В этой версии истории никто не почувствовал внезапного изменения самочувствия.
+  pressure:
+    mode: yellow
+    messages:
+    - remarka-trener-tol-ko-chto-govoril
+    - sasha-ya-tut-u-menya
+    continuation: true
+    question: Что в этой сцене требует твоего внимания?
+    choices:
+      call: Речь и лицо вдруг изменились. Вызову скорую прямо из зала.
+      delegate: Саша с телефоном рядом. Попрошу его сейчас же вызвать скорую и останусь с тренером.
+      wait: Может, это усталость. Посмотрю, пройдёт ли само.
+  wait:
+    mode: yellow
+    messages:
+    - remarka-trener-snova-mozhet-otchyotlivo
+    - remarka-pri-takih-vnezapnyh-priznakah
+    question: Что сделаешь теперь?
+    choices:
+      call-now: Позвоню 112 сейчас. Расскажу и о том, как всё началось, и о том, что изменилось.
+    review:
+      signals:
+      - pressure/remarka-trener-tol-ko-chto-govoril
+      miss: true
+      effect: Внезапное нарушение речи или асимметрия лица — уже повод заподозрить инсульт и сразу вызвать скорую. Ожидание отложило вызов.
+      repair: call-now
+      recovery: После этого скорую всё-таки вызвали.
+  call:
+    mode: red
+    messages:
+    - remarka-vyzov-112-prinyat
+    - ty-u-trenera-vnezapno-izmenilas
+    - remarka-dispetcheru-nazyvayut-gorod-ulitsu
+    - dispetcher-zapisal-adres-shkoly-i
+    question: Что передашь о времени?
+    choices:
+      call-time: Скажу, когда всё было как обычно и когда заметили перемену.
+    review:
+      signals:
+      - pressure/remarka-trener-tol-ko-chto-govoril
+      effect: Вызов 112 принят. Внезапное нарушение речи или асимметрия лица — уже повод заподозрить инсульт и сразу вызвать скорую.
+  call-time:
+    mode: red
+    messages:
+    - ty-v-16-10-trener-poprosil
+    - dispetcher-brigada-napravlena-ostavaytes-na
+    outcome:
+    - positive
+    - Скорую вызвали, время передали
+    note: Внезапное нарушение речи или асимметрия лица — уже повод заподозрить инсульт и сразу вызвать скорую. В России сразу звонят 103 или 112. Опиши диспетчеру внезапные изменения, назови адрес и время начала. Если точное время неизвестно, скажи, когда человек в последний раз был в обычном состоянии.
+    review:
+      signals:
+      - call/dispetcher-zapisal-adres-shkoly-i
+      effect: Диспетчер получил время, которое участники действительно помнят.
+  delegate:
+    mode: red
+    messages:
+    - remarka-ryadom-s-toboy-nabrali
+    - sasha-u-trenera-vnezapno-izmenilas
+    - remarka-dispetcheru-nazyvayut-gorod-ulitsu
+    - dispetcher-zapisal-adres-shkoly-i
+    question: Как поможешь передать время звонящему?
+    choices:
+      delegate-time: Напомню, когда всё было как обычно.
+    review:
+      signals:
+      - pressure/remarka-trener-tol-ko-chto-govoril
+      effect: Рядом с тобой набрали 112. Внезапное нарушение речи или асимметрия лица — уже повод заподозрить инсульт и сразу вызвать скорую.
+  delegate-time:
+    mode: red
+    messages:
+    - ty-v-16-10-my-eschyo
+    - sasha-v-16-10-trener-poprosil
+    - dispetcher-brigada-napravlena-ostavaytes-na
+    outcome:
+    - positive
+    - Скорую вызвали, время передали
+    note: Внезапное нарушение речи или асимметрия лица — уже повод заподозрить инсульт и сразу вызвать скорую. В России сразу звонят 103 или 112. Опиши диспетчеру внезапные изменения, назови адрес и время начала. Если точное время неизвестно, скажи, когда человек в последний раз был в обычном состоянии.
+    review:
+      signals:
+      - delegate/dispetcher-zapisal-adres-shkoly-i
+      effect: Диспетчер получил время, которое участники действительно помнят.
+  call-now:
+    mode: red
+    messages:
+    - remarka-vyzov-112-prinyat
+    - ty-u-trenera-vnezapno-izmenilas
+    - ty-seychas-stalo-luchshe-rasskazhu
+    - remarka-dispetcheru-nazyvayut-gorod-ulitsu
+    - dispetcher-zapisal-adres-shkoly-i
+    question: Что передашь о времени?
+    choices:
+      call-now-time: Скажу, когда всё было как обычно и когда заметили перемену.
+    review:
+      signals:
+      - wait/remarka-trener-snova-mozhet-otchyotlivo
+      effect: Вызов 112 принят. Внезапное нарушение речи или асимметрия лица — уже повод заподозрить инсульт и сразу вызвать скорую.
+  call-now-time:
+    mode: red
+    messages:
+    - ty-v-16-10-trener-poprosil
+    - dispetcher-brigada-napravlena-ostavaytes-na
+    outcome:
+    - positive
+    - Скорую вызвали, время передали
+    note: Внезапное нарушение речи или асимметрия лица — уже повод заподозрить инсульт и сразу вызвать скорую. В России сразу звонят 103 или 112. Опиши диспетчеру внезапные изменения, назови адрес и время начала. Если точное время неизвестно, скажи, когда человек в последний раз был в обычном состоянии.
+    review:
+      signals:
+      - call-now/dispetcher-zapisal-adres-shkoly-i
+      effect: Диспетчер получил время, которое участники действительно помнят.
+cues:
+  pressure/remarka-trener-tol-ko-chto-govoril: Внезапное нарушение речи или асимметрия лица — уже повод заподозрить инсульт и сразу вызвать скорую.
+  wait/remarka-trener-snova-mozhet-otchyotlivo: Даже если симптомы прошли или ослабли, вызов скорой по-прежнему нужен немедленно.
+  call/dispetcher-zapisal-adres-shkoly-i: Диспетчеру важно знать время начала или когда человек в последний раз был в обычном состоянии.
+  delegate/dispetcher-zapisal-adres-shkoly-i: Диспетчеру важно знать время начала или когда человек в последний раз был в обычном состоянии.
+  call-now/dispetcher-zapisal-adres-shkoly-i: Диспетчеру важно знать время начала или когда человек в последний раз был в обычном состоянии.

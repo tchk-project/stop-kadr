@@ -1,0 +1,214 @@
+scenes:
+  start:
+    mode: yellow
+    messages:
+    - misha-kto-zavtra-v-nochnoy
+    - sistema-ty-vyshla-iz-besedy
+    - sistema-kostya-dobavil-tebya-v
+    - kostya-ty-pohozhe-sluchayno-vyshla
+    choices:
+      pressure: Читать дальше
+      calm: Спокойный дубль
+  pressure:
+    mode: yellow
+    messages:
+    - ty-ya-sama-vyshla-ot
+    - sistema-ty-vyshla-iz-besedy
+    - sistema-kostya-dobavil-tebya-v-2
+    - kostya-an-nas-pyatero-na
+    - vera-mogu-utrom-kinut-tebe
+    continuation: true
+    question: Ты хотела выспаться перед тренировкой. Как поступишь?
+    choices:
+      alternative: Не хочу подвести команду. Останусь ровно на матч.
+      pressure-act-0: Меня снова вернули после отказа. Напомню Косте и выйду.
+      pressure-act-1: Я уже всё сказала. Выйду ещё раз без объяснений.
+      observe: Может, Костя сам заглянет во вчерашний чат. Пока дочитаю.
+      focus: Я просила больше не добавлять. Посмотрю, что Костя сделает теперь.
+  pressure-act-0:
+    mode: orange
+    messages:
+    - ty-ya-vchera-spetsial-no-vyshla
+    - sistema-ty-vyshla-iz-besedy
+    outcome:
+    - positive
+    - Ты вышла и попросила больше тебя не добавлять
+    note: Ты прямо сказала Косте, чего хочешь. Если захочешь вернуться, сможешь сама попросить приглашение.
+    review:
+      signals:
+      - pressure/ty-ya-sama-vyshla-ot
+      - pressure/kostya-an-nas-pyatero-na
+      effect: Ты прямо сказала Косте, чего хочешь. Если захочешь вернуться, сможешь сама попросить приглашение.
+  pressure-act-1:
+    mode: orange
+    messages:
+    - sistema-ty-vyshla-iz-besedy-2
+    outcome:
+    - positive
+    - Ты вышла из чата, когда захотела
+    note: Предложение Веры остаётся в личке. Можно вернуться к нему завтра, если захочешь узнать про игры.
+    review:
+      signals:
+      - pressure/ty-ya-sama-vyshla-ot
+      - pressure/kostya-an-nas-pyatero-na
+      effect: Предложение Веры остаётся в личке. Можно вернуться к нему завтра, если захочешь узнать про игры.
+  alternative:
+    mode: orange
+    messages:
+    - ty-ladno-odin-i-vsyo
+    - kostya-spasibo-an-togda-ty
+    - kostya-nu-chto-revansh-sostav
+    - remarka-pervyy-match-uzhe-zakonchilsya
+    question: Что тебе сейчас подходит?
+    choices:
+      follow-up: Выйти после первого матча
+      pause: Закончить этот дубль здесь
+    review:
+      signals:
+      - pressure/ty-ya-sama-vyshla-ot
+      - pressure/kostya-an-nas-pyatero-na
+      effect: Аня согласилась на один матч. Костя записал её на следующий без вопроса. Даже если первый матч понравился, Аня в любой момент может уйти.
+      miss: false
+  follow-up:
+    mode: orange
+    messages:
+    - ty-ya-na-odin-soglashalas
+    - sistema-ty-vyshla-iz-besedy
+    outcome:
+    - positive
+    - Аня закончила игру, когда захотела
+    note: После первого матча Аня вышла. Согласие на реванш у неё никто не спрашивал.
+    review:
+      signals:
+      - alternative/kostya-nu-chto-revansh-sostav
+      effect: После первого матча Аня вышла. Согласие на реванш у неё никто не спрашивал.
+  pause:
+    mode: orange
+    messages:
+    - remarka-na-etom-dubl-zakanchivaetsya
+    outcome:
+    - mixed
+    - Первый матч закончился, а Аня всё ещё ждёт, когда можно уйти
+    note: Аня согласилась на один матч. Костя записал её на следующий без вопроса. Даже если первый матч понравился, Аня в любой момент может уйти.
+    review:
+      signals:
+      - alternative/kostya-nu-chto-revansh-sostav
+      effect: Можно взять паузу. Решать, возвращаться ли к этому разговору, по-прежнему тебе.
+  calm:
+    mode: yellow
+    messages:
+    - anya-ya-sama-vyshla-ot-2
+    - kostya-ponyal-an-na-turnir
+    continuation: true
+    question: Как продолжишь?
+    choices:
+      calm-end: Посмотреть, что будет дальше
+      ask: Договориться про расписание отдельно
+      calm-watch: Костя согласился. Посмотрю, вспомнит ли он про это перед игрой.
+  calm-end:
+    mode: yellow
+    messages:
+    - sistema-ty-vyshla-iz-besedy
+    - remarka-utrom-v-spiske-chatov
+    outcome:
+    - positive
+    - Аня вышла из беседы перед тренировкой
+    note: Костя принял объяснение. На турнир можно позвать тех, кто сам хочет сыграть.
+  ask:
+    mode: yellow
+    messages:
+    - ty-ver-kinesh-mne-zavtra
+    - vera-aga-s-utra-prishlyu
+    outcome:
+    - positive
+    - Вера пришлёт расписание отдельно
+    note: Ребята договорились о турнире отдельно. Ане не пришлось оставаться в ночном чате.
+  observe:
+    mode: yellow
+    messages:
+    - kostya-an-vizhu-vcherashnee-bol-she
+    question: Что изменилось для тебя сейчас?
+    choices:
+      observe-ease: Костя понял. На сегодня вопрос закрыт.
+      observe-watch: Он обещал больше не добавлять. Посмотрю, сдержит ли слово.
+    review:
+      signals:
+      - pressure/ty-ya-sama-vyshla-ot
+      - pressure/kostya-an-nas-pyatero-na
+      effect: Костя увидел прошлую просьбу. Место в составе он предложил другому игроку.
+  observe-ease:
+    mode: yellow
+    messages:
+    - sistema-anya-vyshla-iz-besedy
+    outcome:
+    - positive
+    - Аня закончила разговор о турнире
+    note: Костя увидел прошлую просьбу. Место в составе он предложил другому игроку.
+    review:
+      signals:
+      - observe/kostya-an-vizhu-vcherashnee-bol-she
+      effect: Костя увидел прошлую просьбу. Место в составе он предложил другому игроку.
+  observe-watch:
+    mode: orange
+    messages:
+    - sistema-anya-vyshla-iz-besedy
+    outcome:
+    - positive
+    - Аня закончила разговор о турнире
+    note: Костя увидел прошлую просьбу. Место в составе он предложил другому игроку.
+    review:
+      signals:
+      - observe/kostya-an-vizhu-vcherashnee-bol-she
+      effect: Он обещал больше не добавлять. Посмотрю, сдержит ли слово.
+  focus:
+    mode: orange
+    messages:
+    - kostya-an-vizhu-vcherashnee-bol-she
+    question: Что изменилось для тебя сейчас?
+    choices:
+      focus-ease: Костя понял. На сегодня вопрос закрыт.
+      focus-watch: Он обещал больше не добавлять. Посмотрю, сдержит ли слово.
+    review:
+      signals:
+      - pressure/ty-ya-sama-vyshla-ot
+      - pressure/kostya-an-nas-pyatero-na
+      effect: Костя увидел прошлую просьбу. Место в составе он предложил другому игроку.
+  focus-ease:
+    mode: yellow
+    messages:
+    - sistema-anya-vyshla-iz-besedy
+    outcome:
+    - positive
+    - Аня закончила разговор о турнире
+    note: Костя увидел прошлую просьбу. Место в составе он предложил другому игроку.
+    review:
+      signals:
+      - focus/kostya-an-vizhu-vcherashnee-bol-she
+      effect: Костя увидел прошлую просьбу. Место в составе он предложил другому игроку.
+  focus-watch:
+    mode: orange
+    messages:
+    - sistema-anya-vyshla-iz-besedy
+    outcome:
+    - positive
+    - Аня закончила разговор о турнире
+    note: Костя увидел прошлую просьбу. Место в составе он предложил другому игроку.
+    review:
+      signals:
+      - focus/kostya-an-vizhu-vcherashnee-bol-she
+      effect: Он обещал больше не добавлять. Посмотрю, сдержит ли слово.
+  calm-watch:
+    mode: orange
+    messages:
+    - sistema-ty-vyshla-iz-besedy
+    - remarka-utrom-v-spiske-chatov
+    outcome:
+    - positive
+    - Аня вышла из беседы перед тренировкой
+    note: Костя принял объяснение. На турнир можно позвать тех, кто сам хочет сыграть.
+cues:
+  pressure/ty-ya-sama-vyshla-ot: Аня объяснила, что вышла сама.
+  pressure/kostya-an-nas-pyatero-na: После её просьбы Костя снова добавил Аню ради команды.
+  alternative/kostya-nu-chto-revansh-sostav: Костя записал тот же состав на реванш, хотя обещание было только на одну игру.
+  observe/kostya-an-vizhu-vcherashnee-bol-she: Костя увидел прошлую просьбу. Место в составе он предложил другому игроку.
+  focus/kostya-an-vizhu-vcherashnee-bol-she: Костя увидел прошлую просьбу. Место в составе он предложил другому игроку.

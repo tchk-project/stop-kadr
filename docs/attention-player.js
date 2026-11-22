@@ -1,32 +1,5 @@
 'use strict';
 
-// The scenario labels may include a time or a place alongside the chat name.
-// Keep those details on the message and use the channel alone to group the tape.
-function transcriptContext(label, speaker) {
-  const parts = label.split(' · ');
-  const aliases = {
-    'чат класса':'Общий чат класса', '«после отбоя»':'Чат «После отбоя»',
-    'лично саше':'Личная переписка с Сашей', 'лично мише':'Личная переписка с Мишей',
-    'сообщение ане':'Личная переписка с Аней', 'сообщение дане':'Личная переписка с Аней',
-    'личная переписка ани и тимура':playerName === 'Аня' ? 'Личная переписка с Тимуром' : 'Личная переписка с Аней'
-  };
-  for (const part of parts) {
-    const key = part.toLowerCase();
-    let title = aliases[key];
-    if (key === 'лично тебе' || key === 'личная переписка') {
-      title = {Саша:'Личная переписка с Сашей', Миша:'Личная переписка с Мишей'}[speaker] || 'Личная переписка';
-    }
-    if (!title && /^(?:(?:общий |текстовый )?чат |голосовой канал |личная переписка с )/.test(key)) {
-      title = part[0].toUpperCase() + part.slice(1);
-    }
-    if (title) {
-      const caption = parts.filter(text => text !== part && !(key === 'лично тебе' && text === speaker)).join(' · ');
-      return {title, caption};
-    }
-  }
-  return {title:'', caption:label};
-}
-
 async function playAttentionPilot(ui) {
   const {pages, pathFor, messages, makeRow, button, scene, heading, thread, typing, flash,
     freeze, question, outcome, outcomeLabels, choices, controls, status, motionAllowed} = ui;
@@ -58,17 +31,19 @@ async function playAttentionPilot(ui) {
 
   function readView() {
     const hash = location.hash.slice(1);
-    if (pages.has(hash) && hash !== 'start') return {id:hash, index:history.state?.reviewIndex};
+    if (pages.has(hash) && hash !== 'start') return {id:hash, path:routePath(story,hash,history.state?.path), index:history.state?.reviewIndex};
     const id = pickAttentionTake();
-    history.replaceState(null, '', '#'+id);
-    return {id};
+    const path = routePath(story,id);
+    history.replaceState({path}, '', '#'+id);
+    return {id,path};
   }
 
   function navigate(id, index, mode = 'travel') {
     if (busy) return;
     const method = index != null && view.index != null ? 'replaceState' : 'pushState';
-    history[method]({reviewIndex:index}, '', '#'+id);
-    render({id, index}, mode);
+    const path = travelPath(story,view.path,id);
+    history[method]({path,reviewIndex:index}, '', '#'+id);
+    render({id, index, path}, mode);
   }
 
   function wait(ms, signal) {
@@ -105,13 +80,18 @@ async function playAttentionPilot(ui) {
   }
 
   function drawSignal(row, key) {
-    const [snippet, explanation] = cues[key];
-    const words = [...row.querySelectorAll('.msg p')].find(p => p.textContent.toLowerCase().includes(snippet.toLowerCase()));
-    if (!words) return;
-    const text = words.textContent;
-    const start = text.toLowerCase().indexOf(snippet.toLowerCase());
-    if (start < 0 || row.classList.contains('noticed')) return;
-    words.replaceChildren(text.slice(0,start), element('mark','',text.slice(start,start+snippet.length)), text.slice(start+snippet.length));
+    if (row.classList.contains('noticed')) return;
+    const [, explanation] = cues[key];
+    const words = row.querySelector('.cue-words');
+    if (words) {
+      const mark = element('mark','',words.textContent);
+      words.replaceChildren(mark);
+      const transcript = words.closest('details');
+      if (transcript && !transcript.open) {
+        transcript.open = true;
+        transcript.dataset.openedByReview = '';
+      }
+    }
     row.classList.add('noticed');
     row.append(element('p', 'signal-caption', explanation));
   }
@@ -119,7 +99,12 @@ async function playAttentionPilot(ui) {
   function clearSignals() {
     for (const row of thread.querySelectorAll('.noticed')) {
       const mark = row.querySelector('mark');
-      mark.replaceWith(mark.textContent);
+      if (mark) mark.replaceWith(mark.textContent);
+      const transcript = row.querySelector('[data-opened-by-review]');
+      if (transcript) {
+        transcript.open = false;
+        delete transcript.dataset.openedByReview;
+      }
       row.querySelector('.signal-caption')?.remove();
       row.classList.remove('noticed');
     }
@@ -148,17 +133,24 @@ async function playAttentionPilot(ui) {
     ];
     const media = types.find(([type]) => content.classList.contains(type));
     if (media) return {label:name+' '+media[1], kind:media[2]};
-    if (channel && !channel.startsWith('Голосовой канал')) return {label:name+' печатает сообщение', kind:'dots'};
+    if (channel.kind === 'private' || channel.kind === 'group') return {label:name+' печатает сообщение', kind:'dots'};
     return {label:name+' говорит', kind:'voice'};
   }
 
-  function blockFor(title) {
+  const stage = {title:'', kind:'scene'};
+  function blockChannel(block) {
+    return block ? {title:block.dataset.channel, kind:block.dataset.channelKind} : stage;
+  }
+
+  function blockFor(channel) {
+    const {title,kind} = channel;
     const last = thread.lastElementChild;
-    if (last && last.dataset.channel === title) return last;
+    if (last && last.dataset.channel === title && last.dataset.channelKind === kind) return last;
     const block = element(title ? 'section' : 'div', 'thread');
     block.dataset.channel = title;
+    block.dataset.channelKind = kind;
     if (title) {
-      block.classList.add(title.startsWith('Личная переписка') ? 'private-chat' : 'group-chat');
+      block.classList.add(kind === 'private' ? 'private-chat' : 'group-chat');
       block.append(element('h2','chat-heading',title));
     }
     thread.append(block);
@@ -196,7 +188,7 @@ async function playAttentionPilot(ui) {
     while (common < items.length && common < rows.length &&
            items[common].key === rows[common].dataset.key) common++;
     if (common < rows.length) direction.textContent = `◀◀ Назад · ${speed}×`;
-    let reverseChannel = thread.lastElementChild?.dataset.channel || '';
+    let reverseChannel = blockChannel(thread.lastElementChild);
     let reverseActivity = {label:'Перемотка назад', kind:'dots'};
     while (rows.length > common) {
       const row = rows.pop();
@@ -217,7 +209,7 @@ async function playAttentionPilot(ui) {
       changeColour(code, !task.signal.aborted);
       if (!task.signal.aborted) {
         scrollTo(last);
-        reverseChannel = block.dataset.channel;
+        reverseChannel = blockChannel(block);
         reverseActivity = {label:row.dataset.activity, kind:row.dataset.kind};
         showActivity(reverseActivity, reverseChannel);
         await wait(Number(row.dataset.pause)/speed, task.signal);
@@ -226,25 +218,22 @@ async function playAttentionPilot(ui) {
       }
     }
     if (common < items.length) direction.textContent = rate === speed ? `▶▶ Вперёд · ${speed}×` : '';
-    let channel = thread.lastElementChild?.dataset.channel || '';
+    let channel = blockChannel(thread.lastElementChild);
     const pending = items.slice(common).map(item => {
-      const label = item.content.dataset.context;
-      const context = label
-        ? transcriptContext(label, item.content.querySelector('strong')?.textContent.split(' · ')[0])
-        : {title:channel, caption:''};
-      channel = context.title;
-      return {item, context, activity:activityFor(item.content, channel)};
+      channel = item.line?.channel || channel;
+      const caption = item.line?.caption || '';
+      return {item, context:{channel,caption}, activity:activityFor(item.content, channel)};
     });
     for (const [index, {item, context, activity}] of pending.entries()) {
       const {pause} = timing(item);
 
       if (!task.signal.aborted) {
-        showActivity(activity, context.title);
+        showActivity(activity, context.channel);
         await wait(pause/rate, task.signal);
         if (run !== task) return;
       }
       changeColour(item.attention, !task.signal.aborted);
-      const block = blockFor(context.title);
+      const block = blockFor(context.channel);
       const row = makeRow(item, context.caption);
       row.dataset.attention = item.attention;
       if (item.reaction) guide.explainReaction(row);
@@ -259,13 +248,13 @@ async function playAttentionPilot(ui) {
       await animateRow(row, false, rate, task);
       if (run !== task) return;
       if (!task.signal.aborted) {
-        if (next) showActivity(next.activity, next.context.title);
+        if (next) showActivity(next.activity, next.context.channel);
         await wait(Number(row.dataset.readingPause)/rate, task.signal);
         if (run !== task) return;
       }
-      if (signals.includes(item.key)) {
+      if (signals.includes(item.ref)) {
         showActivity();
-        drawSignal(row, item.key);
+        drawSignal(row, item.ref);
         if (!task.signal.aborted) {
           direction.textContent = 'Стоп-кадр · деталь';
           scrollTo(row);
@@ -286,7 +275,7 @@ async function playAttentionPilot(ui) {
       const li = element('li');
       li.append(element('b', '', '«'+quote+'»'), ' — '+why);
       list.append(li);
-      const row = thread.querySelector('[data-key="'+key+'"]');
+      const row = thread.querySelector('[data-ref="'+key+'"]');
       if (row) drawSignal(row,key);
     }
     review.append(title, list, element('p','chosen-answer',transitionLabel(attentionAtLine(story[stop.parent],story[stop.parent].lines.length-1),story[stop.id].mode)+' · '+stop.answer),
@@ -348,7 +337,7 @@ async function playAttentionPilot(ui) {
           () => navigate(view.id,0)));
       }
       const otherRole = role === 'self' ? 'witness' : 'self';
-      const otherName = viewpointNames[activeStory.actors[otherRole]];
+      const otherName = activeStory.roles[otherRole].viewpoint;
       const replayUrl = focusLink(activeStory.id,otherRole)+'#'+path[1];
       choices.append(button('forward','Посмотреть глазами '+otherName,() => leave(replayUrl),'play'));
     } else {
@@ -430,7 +419,7 @@ async function playAttentionPilot(ui) {
     if (!motionAllowed() || mode === 'restore') task.abort();
     if (stop) {
       const end = items.findIndex(item => item.key === stop.id+'-choice')+1;
-      const first = items.findIndex(item => stop.signals.includes(item.key));
+      const first = items.findIndex(item => stop.signals.includes(item.ref));
       if (first >= 0 && thread.querySelectorAll('.item').length > first) {
         await moveTo(items.slice(0,first),speed,task);
         if (run !== task) return;

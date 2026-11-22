@@ -1,0 +1,272 @@
+danya-rebyat-po-sotke-na:
+  speaker: Даня
+  channel: chat-sektsii
+  caption: большая перемена
+  text: Ребят, по сотке на подарок тренеру. В четверг уже др.
+sasha-ya-v-etot-raz:
+  speaker: Саша
+  text: '[[Я в этот раз пас]].'
+danya-togda-s-tebya-dvesti:
+  speaker: Даня
+  text: '[[Тогда с тебя двести]]. После уроков тебя подождём.'
+sasha-mish-oni-vchera-tozhe:
+  speaker: Саша
+  channel: lichnaya-perepiska-s-sashey
+  text: Миш, они вчера тоже ждали у раздевалки. [[Побудешь со мной]] после уроков?
+remarka-ty-zakryl-chat-posle:
+  speaker: Ремарка
+  text: Ты закрыл чат. После последнего звонка замечаешь ещё одно сообщение.
+sasha-mish-ty-uzhe-ushyol:
+  speaker: Саша
+  channel: lichnaya-perepiska-s-sashey
+  text: Миш, ты уже ушёл? [[Я пока у кабинета сижу]].
+sasha-ya-trenera-u-kabineta:
+  speaker: Саша
+  channel: lichnaya-perepiska-s-sashey
+  caption: Позже
+  text: Я тренера у кабинета дождался. Мы вместе вышли.
+sasha-ya-dumal-ty-hot:
+  speaker: Саша
+  text: Я думал, ты хоть напишешь, [[ждать тебя или нет]].
+ty-sash-ya-tut-zrya:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-sashey
+  text: Саш, я тут. Зря сразу не ответил. Куда подойти?
+sasha-k-kabinetu-geografii-ya:
+  speaker: Саша
+  text: К кабинету географии. Я Веру попросил тренера позвать. Посидишь со мной?
+ty-aga-uzhe-na-lestnitse:
+  speaker: Ты
+  text: Ага, уже на лестнице.
+sasha-spasibo-chto-prishyol-ya:
+  speaker: Саша
+  channel: scene
+  caption: У кабинета
+  text: Спасибо, что пришёл. Я ему сам расскажу про вчера.
+remarka-vy-sidite-u-kabineta:
+  speaker: Ремарка
+  text: Вы сидите у кабинета. Тренер придвигает стул и слушает Сашу.
+ty-dan-davay-ya-za:
+  speaker: Ты
+  channel: chat-sektsii
+  text: Дань, давай я за него сотку докину?
+danya-mish-ya-zhe-skazal:
+  speaker: Даня
+  text: Миш, я же сказал — двести.
+sasha-ya-ne-prosil-platit:
+  speaker: Саша
+  channel: lichnaya-perepiska-s-sashey
+  text: Я не просил платить. [[Я просил со мной выйти]]. Ты сможешь?
+ty-da-podozhdu-ty-gde:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-sashey
+  caption: перед последним звонком
+  text: Да, подожду. Ты где сейчас?
+sasha-u-razdevalki-danya-vstal:
+  speaker: Саша
+  text: У раздевалки. Даня встал в дверях. Говорит, без двухсот [[не выпустит]].
+remarka-ty-u-sportzala-v:
+  speaker: Ремарка
+  channel: scene
+  caption: У тренерской
+  text: Ты у спортзала. [[В открытой тренерской тренер и Вера]] собирают мячи.
+sasha-mish-skazhi-treneru-pozhaluysta:
+  speaker: Саша
+  channel: lichnaya-perepiska-s-sashey
+  text: Миш, скажи тренеру, пожалуйста. Я правда выйти не могу.
+remarka-ty-snova-vidish-soobschenie:
+  speaker: Ремарка
+  text: Ты снова видишь сообщение. Тренер всё ещё у спортзала.
+ty-posmotrite-sasha-u-razdevalki:
+  speaker: Ты
+  channel: scene
+  caption: У тренерской
+  text: Посмотрите, Саша у раздевалки. Его не выпускают.
+trener-ponyal-idu-tuda:
+  speaker: Тренер
+  text: Понял, иду туда.
+sasha-on-prishyol-ya-s:
+  speaker: Саша
+  channel: lichnaya-perepiska-s-sashey
+  text: Он пришёл. Я с ним.
+ty-sasha-u-razdevalki-danya:
+  speaker: Ты
+  channel: scene
+  caption: У тренерской
+  text: Саша у раздевалки. Даня его не выпускает и требует деньги. Вы можете сейчас подойти?
+trener-da-u-razdevalki-ponyal:
+  speaker: Тренер
+  text: Да. У раздевалки, понял.
+sasha-vsyo-ya-vyshel-trener:
+  speaker: Саша
+  channel: lichnaya-perepiska-s-sashey
+  text: Всё, я вышел. [[Тренер со мной]]. Дождёшься меня у зала?
+ty-aga-ya-u-zala:
+  speaker: Ты
+  text: Ага, я у зала.
+sasha-idu-slushay-davay-zavtra:
+  speaker: Саша
+  text: Иду. Слушай, давай завтра тоже вместе после трени?
+ty-ver-otvedi-trenera-k:
+  speaker: Ты
+  channel: scene
+  caption: У тренерской
+  text: Вер, отведи тренера к раздевалке, пожалуйста. Сашу там не выпускают.
+vera-ponyala-my-idyom:
+  speaker: Вера
+  text: Поняла. Мы идём.
+ty-sash-trener-uzhe-idyot:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-sashey
+  text: Саш, тренер уже идёт к тебе. Я тут.
+sasha-vizhu-ih-da-vyshel:
+  speaker: Саша
+  text: Вижу их. [[Да, вышел]]. Спасибо.
+danya-ok-sash-vycherknul-ver:
+  speaker: Даня
+  text: Ок, Саш, [[вычеркнул]]. Вер, сколько у нас тогда?
+vera-sem-sot-na-otkrytku-hvatit:
+  speaker: Вера
+  text: Семьсот. На открытку хватит.
+sasha-otkrytku-potom-prinesite-na:
+  speaker: Саша
+  text: Открытку потом принесите на тренировку, я тоже подпишу.
+danya-aga-zahvachu:
+  speaker: Даня
+  text: Ага, захвачу.
+ty-sash-ya-pro-sbor:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-sashey
+  text: Саш, я про сбор. Всё ок?
+sasha-aga-ya-na-butsy:
+  speaker: Саша
+  text: Ага. Я на бутсы коплю. [[Даня понял]]. Увидимся на трене?
+ty-uvidimsya-myach-tol-ko-ne:
+  speaker: Ты
+  text: Увидимся! Мяч только не забудь.
+sasha-uzhe-v-ryukzake:
+  speaker: Саша
+  text: Уже в рюкзаке :)
+trener-pro-podarok-uvidel-sash:
+  speaker: Тренер
+  channel: chat-sektsii
+  text: Про подарок увидел. Саш, я у кабинета. Можем выйти вместе.
+sasha-da-ya-s-vami:
+  speaker: Саша
+  text: Да, я с вами пойду. [[Уже вижу вас]].
+remarka-trener-i-sasha-vmeste:
+  speaker: Ремарка
+  channel: scene
+  caption: У выхода из школы
+  text: Тренер и Саша вместе выходят из школы.
+ty-trener-sasha-u-razdevalki:
+  speaker: Ты
+  text: Тренер, Саша у раздевалки. Можно я с вами? Он меня ждёт.
+remarka-vy-podhodite-vmeste-trener:
+  speaker: Ремарка
+  text: Вы подходите вместе. Тренер просит Даню освободить дверь.
+danya-sash-a-den-gi:
+  speaker: Даня
+  text: Саш! А деньги?
+remarka-sasha-ostanovilsya-guby-shevel-nulis:
+  speaker: Ремарка
+  text: Саша остановился. Губы шевельнулись, но ты ничего не расслышал.
+trener-dver-svobodna-ya-zdes:
+  speaker: Тренер
+  text: '[[Дверь свободна. Я здесь побуду.]]'
+remarka-sasha-kivaet-ty-podstraivaesh:
+  speaker: Ремарка
+  text: Саша кивает. Ты подстраиваешь шаг, и вы идёте рядом.
+remarka-sasha-pokazyvaet-na-skam-yu:
+  speaker: Ремарка
+  text: Саша показывает на скамью. Вы садитесь рядом, тренер остаётся у двери.
+sasha-ya-v-etot-raz-2:
+  speaker: Саша
+  text: Я в этот раз пас.
+sasha-mish-oni-vchera-tozhe-2:
+  speaker: Саша
+  channel: lichnaya-perepiska-s-mishey
+  text: Миш, они вчера тоже ждали у раздевалки. Побудешь со мной после уроков?
+ty-marina-sergeevna-s-menya:
+  speaker: Ты
+  channel: scene
+  caption: У учительской
+  text: Марина Сергеевна, с меня деньги требуют. Говорят, после уроков будут ждать. Можно у вас побыть?
+marina-sergeevna-konechno-davay-zdes:
+  speaker: Марина Сергеевна
+  text: Конечно. Давай здесь сядем. Кому позвонить, чтобы тебя встретили?
+ty-ya-sam-mame-napishu:
+  speaker: Ты
+  text: Я сам маме напишу. Вы пока со мной побудете?
+marina-sergeevna-da-ya-zdes:
+  speaker: Марина Сергеевна
+  text: Да, я здесь.
+remarka-u-uchitel-skoy-ty-nahodish:
+  speaker: Ремарка
+  channel: scene
+  caption: У учительской
+  text: У учительской ты находишь Марину Сергеевну и просишь разрешения подождать рядом.
+ty-mam-smozhesh-menya-vstretit:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-mamoy
+  text: Мам, сможешь меня встретить? У выхода обещали ждать из-за денег. Я у дежурной.
+mama-sashi-da-podozhdi-u:
+  speaker: Мама Саши
+  text: Да. Подожди у учительской, я за тобой туда зайду. Напишу, как буду в школе.
+ty-davay-sto-kak-vnachale:
+  speaker: Ты
+  channel: chat-sektsii
+  text: Давай сто, как вначале? Только не ждите меня после уроков.
+danya-sto-segodnya-pro-zavtra:
+  speaker: Даня
+  text: Сто сегодня. [[Про завтра я ничего не обещал]].
+remarka-pered-poslednim-zvonkom-ty:
+  speaker: Ремарка
+  channel: scene
+  caption: Перед звонком · в классе
+  text: Перед последним звонком ты всё ещё сидишь в классе с деньгами в кармане и думаешь, кто стоит у выхода.
+ty-marina-sergeevna-u-menya:
+  speaker: Ты
+  text: Марина Сергеевна, у меня требуют деньги и обещали ждать после уроков. Можно я пока здесь побуду?
+marina-sergeevna-konechno-ostanus-s:
+  speaker: Марина Сергеевна
+  text: Конечно. Останусь с тобой, давай решим, кого позвать.
+remarka-na-etom-dubl-zakanchivaetsya:
+  speaker: Ремарка
+  text: На этом дубль заканчивается.
+danya-ok-sash-vycherknul-ver-2:
+  speaker: Даня
+  text: Ок, Саш, вычеркнул. Вер, сколько у нас тогда?
+ty-mozhno-ya-prosto-podpishu:
+  speaker: Ты
+  text: Можно я просто подпишу?
+vera-konechno-na-trene-dam:
+  speaker: Вера
+  text: Конечно. На трене дам ручку.
+ty-mish-vstret-menya-u:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-mishey
+  text: Миш, встреть меня у раздевалки, ладно?
+misha-da-ya-s-trenerom:
+  speaker: Миша
+  text: Да. Я с тренером, мы уже подходим.
+danya-sash-a-den-gi-2:
+  speaker: Даня
+  channel: scene
+  caption: После звонка · у раздевалки
+  text: Саш! А деньги?
+remarka-ya-sobiralsya-skazat-chto:
+  speaker: Ремарка
+  text: Я собирался сказать, что мы уходим. Даже знал, какими словами. А сейчас стою и не могу их выговорить.
+misha-ya-zdes-trener-tozhe:
+  speaker: Миша
+  text: '[[Я здесь. Тренер тоже. Пойдём со мной?]]'
+remarka-misha-zhdyot-u-otkrytoy:
+  speaker: Ремарка
+  text: Миша ждёт у открытой двери. Я ловлю его взгляд.
+remarka-ty-kivaesh-misha-zhdyot:
+  speaker: Ремарка
+  text: Ты киваешь. Миша ждёт, пока ты поравняешься с ним. Вы выходите вдвоём.
+remarka-misha-ponimaet-zhest-vy:
+  speaker: Ремарка
+  text: Миша понимает жест. Вы подходите к тренеру, и он остаётся с вами.

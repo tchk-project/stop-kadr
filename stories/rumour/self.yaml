@@ -1,0 +1,204 @@
+scenes:
+  start:
+    mode: yellow
+    messages:
+    - vera-an-mne-vot-takoy
+    - ty-ya-vpervye-vizhu-etot
+    choices:
+      pressure: Читать дальше
+      calm: Спокойный дубль
+  pressure:
+    mode: yellow
+    messages:
+    - ty-tim-mne-uzhe-pishut
+    - vera-ya-uzhe-reshila-chto
+    continuation: true
+    question: Вера рассказала про тренера. Что ты решишь?
+    choices:
+      pressure-act-0: Уже пишут гадости. Покажу тренеру, где идёт обсуждение.
+      pressure-act-1: Вера знает, где скрин. Попрошу её связаться с тренером.
+      alternative: Хочу понять, кто мне верит. Попрошу ребят поставить плюс.
+      observe: Пока никому не перешлю. Почитаю, что напишут в команде.
+      focus: На скрине обрезаны соседние сообщения. Посмотрю, остановится ли пересылка.
+  pressure-act-0:
+    mode: orange
+    messages:
+    - ty-pod-raspisaniem-peresylayut-skrin
+    - trener-vizhu-otvety-pod-raspisaniem
+    - ty-davayte-zavtra
+    outcome:
+    - positive
+    - Тренер закрыл ответы. Вы договорились поговорить завтра
+    note: Аня смогла показать конкретное место и выбрать, когда поговорить. Ей не понадобилось открывать личные переписки команде.
+    review:
+      signals:
+      - pressure/vera-ya-uzhe-reshila-chto
+      effect: Аня смогла показать конкретное место и выбрать, когда поговорить. Ей не понадобилось открывать личные переписки команде.
+  pressure-act-1:
+    mode: orange
+    messages:
+    - ty-ver-napishi-emu-ladno
+    - vera-uzhe-napisala-gde-iskat
+    - remarka-ty-vyklyuchaesh-zvuk-u
+    outcome:
+    - positive
+    - Вера написала тренеру. Ты взяла паузу
+    note: Вера согласилась поговорить с тренером. Аня сама решила, сколько сообщений ей сейчас читать.
+    review:
+      signals:
+      - pressure/vera-ya-uzhe-reshila-chto
+      effect: Вера согласилась поговорить с тренером. Аня сама решила, сколько сообщений ей сейчас читать.
+  alternative:
+    mode: orange
+    messages:
+    - ty-kto-mne-verit-postav-te
+    - vera-ya-veryu-tebe-an
+    - remarka-dva-cheloveka-stavyat-plyus
+    question: Что тебе сейчас подходит?
+    choices:
+      follow-up: Перейти с Верой в личку
+      pause: Закончить этот дубль здесь
+    review:
+      signals:
+      - pressure/vera-ya-uzhe-reshila-chto
+      effect: Плюсы ничего не говорят о происхождении скрина. Теперь тебе приходится ещё и гадать, что значит чужое молчание. За рассылку отвечают те, кто её продолжает. Можно попросить тренера закрыть ветку и поговорить с Верой отдельно.
+      miss: false
+  follow-up:
+    mode: orange
+    messages:
+    - ty-ver-davay-v-lichke
+    - vera-ya-tut-hochesh-zavtra
+    outcome:
+    - positive
+    - Вера осталась с Аней на связи
+    note: Аня закрыла общий чат, а личная переписка с Верой осталась открыта.
+    review:
+      signals:
+      - alternative/vera-ya-veryu-tebe-an
+      effect: Аня закрыла общий чат, а личная переписка с Верой осталась открыта.
+  pause:
+    mode: orange
+    messages:
+    - remarka-na-etom-dubl-zakanchivaetsya
+    outcome:
+    - mixed
+    - Весь вечер ты ждёшь, кто поставит плюс
+    note: Плюсы ничего не говорят о происхождении скрина. Теперь тебе приходится ещё и гадать, что значит чужое молчание. За рассылку отвечают те, кто её продолжает. Можно попросить тренера закрыть ветку и поговорить с Верой отдельно.
+    review:
+      signals:
+      - alternative/vera-ya-veryu-tebe-an
+      effect: Можно взять паузу. Решать, возвращаться ли к этому разговору, по-прежнему тебе.
+  calm:
+    mode: yellow
+    messages:
+    - vera-stop-v-skrine-tol-ko
+    continuation: true
+    question: Как продолжишь?
+    choices:
+      calm-end: Посмотреть, что будет дальше
+      ask: Попросить Веру уточнить в команде
+      calm-watch: Дальше картинку не передали. Пока хочется разобраться, откуда она взялась.
+  calm-end:
+    mode: yellow
+    messages:
+    - vera-an-dal-she-kidat-ne
+    - anya-pobud-pozhaluysta
+    outcome:
+    - positive
+    - Скрин дальше не переслали
+    note: По одной фразе никто не смог определить, о ком шла речь. В этой переписке скрин перестали пересылать.
+  ask:
+    mode: orange
+    messages:
+    - ty-ver-sprosi-u-togo
+    - vera-horosho-sproshu-u-nego
+    outcome:
+    - positive
+    - Вера проверит источник в личке
+    note: Происхождение картинки ещё предстоит выяснить. Для этого не пришлось посылать её всей команде.
+  observe:
+    mode: yellow
+    messages:
+    - trener-vetku-pod-raspisaniem-zakryl
+    question: Что изменилось для тебя сейчас?
+    choices:
+      observe-ease: В этой ветке больше не пишут. Можно отложить телефон.
+      observe-watch: Здесь ветку закрыли. Если скрин появится снова, я знаю, куда написать.
+    review:
+      signals:
+      - pressure/vera-ya-uzhe-reshila-chto
+      effect: Тренер закрыл конкретное обсуждение. Что происходит в других чатах, пока неизвестно.
+  observe-ease:
+    mode: yellow
+    messages:
+    - sistema-kommentarii-pod-raspisaniem-zakryty
+    outcome:
+    - mixed
+    - В командном чате обсуждение закрыто
+    note: Тренер закрыл конкретное обсуждение. Что происходит в других чатах, пока неизвестно.
+    review:
+      signals:
+      - observe/trener-vetku-pod-raspisaniem-zakryl
+      effect: Тренер закрыл конкретное обсуждение. Что происходит в других чатах, пока неизвестно.
+  observe-watch:
+    mode: orange
+    messages:
+    - sistema-kommentarii-pod-raspisaniem-zakryty
+    outcome:
+    - mixed
+    - В командном чате обсуждение закрыто
+    note: Тренер закрыл конкретное обсуждение. Что происходит в других чатах, пока неизвестно.
+    review:
+      signals:
+      - observe/trener-vetku-pod-raspisaniem-zakryl
+      effect: Здесь ветку закрыли. Если скрин появится снова, я знаю, куда написать.
+  focus:
+    mode: orange
+    messages:
+    - trener-vetku-pod-raspisaniem-zakryl
+    question: Что изменилось для тебя сейчас?
+    choices:
+      focus-ease: В этой ветке больше не пишут. Можно отложить телефон.
+      focus-watch: Здесь ветку закрыли. Если скрин появится снова, я знаю, куда написать.
+    review:
+      signals:
+      - pressure/vera-ya-uzhe-reshila-chto
+      effect: Тренер закрыл конкретное обсуждение. Что происходит в других чатах, пока неизвестно.
+  focus-ease:
+    mode: yellow
+    messages:
+    - sistema-kommentarii-pod-raspisaniem-zakryty
+    outcome:
+    - mixed
+    - В командном чате обсуждение закрыто
+    note: Тренер закрыл конкретное обсуждение. Что происходит в других чатах, пока неизвестно.
+    review:
+      signals:
+      - focus/trener-vetku-pod-raspisaniem-zakryl
+      effect: Тренер закрыл конкретное обсуждение. Что происходит в других чатах, пока неизвестно.
+  focus-watch:
+    mode: orange
+    messages:
+    - sistema-kommentarii-pod-raspisaniem-zakryty
+    outcome:
+    - mixed
+    - В командном чате обсуждение закрыто
+    note: Тренер закрыл конкретное обсуждение. Что происходит в других чатах, пока неизвестно.
+    review:
+      signals:
+      - focus/trener-vetku-pod-raspisaniem-zakryl
+      effect: Здесь ветку закрыли. Если скрин появится снова, я знаю, куда написать.
+  calm-watch:
+    mode: orange
+    messages:
+    - vera-an-dal-she-kidat-ne
+    - anya-pobud-pozhaluysta
+    outcome:
+    - positive
+    - Скрин дальше не переслали
+    note: По одной фразе никто не смог определить, о ком шла речь. В этой переписке скрин перестали пересылать.
+cues:
+  pressure/vera-ya-uzhe-reshila-chto: Вера назвала человека, который может закрыть обсуждение под расписанием.
+  alternative/vera-ya-veryu-tebe-an: Вера предложила поговорить отдельно. Счётчик в общем чате не объясняет, откуда взялся скрин.
+  observe/trener-vetku-pod-raspisaniem-zakryl: Тренер закрыл конкретное обсуждение. Что происходит в других чатах, пока неизвестно.
+  focus/trener-vetku-pod-raspisaniem-zakryl: Тренер закрыл конкретное обсуждение. Что происходит в других чатах, пока неизвестно.

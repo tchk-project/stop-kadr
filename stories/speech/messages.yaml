@@ -1,0 +1,89 @@
+trener-vera-peredvin-pozhaluysta-skameyku:
+  speaker: Тренер
+  channel: scene
+  caption: После игры · 16:10
+  text: Вера, передвинь, пожалуйста, скамейку.
+vera-tak-togda-ya-stavlyu:
+  speaker: Вера
+  text: Так? Тогда я ставлю телефон на таймер.
+remarka-telefon-schyolkaet-ran-she-chem:
+  speaker: Ремарка
+  text: Телефон щёлкает раньше, чем ребята успевают встать. На снимке видно только половину лица тренера.
+trener-vera-davay-eschyo-raz:
+  speaker: Тренер
+  text: Вера, давай ещё раз. На этот раз встану по центру.
+remarka-na-vtorom-snimke-vse:
+  speaker: Ремарка
+  text: На втором снимке все попали в кадр. Тренер зовёт ребят разбирать скамейки.
+remarka-trener-tol-ko-chto-govoril:
+  speaker: Ремарка
+  text: Тренер только что говорил как обычно. Вдруг [[слова стали неразборчивыми]], а когда он улыбнулся, один угол рта остался опущенным.
+sasha-ya-tut-u-menya:
+  speaker: Саша
+  text: Я тут, у меня телефон.
+remarka-trener-snova-mozhet-otchyotlivo:
+  speaker: Ремарка
+  text: '[[Тренер снова может отчётливо произнести твоё имя. Улыбка всё ещё неровная.]]'
+remarka-pri-takih-vnezapnyh-priznakah:
+  speaker: Ремарка
+  text: При таких внезапных признаках скорую вызывают сразу, даже если стало легче. В России — 103 или 112.
+remarka-vyzov-112-prinyat:
+  speaker: Ремарка
+  text: Вызов 112 принят.
+ty-u-trenera-vnezapno-izmenilas:
+  speaker: Ты
+  channel: scene
+  caption: Разговор с диспетчером 112
+  text: У тренера внезапно изменилась речь, опустился угол рта. Мы в школьном спортзале.
+remarka-dispetcheru-nazyvayut-gorod-ulitsu:
+  speaker: Ремарка
+  text: Диспетчеру называют город, улицу, номер дома и вход в школу.
+dispetcher-zapisal-adres-shkoly-i:
+  speaker: Диспетчер
+  text: Записал адрес школы и куда подойти. [[Когда это началось]]?
+ty-v-16-10-trener-poprosil:
+  speaker: Ты
+  text: В 16:10 тренер попросил передвинуть скамейку и говорил как обычно. Сразу после этого изменилась речь.
+dispetcher-brigada-napravlena-ostavaytes-na:
+  speaker: Диспетчер
+  text: Бригада направлена. Оставайтесь на связи, я скажу, что делать до её приезда.
+remarka-ryadom-s-toboy-nabrali:
+  speaker: Ремарка
+  text: Рядом с тобой набрали 112.
+sasha-u-trenera-vnezapno-izmenilas:
+  speaker: Саша
+  channel: scene
+  caption: Разговор с диспетчером 112
+  text: У тренера внезапно изменилась речь, опустился угол рта. Мы в школьном спортзале.
+ty-v-16-10-my-eschyo:
+  speaker: Ты
+  text: В 16:10 мы ещё ставили скамейку. Помнишь?
+sasha-v-16-10-trener-poprosil:
+  speaker: Саша
+  text: В 16:10 тренер попросил передвинуть скамейку и говорил как обычно. Сразу после этого изменилась речь.
+ty-seychas-stalo-luchshe-rasskazhu:
+  speaker: Ты
+  text: Сейчас стало лучше. Расскажу, какие признаки были вначале.
+remarka-hochesh-poprosit-rebyat-podvinut-sya:
+  speaker: Ремарка
+  text: Хочешь попросить ребят подвинуться. Ты знаешь слова, но [[речь вдруг стала невнятной]].
+vera-u-vas-ugol-rta:
+  speaker: Вера
+  text: У вас угол рта с одной стороны опустился. Тренер, я рядом, телефон у меня.
+remarka-teper-poluchaetsya-otchyotlivo-skazat:
+  speaker: Ремарка
+  text: '[[Теперь получается отчётливо сказать «Вера». Она всё ещё видит, что улыбка неровная.]]'
+vera-u-trenera-vdrug-izmenilas:
+  speaker: Вера
+  channel: scene
+  caption: Разговор с диспетчером 112
+  text: У тренера вдруг изменилась речь и опустился угол рта. Я рядом, в школьном спортзале.
+remarka-ty-pokazyvaesh-vere-na:
+  speaker: Ремарка
+  text: Ты показываешь Вере на часы в зале. Она кивает.
+vera-v-16-10-trener-poprosil:
+  speaker: Вера
+  text: В 16:10 тренер попросил передвинуть скамейку и говорил как обычно. Сразу после этого изменилась речь.
+vera-seychas-stalo-luchshe-rasskazhu:
+  speaker: Вера
+  text: Сейчас стало лучше. Расскажу, какие признаки были вначале.

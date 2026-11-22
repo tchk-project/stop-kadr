@@ -1,0 +1,36 @@
+id: sticker
+title: Кот под голосовым
+order: 2
+place: Чат класса · делаем стенгазету
+roles:
+  witness:
+    name: Вера
+    viewpoint: Веры
+    intro: Вы с классом делаете стенгазету. Вчера Лера прислала в чат голосовое о встрече.
+  self:
+    name: Лера
+    viewpoint: Леры
+    intro: Вчера ты отправила в чат класса голосовое о том, где вы встретитесь делать стенгазету.
+cast:
+- Аня
+- Вера
+- Даня
+- Костя
+- Лера
+- Миша
+channels:
+  obschiy-chat-klassa:
+    kind: group
+    title: Общий чат класса
+  lichnaya-perepiska-s-leroy:
+    kind: private
+    title: Личная переписка с Лерой
+  scene:
+    kind: scene
+    title: ''
+  lichnaya-perepiska-s-daney:
+    kind: private
+    title: Личная переписка с Даней
+  lichnaya-perepiska-s-veroy:
+    kind: private
+    title: Личная переписка с Верой

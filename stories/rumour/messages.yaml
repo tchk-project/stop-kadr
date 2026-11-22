@@ -1,0 +1,150 @@
+kostya-glyan-skrin-pohodu-eto:
+  speaker: Костя
+  channel: lichnaya-perepiska-s-kostey
+  caption: После тренировки
+  media:
+    kind: image
+    src: ./assets/chat-fragment.webp
+    alt: 'Фрагмент переписки. Аня: «С ними я точно больше не пойду». 18:42. Соседние сообщения обрезаны.'
+    caption: Глянь скрин. Походу, это Аня про нас после игры.
+kostya-zakin-v-chat-komandy:
+  speaker: Костя
+  text: Закинь в чат команды, [[тебе больше поверят]].
+anya-tim-ty-videl-chto:
+  speaker: Аня
+  aside: лично тебе
+  channel: lichnaya-perepiska-s-aney
+  text: Тим, ты видел, что там про меня? [[Мне уже пишут гадости]]. Что вообще разослали?
+ty-tam-odna-strochka-s:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-aney
+  text: 'Там одна строчка: «С ними я точно больше не пойду». До и после обрезано. Костя мне скинул. Дальше не отправляю.'
+anya-teper-ponyala-pro-chto:
+  speaker: Аня
+  text: Теперь поняла, про что все пишут. Тим, спасибо, саму картинку не кидай.
+ty-pod-raspisaniem-igry-obsuzhdayut:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-trenerom
+  text: Под расписанием игры обсуждают скрин с Аниным именем. Она говорит, ей уже гадости пишут. Вы можете посмотреть?
+trener-vizhu-vetku-zakroyu-otvety:
+  speaker: Тренер
+  text: Вижу ветку. Закрою ответы под расписанием и напишу Ане отдельно.
+ty-rebyat-pro-frazu-ani:
+  speaker: Ты
+  channel: chat-komandy
+  text: Ребят, про фразу Ани. Кто вообще знает, о ком это?
+sasha-a-chto-za-fraza:
+  speaker: Саша
+  text: А что за фраза? Мне никто не присылал.
+anya-teper-i-sasha-sprashivaet:
+  speaker: Аня
+  aside: лично тебе
+  channel: lichnaya-perepiska-s-aney
+  text: Теперь и Саша спрашивает. Я весь вечер отвечаю про эту фразу.
+anya-tim-mne-eschyo-dvoe:
+  speaker: Аня
+  channel: lichnaya-perepiska-s-aney
+  text: '[[Тим, мне ещё двое написали. Можешь хоть сказать, что на скрине?]]'
+anya-vera-mne-pokazala-tam:
+  speaker: Аня
+  text: Вера мне показала. Там вообще одна фраза.
+ty-odna-fraza-s-nimi:
+  speaker: Ты
+  text: 'Одна фраза: «С ними я точно больше не пойду». До и после всё обрезано.'
+anya-teper-ponyala-sam-skrin:
+  speaker: Аня
+  text: Теперь поняла. Сам скрин мне не кидай.
+kostya-stop-tut-zhe-odna:
+  speaker: Костя
+  channel: lichnaya-perepiska-s-kostey
+  text: Стоп, тут же одна фраза. С чего я взял, что она про нас? Не буду кидать в команду.
+kostya-ya-poka-tol-ko-tebe:
+  speaker: Костя
+  text: Я пока только тебе скинул. Хорошо, что не успел в команду.
+ty-ty-videl-soobscheniya-do:
+  speaker: Ты
+  text: Ты видел сообщения до этой фразы?
+kostya-net-mne-uzhe-tak:
+  speaker: Костя
+  text: Нет. Мне уже так прислали.
+trener-vetku-pod-raspisaniem-zakryl:
+  speaker: Тренер
+  channel: chat-komandy
+  text: '[[Ветку под расписанием закрыл]]. Если кому-то ещё приходит скрин, напишите мне лично.'
+sistema-kommentarii-pod-raspisaniem-zakryty:
+  speaker: Система
+  text: Комментарии под расписанием закрыты.
+vera-an-mne-vot-takoy:
+  speaker: Вера
+  channel: lichnaya-perepiska-s-veroy
+  media:
+    kind: image
+    src: ./assets/chat-fragment.webp
+    alt: 'Фрагмент переписки. Аня: «С ними я точно больше не пойду». 18:42. Соседние сообщения обрезаны.'
+    caption: Ань, мне вот такой кусок прислали. Тут про нашу команду?
+ty-ya-vpervye-vizhu-etot:
+  speaker: Ты
+  text: Я впервые вижу этот скрин.
+ty-tim-mne-uzhe-pishut:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-timurom
+  text: Тим, мне уже пишут гадости. Ты знаешь, где это выложили?
+vera-ya-uzhe-reshila-chto:
+  speaker: Вера
+  channel: lichnaya-perepiska-s-veroy
+  text: Я уже решила, что это ты. Зря. Слушай, это под расписанием игры висит. Написать тренеру? [[Он ведёт чат]].
+ty-pod-raspisaniem-peresylayut-skrin:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-trenerom
+  text: Под расписанием пересылают скрин с моим именем. Мне из-за него пишут гадости. Можете закрыть ответы?
+trener-vizhu-otvety-pod-raspisaniem:
+  speaker: Тренер
+  text: Вижу. Ответы под расписанием закрыл. Тебе удобно сейчас поговорить или завтра на тренировке?
+ty-davayte-zavtra:
+  speaker: Ты
+  text: Давайте завтра.
+ty-ver-napishi-emu-ladno:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-veroy
+  text: Вер, напиши ему, ладно? Я пока выключу уведомления.
+vera-uzhe-napisala-gde-iskat:
+  speaker: Вера
+  text: Уже написала, где искать. Твои сообщения ему не пересылала.
+remarka-ty-vyklyuchaesh-zvuk-u:
+  speaker: Ремарка
+  text: Ты выключаешь звук у командного чата и убираешь телефон.
+ty-kto-mne-verit-postav-te:
+  speaker: Ты
+  channel: chat-komandy
+  text: Кто мне верит, поставьте плюс. Я такого про команду не писала.
+vera-ya-veryu-tebe-an:
+  speaker: Вера
+  text: Я верю тебе, Ань. [[Можно я просто тебе в личку напишу]]?
+remarka-dva-cheloveka-stavyat-plyus:
+  speaker: Ремарка
+  text: Два человека ставят плюс. Остальные молчат. Ты весь вечер смотришь на счётчик и гадаешь, что думают остальные.
+ty-ver-davay-v-lichke:
+  speaker: Ты
+  text: Вер, давай в личке. Я пока чат закрою.
+vera-ya-tut-hochesh-zavtra:
+  speaker: Вера
+  text: Я тут. Хочешь, завтра до тренировки вместе дойдём?
+remarka-na-etom-dubl-zakanchivaetsya:
+  speaker: Ремарка
+  text: На этом дубль заканчивается.
+vera-stop-v-skrine-tol-ko:
+  speaker: Вера
+  channel: lichnaya-perepiska-s-veroy
+  text: Стоп, в скрине только одна фраза. С чего я взяла, что это про нас? Дальше не кину.
+vera-an-dal-she-kidat-ne:
+  speaker: Вера
+  text: Ань, дальше кидать не буду. Если хочешь, побуду с тобой на связи.
+anya-pobud-pozhaluysta:
+  speaker: Аня
+  text: Побудь, пожалуйста.
+ty-ver-sprosi-u-togo:
+  speaker: Ты
+  text: Вер, спроси у того, кто тебе прислал, откуда это. Снова картинку не кидай.
+vera-horosho-sproshu-u-nego:
+  speaker: Вера
+  text: Хорошо, спрошу у него в личке.

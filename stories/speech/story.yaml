@@ -1,0 +1,23 @@
+id: speech
+title: Перед командным фото
+order: 12
+place: Спортзал
+article: ./stroke.html
+roles:
+  witness:
+    name: Вера
+    viewpoint: Веры
+    intro: После игры ты ставишь телефон на таймер для командного фото.
+  self:
+    name: Тренер
+    viewpoint: тренера
+    intro: После игры ты собираешь команду для общего фото.
+cast:
+- Вера
+- Диспетчер
+- Саша
+- Тренер
+channels:
+  scene:
+    kind: scene
+    title: ''

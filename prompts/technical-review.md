@@ -4,7 +4,7 @@
 Опубликованный тренажёр https://tchk-project.github.io/stop-kadr/docs/
 Возьми текущий main и укажи SHA, который проверял. Версия с исправленной ролью — a07de39.
 
-Это статический русскоязычный тренажёр. В нём 12 ситуаций и две роли. Первую историю частично задают docs/index.html и docs/self.html, остальные — docs/scenarios.js. Каталог и роли собраны в docs/catalog.js, воспроизведение в docs/scene.js, разбор в docs/detail-review.js и docs/detail-cues.js, оформление в docs/scene.css, вложения в docs/assets/. Читай фактические файлы на выбранном коммите.
+Это статический русскоязычный тренажёр. Каждая ситуация в stories/ содержит две роли, сообщения и разбор в YAML. Сборщик scripts/build_stories.py формирует статический каталог и отдельные истории в docs/game/. Маршруты и решения обрабатывает docs/engine.js, воспроизведение и разбор — docs/scene.js и docs/attention-player.js. Оформление находится в docs/scene.css и docs/attention.css, вложения — в docs/assets/ и папке media/ соответствующей истории. Читай фактические файлы на выбранном коммите.
 
 Что проверить
 

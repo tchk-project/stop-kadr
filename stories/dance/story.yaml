@@ -1,0 +1,29 @@
+id: dance
+title: Последний танец
+order: 6
+place: Школьная дискотека
+roles:
+  witness:
+    name: Даня
+    viewpoint: Дани
+    intro: Ты на школьной дискотеке. Вера пишет тебе, что подойдёт к Ане.
+  self:
+    name: Аня
+    viewpoint: Ани
+    intro: Ты на школьной дискотеке. Лёша приглашает тебя танцевать.
+cast:
+- Аня
+- Вера
+- Даня
+- Лёша
+- Марина Сергеевна
+channels:
+  lichnaya-perepiska-s-veroy:
+    kind: private
+    title: Личная переписка с Верой
+  scene:
+    kind: scene
+    title: ''
+  lichnaya-perepiska-s-aney:
+    kind: private
+    title: Личная переписка с Аней

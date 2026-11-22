@@ -1,0 +1,219 @@
+scenes:
+  start:
+    mode: yellow
+    messages:
+    - kostya-glyan-skrin-pohodu-eto
+    choices:
+      pressure: Читать дальше
+      calm: Спокойный дубль
+  pressure:
+    mode: yellow
+    messages:
+    - kostya-zakin-v-chat-komandy
+    - anya-tim-ty-videl-chto
+    continuation: true
+    question: Костя просит переслать скрин. Что сделаешь?
+    choices:
+      pressure-act-0: Аня спрашивает, что разослали. Объясню ей в личке.
+      alternative: Одного куска мало. Спрошу в команде, кто видел остальное.
+      pressure-act-1: Скрин пошёл по команде. Напишу тренеру, который ведёт чат.
+      ignore: Не открывать личку. Про скрин скоро забудут.
+      observe: Пока никому не перешлю. Почитаю, что напишут в команде.
+      focus: На скрине обрезаны соседние сообщения. Посмотрю, остановится ли пересылка.
+  pressure-act-0:
+    mode: orange
+    messages:
+    - ty-tam-odna-strochka-s
+    - anya-teper-ponyala-pro-chto
+    outcome:
+    - positive
+    - Аня узнала, какую фразу рассылают
+    note: Тимур рассказал Ане, что именно получил. Аня узнала содержание и смогла сказать, нужна ли ей копия.
+    review:
+      signals:
+      - pressure/kostya-zakin-v-chat-komandy
+      - pressure/anya-tim-ty-videl-chto
+      effect: Тимур рассказал Ане, что именно получил. Аня узнала содержание и смогла сказать, нужна ли ей копия.
+  pressure-act-1:
+    mode: orange
+    messages:
+    - ty-pod-raspisaniem-igry-obsuzhdayut
+    - trener-vizhu-vetku-zakroyu-otvety
+    outcome:
+    - positive
+    - Тренер нашёл обсуждение под расписанием
+    note: Тренер нашёл обсуждение. Закрыть ответы в одном чате ему по силам. Кто уже успел сохранить скрин, пока неизвестно.
+    review:
+      signals:
+      - pressure/kostya-zakin-v-chat-komandy
+      - pressure/anya-tim-ty-videl-chto
+      effect: Тренер нашёл обсуждение. Закрыть ответы в одном чате ему по силам. Кто уже успел сохранить скрин, пока неизвестно.
+  alternative:
+    mode: orange
+    messages:
+    - ty-rebyat-pro-frazu-ani
+    - sasha-a-chto-za-fraza
+    - anya-teper-i-sasha-sprashivaet
+    outcome:
+    - negative
+    - О скрине узнали ещё больше ребят
+    note: Ты хотел проверить слух и даже не пересылал картинку. Но общий вопрос привлёк тех, кто ничего не слышал, и объяснений опять ждут от Ани. Про источник можно спросить лично. С оскорблениями уже может помочь модератор.
+    review:
+      signals:
+      - pressure/kostya-zakin-v-chat-komandy
+      - pressure/anya-tim-ty-videl-chto
+      effect: Ты хотел проверить слух и даже не пересылал картинку. Но общий вопрос привлёк тех, кто ничего не слышал, и объяснений опять ждут от Ани. Про источник можно спросить лично. С оскорблениями уже может помочь модератор.
+      miss: true
+  ignore:
+    mode: white
+    messages:
+    - anya-tim-mne-eschyo-dvoe
+    question: Теперь ты знаешь ещё кое-что. Что сделаешь?
+    choices:
+      stay: Закрыть переписку и вернуться к ней завтра.
+      rejoin: Описать Ане, что видно на картинке.
+    review:
+      miss: true
+      signals:
+      - pressure/kostya-zakin-v-chat-komandy
+      - pressure/anya-tim-ty-videl-chto
+      effect: 'После твоего решения разговор продолжился: «Тим, мне ещё двое написали. Можешь хоть сказать, что на скрине?»'
+      repair: rejoin
+      recovery: Аня получила ответ без новой пересылки.
+  stay:
+    mode: white
+    messages:
+    - anya-vera-mne-pokazala-tam
+    outcome:
+    - mixed
+    - Аня узнала о содержании от Веры
+    note: Тимур не стал пересылать картинку, но и на вопрос Ани не ответил. Ей пришлось искать ответ у Веры.
+    review:
+      miss: true
+      signals:
+      - ignore/anya-tim-mne-eschyo-dvoe
+      effect: Тимур не стал пересылать картинку, но и на вопрос Ани не ответил. Ей пришлось искать ответ у Веры.
+  rejoin:
+    mode: orange
+    messages:
+    - ty-odna-fraza-s-nimi
+    - anya-teper-ponyala-sam-skrin
+    outcome:
+    - positive
+    - Аня получила ответ без новой пересылки
+    note: Тимур описал, что видно на скрине. Аня сама сказала, что копия ей не нужна.
+  calm:
+    mode: yellow
+    messages:
+    - kostya-stop-tut-zhe-odna
+    continuation: true
+    question: Как продолжишь?
+    choices:
+      calm-end: Посмотреть, что будет дальше
+      ask: Переспросить про источник
+      calm-watch: Дальше картинку не передали. Пока хочется разобраться, откуда она взялась.
+  calm-end:
+    mode: yellow
+    messages:
+    - kostya-ya-poka-tol-ko-tebe
+    outcome:
+    - positive
+    - Скрин дальше не переслали
+    note: По одной фразе никто не смог определить, о ком шла речь. В этой переписке скрин перестали пересылать.
+  ask:
+    mode: orange
+    messages:
+    - ty-ty-videl-soobscheniya-do
+    - kostya-net-mne-uzhe-tak
+    outcome:
+    - positive
+    - Костя получил уже обрезанную картинку
+    note: Происхождение картинки ещё предстоит выяснить. Для этого не пришлось посылать её всей команде.
+  observe:
+    mode: yellow
+    messages:
+    - trener-vetku-pod-raspisaniem-zakryl
+    question: Что изменилось для тебя сейчас?
+    choices:
+      observe-ease: В этой ветке больше не пишут. Можно отложить телефон.
+      observe-watch: Здесь ветку закрыли. Если скрин появится снова, я знаю, куда написать.
+    review:
+      signals:
+      - pressure/kostya-zakin-v-chat-komandy
+      - pressure/anya-tim-ty-videl-chto
+      effect: Тренер закрыл конкретное обсуждение. Что происходит в других чатах, пока неизвестно.
+  observe-ease:
+    mode: yellow
+    messages:
+    - sistema-kommentarii-pod-raspisaniem-zakryty
+    outcome:
+    - mixed
+    - В командном чате обсуждение закрыто
+    note: Тренер закрыл конкретное обсуждение. Что происходит в других чатах, пока неизвестно.
+    review:
+      signals:
+      - observe/trener-vetku-pod-raspisaniem-zakryl
+      effect: Тренер закрыл конкретное обсуждение. Что происходит в других чатах, пока неизвестно.
+  observe-watch:
+    mode: orange
+    messages:
+    - sistema-kommentarii-pod-raspisaniem-zakryty
+    outcome:
+    - mixed
+    - В командном чате обсуждение закрыто
+    note: Тренер закрыл конкретное обсуждение. Что происходит в других чатах, пока неизвестно.
+    review:
+      signals:
+      - observe/trener-vetku-pod-raspisaniem-zakryl
+      effect: Здесь ветку закрыли. Если скрин появится снова, я знаю, куда написать.
+  focus:
+    mode: orange
+    messages:
+    - trener-vetku-pod-raspisaniem-zakryl
+    question: Что изменилось для тебя сейчас?
+    choices:
+      focus-ease: В этой ветке больше не пишут. Можно отложить телефон.
+      focus-watch: Здесь ветку закрыли. Если скрин появится снова, я знаю, куда написать.
+    review:
+      signals:
+      - pressure/kostya-zakin-v-chat-komandy
+      - pressure/anya-tim-ty-videl-chto
+      effect: Тренер закрыл конкретное обсуждение. Что происходит в других чатах, пока неизвестно.
+  focus-ease:
+    mode: yellow
+    messages:
+    - sistema-kommentarii-pod-raspisaniem-zakryty
+    outcome:
+    - mixed
+    - В командном чате обсуждение закрыто
+    note: Тренер закрыл конкретное обсуждение. Что происходит в других чатах, пока неизвестно.
+    review:
+      signals:
+      - focus/trener-vetku-pod-raspisaniem-zakryl
+      effect: Тренер закрыл конкретное обсуждение. Что происходит в других чатах, пока неизвестно.
+  focus-watch:
+    mode: orange
+    messages:
+    - sistema-kommentarii-pod-raspisaniem-zakryty
+    outcome:
+    - mixed
+    - В командном чате обсуждение закрыто
+    note: Тренер закрыл конкретное обсуждение. Что происходит в других чатах, пока неизвестно.
+    review:
+      signals:
+      - focus/trener-vetku-pod-raspisaniem-zakryl
+      effect: Здесь ветку закрыли. Если скрин появится снова, я знаю, куда написать.
+  calm-watch:
+    mode: orange
+    messages:
+    - kostya-ya-poka-tol-ko-tebe
+    outcome:
+    - positive
+    - Скрин дальше не переслали
+    note: По одной фразе никто не смог определить, о ком шла речь. В этой переписке скрин перестали пересылать.
+cues:
+  pressure/kostya-zakin-v-chat-komandy: Костя хочет переслать обрезанный скрин от твоего имени.
+  pressure/anya-tim-ty-videl-chto: Аня сама рассказала тебе, что получает сообщения.
+  ignore/anya-tim-mne-eschyo-dvoe: Теперь к тебе обратились напрямую.
+  observe/trener-vetku-pod-raspisaniem-zakryl: Тренер закрыл конкретное обсуждение. Что происходит в других чатах, пока неизвестно.
+  focus/trener-vetku-pod-raspisaniem-zakryl: Тренер закрыл конкретное обсуждение. Что происходит в других чатах, пока неизвестно.

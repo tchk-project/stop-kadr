@@ -1,0 +1,190 @@
+misha-sobral-ler-otkroesh-na:
+  speaker: Миша
+  channel: chat-proekta
+  caption: до защиты пять минут
+  reactions:
+    👍:
+    - Вера
+  media:
+    kind: document
+    caption: Собрал. Лер, откроешь на школьном ноуте? Через пять минут наш выход.
+    src: ./assets/yard-project.webp
+    file: ./assets/yard-project.pdf
+    alt: 'Наш школьный двор. Авторы: Миша, Аня.'
+anya-mish-na-pervoy-nas:
+  speaker: Аня
+  text: Миш, на первой нас двое. А под графиками на второй и третьей — Тимур.
+misha-ya-teh-vpisal-kto:
+  speaker: Миша
+  text: Я тех вписал, кто выходит к доске. Мы же с тобой репетировали.
+timur-a-grafiki-ya-vsyo:
+  speaker: Тимур
+  text: А графики я всё равно делал. [[Верни имя]], ладно? Я ещё не решил, буду ли сам их показывать.
+misha-ler-otkryvay-chto-skinul:
+  speaker: Миша
+  channel: chat-proekta
+  caption: Через минуту
+  text: Лер, открывай, что скинул. Опоздаем же. Имя уже [[после защиты впишу]].
+anya-my-seychas-vyhodim-na:
+  speaker: Аня
+  text: Мы сейчас выходим. На доске так и останемся вдвоём?
+ty-mish-u-menya-poka:
+  speaker: Ты
+  text: Миш, у меня пока заставка. Успеешь вписать Тимура? Я дождусь.
+misha-uspel-vot-etot-otkryvay:
+  speaker: Миша
+  media:
+    kind: document
+    caption: Успел. Вот этот открывай.
+    src: ./assets/yard-project-v2.webp
+    file: ./assets/yard-project-v2.pdf
+    alt: 'Наш школьный двор. Авторы: Миша, Аня, Тимур.'
+ty-vsyo-otkryla-teper-na:
+  speaker: Ты
+  text: Всё, открыла. Теперь на первой трое.
+ty-marina-sergeevna-u-nas:
+  speaker: Ты
+  channel: scene
+  caption: У доски · перед защитой
+  text: Марина Сергеевна, у нас Тимур тоже автор. Вот на двух последних его графики.
+marina-sergeevna-vizhu-podpis-timur:
+  speaker: Марина Сергеевна
+  text: Вижу подпись. Тимур, как тебя представить?
+timur-ya-delal-grafiki-a:
+  speaker: Тимур
+  text: Я делал графики. А первый слайд Аня расскажет.
+ty-ladno-togda-otkryvayu-etot:
+  speaker: Ты
+  text: Ладно, тогда открываю этот. После защиты поменяем.
+marina-sergeevna-proekt-mishi-i:
+  speaker: Марина Сергеевна
+  channel: scene
+  caption: У доски · перед защитой
+  text: Проект Миши и Ани. Ребята, вам слово.
+timur-ya-vchera-eti-grafiki:
+  speaker: Тимур
+  channel: lichnaya-perepiska-s-timurom
+  caption: После защиты
+  text: Я вчера эти графики до ночи переделывал. А все уже на следующую группу переключились.
+timur-ler-uzhe-na-ekran:
+  speaker: Тимур
+  channel: scene
+  caption: У ноутбука, вполголоса
+  text: '[[Лер, уже на экран вывели? Моего имени всё ещё нет?]]'
+marina-sergeevna-proekt-mishi-i-2:
+  speaker: Марина Сергеевна
+  channel: scene
+  caption: У доски
+  text: Проект Миши и Ани. Кто начнёт?
+ty-eschyo-ne-vyvela-mish:
+  speaker: Ты
+  channel: scene
+  caption: У ноутбука
+  text: Ещё не вывела. Миш, впиши Тимура сейчас, я подожду.
+misha-vsyo-derzhi-novyy-fayl:
+  speaker: Миша
+  text: Всё, держи новый файл, там все трое.
+misha-dobavil-tim-glyan-pervuyu:
+  speaker: Миша
+  channel: chat-proekta
+  caption: Через минуту
+  media:
+    kind: document
+    caption: Добавил. Тим, глянь первую. Лер, на защите открывай вот эту.
+    src: ./assets/yard-project-v2.webp
+    file: ./assets/yard-project-v2.pdf
+    alt: 'Наш школьный двор. Авторы: Миша, Аня, Тимур.'
+anya-tim-ty-sam-pro:
+  speaker: Аня
+  text: Тим, ты сам про графики расскажешь или мне их взять?
+ty-otkryla-novyy-tim-posmotri:
+  speaker: Ты
+  text: Открыла новый. Тим, посмотри, всё так?
+timur-aga-teper-vse-troe:
+  speaker: Тимур
+  text: Ага, теперь все трое. Ань, давай ты начнёшь, а я покажу второй график.
+anya-davay-ya-tebe-kliker:
+  speaker: Аня
+  text: Давай. Я тебе кликер передам.
+ty-tim-esli-ne-hochesh:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-timurom
+  text: Тим, если не хочешь к доске, я могу графики с ноута листать. Как тебе?
+timur-listay-spasibo-ya-ane:
+  speaker: Тимур
+  text: Листай, спасибо. Я Ане напишу, пусть про них расскажет.
+ty-dogovorilis-na-pervoy-tvoyo:
+  speaker: Ты
+  text: Договорились. На первой твоё имя уже есть.
+misha-tim-stoy-uspel-ler:
+  speaker: Миша
+  text: Тим, стой, успел! Лер, открывай второй файл.
+anya-teper-troe-timur-tozhe:
+  speaker: Аня
+  text: Теперь трое. [[Тимур тоже на титульном]].
+marina-sergeevna-vizhu-tryoh-avtorov:
+  speaker: Марина Сергеевна
+  channel: scene
+  caption: У доски
+  text: Вижу трёх авторов. Кто начнёт?
+ty-a-grafiki-ya-vsyo:
+  speaker: Ты
+  text: А графики я всё равно делал. [[Верни имя]], ладно? Я ещё не решил, буду ли сам их показывать.
+ty-ler-pogodi-vyvodit-mish:
+  speaker: Ты
+  text: Лер, погоди выводить. Миш, я хочу, чтобы там были все трое.
+lera-u-menya-poka-zastavka:
+  speaker: Лера
+  text: У меня пока заставка. Миш, минуту подождём.
+misha-gotovo-tim-vot-teper:
+  speaker: Миша
+  media:
+    kind: document
+    caption: Готово. Тим, вот теперь проверь.
+    src: ./assets/yard-project-v2.webp
+    file: ./assets/yard-project-v2.pdf
+    alt: 'Наш школьный двор. Авторы: Миша, Аня, Тимур.'
+ty-teper-est-ler-mozhno:
+  speaker: Ты
+  text: Теперь есть. Лер, можно открывать.
+ty-marina-sergeevna-eto-moi:
+  speaker: Ты
+  channel: scene
+  caption: У доски · перед защитой
+  text: Марина Сергеевна, это мои графики, вот подпись. Можно сказать, что я их делал?
+marina-sergeevna-konechno-ty-hochesh:
+  speaker: Марина Сергеевна
+  text: Конечно. Ты хочешь сам показать или назвать тебя в начале?
+ty-v-nachale-pozhaluysta-grafiki:
+  speaker: Ты
+  text: В начале, пожалуйста. Графики пусть покажет Аня.
+ty-ladno-pokazyvayte-mish-posle:
+  speaker: Ты
+  text: Ладно, показывайте. Миш, после защиты поменяешь?
+misha-da-ler-zapuskay:
+  speaker: Миша
+  text: Да. Лер, запускай.
+remarka-posle-zaschity-misha-vpisal:
+  speaker: Ремарка
+  text: После защиты Миша [[вписал твоё имя]] в файл для сдачи. Класс уже слушает следующую группу.
+ty-marina-sergeevna-grafiki-ya:
+  speaker: Ты
+  text: Марина Сергеевна, графики я делал. Можно это в отзыве про защиту указать?
+marina-sergeevna-da-pokazhesh-kakie:
+  speaker: Марина Сергеевна
+  text: Да. Покажешь, какие слайды твои?
+remarka-na-etom-dubl-zakanchivaetsya:
+  speaker: Ремарка
+  text: На этом дубль заканчивается.
+ty-teper-vizhu-svoyo-imya:
+  speaker: Ты
+  text: Теперь вижу своё имя. Ань, давай ты первый покажешь, а второй я?
+anya-aga-posle-pervoy-kartinki:
+  speaker: Аня
+  text: Ага. После первой картинки передаю тебе кликер.
+ty-teper-vsyo-na-meste:
+  speaker: Ты
+  text: Теперь всё на месте. Ань, можешь сегодня оба показать? Я из зала подскажу, если что.
+anya-davay-ya-esli-zabudu:
+  speaker: Аня
+  text: Давай я. Если забуду, сколько за скамейки, подскажешь из зала?

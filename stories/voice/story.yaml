@@ -1,0 +1,38 @@
+id: voice
+title: Ещё один раунд
+order: 7
+place: Голосовой чат игры
+roles:
+  witness:
+    name: Саша
+    viewpoint: Саши
+    intro: Ты в голосовом чате команды. Слышишь, как Миша и Лёша договариваются, куда идти.
+  self:
+    name: Миша
+    viewpoint: Миши
+    intro: Ты играешь с друзьями. Вы с Лёшей говорите по микрофону.
+cast:
+- Даня
+- Лёша
+- Миша
+- Модератор игры
+- Саша
+channels:
+  golosovoy-kanal-komnata-3:
+    kind: voice
+    title: Голосовой канал «Комната 3»
+  tekstovyy-chat-igry:
+    kind: group
+    title: Текстовый чат игры
+  lichnaya-perepiska-s-moderatorom-igry:
+    kind: private
+    title: Личная переписка с модератором игры
+  lichnaya-perepiska-s-mishey:
+    kind: private
+    title: Личная переписка с Мишей
+  golosovoy-kanal-komandy:
+    kind: voice
+    title: Голосовой канал команды
+  lichnaya-perepiska-s-lyoshey:
+    kind: private
+    title: Личная переписка с Лёшей

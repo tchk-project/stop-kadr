@@ -1,0 +1,218 @@
+scenes:
+  start:
+    mode: yellow
+    messages:
+    - vera-anya-otoshla-k-stene
+    - remarka-so-svoego-mesta-ty
+    choices:
+      pressure: Читать дальше
+      calm: Спокойный дубль
+  pressure:
+    mode: yellow
+    messages:
+    - anya-ya-emu-dvazhdy-skazala
+    continuation: true
+    question: Аня просится к вам. Что ответишь?
+    choices:
+      pressure-act-0: Аня сама попросила место. Придержу ей стул.
+      pressure-act-1: Я не слышал разговора у стены. Предложу встретить её.
+      alternative: Может, одного танца хватит. Предложу Ане согласиться.
+      ignore: Отложить телефон. Вера с Аней разберутся.
+      observe: Придвину свободный стул к столу. Здесь можно посидеть.
+      focus: После второго отказа хочется держаться рядом со своими. Придвину стул к столу.
+  pressure-act-0:
+    mode: orange
+    messages:
+    - ty-an-idi-syuda-ryadom
+    - remarka-ty-sdvigaesh-stul-ya-chtoby
+    - anya-spasibo-mozhno-ya-poka
+    - ty-konechno
+    outcome:
+    - positive
+    - Аня сидит рядом с тобой
+    note: Аня попросилась к вам за стол. Ты освободил ей место, и ей не пришлось заново объяснять свой отказ от танца.
+    review:
+      signals:
+      - pressure/anya-ya-emu-dvazhdy-skazala
+      effect: Аня попросилась к вам за стол. Ты освободил ей место, и ей не пришлось заново объяснять свой отказ от танца.
+  pressure-act-1:
+    mode: orange
+    messages:
+    - ty-konechno-hochesh-podoydu-za
+    - anya-da-ya-sama-doydu
+    - ty-derzhu-my-u-kolonki
+    outcome:
+    - positive
+    - Ты придержал Ане место
+    note: Аня хотела сама дойти до стола. Ты услышал её ответ и предложил ровно то, что пригодилось.
+    review:
+      signals:
+      - pressure/anya-ya-emu-dvazhdy-skazala
+      effect: Аня хотела сама дойти до стола. Ты услышал её ответ и предложил ровно то, что пригодилось.
+  alternative:
+    mode: yellow
+    messages:
+    - ty-mozhet-odin-raz-potantsuesh
+    - anya-ya-prosto-sprosila-mozhno
+    - vera-ona-uzhe-v-garderob
+    outcome:
+    - negative
+    - Аня ушла в гардероб
+    note: Аня попросила о месте рядом и в ответ услышала ещё один уговор. Пока все обсуждали танец, она осталась одна. Можно подойти и сказать «Место рядом с нами твоё, если захочешь».
+    review:
+      signals:
+      - pressure/anya-ya-emu-dvazhdy-skazala
+      effect: Аня попросила о месте рядом и в ответ услышала ещё один уговор. Пока все обсуждали танец, она осталась одна. Можно подойти и сказать «Место рядом с нами твоё, если захочешь».
+      miss: true
+  ignore:
+    mode: white
+    messages:
+    - anya-dan-tam-stul-eschyo
+    question: Теперь ты знаешь ещё кое-что. Что сделаешь?
+    choices:
+      stay: Вернуться к музыке, посмотреть потом.
+      rejoin: Помахать Ане и освободить стул.
+    review:
+      miss: true
+      signals:
+      - pressure/anya-ya-emu-dvazhdy-skazala
+      effect: 'После твоего решения разговор продолжился: «Дань, там стул ещё есть? Я из-за музыки не слышу.»'
+      repair: rejoin
+      recovery: Аня знает, где её ждут.
+  stay:
+    mode: white
+    messages:
+    - anya-ya-uzhe-s-veroy
+    outcome:
+    - mixed
+    - Аня ушла к Вере, не дождавшись ответа
+    note: Аня нашла компанию Веры сама. Она так и не узнала, оставили ли ей место за столом.
+    review:
+      miss: true
+      signals:
+      - ignore/anya-dan-tam-stul-eschyo
+      effect: Аня нашла компанию Веры сама. Она так и не узнала, оставили ли ей место за столом.
+  rejoin:
+    mode: orange
+    messages:
+    - ty-an-syuda-stul-svoboden
+    - anya-o-vizhu-seychas-podoydu
+    outcome:
+    - positive
+    - Аня знает, где её ждут
+    note: Даня обозначил свободный стул. Теперь Аня сама может к нему подойти.
+  calm:
+    mode: yellow
+    messages:
+    - vera-my-za-vodoy-anya
+    - remarka-lyosha-tantsuet-v-krugu
+    continuation: true
+    question: Как продолжишь?
+    choices:
+      calm-end: Посмотреть, что будет дальше
+      ask: Ответить Вере про воду
+      calm-watch: Они разошлись. Ещё немного посмотрю, как пойдёт вечер.
+  calm-end:
+    mode: yellow
+    messages:
+    - remarka-anya-i-vera-berut
+    outcome:
+    - positive
+    - Аня провела эту песню с Верой
+    note: Аня пошла за водой с Верой. Лёша занялся танцами.
+  ask:
+    mode: yellow
+    messages:
+    - ty-aga-spasibo-ya-zdes
+    - vera-vizhu-tebya
+    outcome:
+    - positive
+    - Вера знает, где ждёт Даня
+    note: Вера спросила про воду. Со своего места Даня видит, что Аня идёт с ней, а Лёша танцует у сцены.
+  observe:
+    mode: yellow
+    messages:
+    - remarka-vera-i-anya-podhodyat
+    - anya-spasibo-posizhu-s-vami
+    question: Что изменилось для тебя сейчас?
+    choices:
+      observe-ease: Теперь можно спокойно посидеть с ребятами.
+      observe-watch: Пока останусь поближе к своим и посмотрю, не подойдёт ли он снова.
+    review:
+      signals:
+      - pressure/anya-ya-emu-dvazhdy-skazala
+      effect: Аня может отойти к друзьям. Лёша остался у колонок.
+  observe-ease:
+    mode: yellow
+    messages:
+    - remarka-za-stolom-slyshno-kak
+    outcome:
+    - positive
+    - Вера и Аня остались вместе у стола
+    note: Аня может отойти к друзьям. Лёша остался у колонок.
+    review:
+      signals:
+      - observe/anya-spasibo-posizhu-s-vami
+      effect: Аня может отойти к друзьям. Лёша остался у колонок.
+  observe-watch:
+    mode: orange
+    messages:
+    - remarka-za-stolom-slyshno-kak
+    outcome:
+    - positive
+    - Вера и Аня остались вместе у стола
+    note: Аня может отойти к друзьям. Лёша остался у колонок.
+    review:
+      signals:
+      - observe/anya-spasibo-posizhu-s-vami
+      effect: Пока останусь поближе к своим и посмотрю, не подойдёт ли он снова.
+  focus:
+    mode: orange
+    messages:
+    - remarka-vera-i-anya-podhodyat
+    - anya-spasibo-posizhu-s-vami
+    question: Что изменилось для тебя сейчас?
+    choices:
+      focus-ease: Теперь можно спокойно посидеть с ребятами.
+      focus-watch: Пока останусь поближе к своим и посмотрю, не подойдёт ли он снова.
+    review:
+      signals:
+      - pressure/anya-ya-emu-dvazhdy-skazala
+      effect: Аня может отойти к друзьям. Лёша остался у колонок.
+  focus-ease:
+    mode: yellow
+    messages:
+    - remarka-za-stolom-slyshno-kak
+    outcome:
+    - positive
+    - Вера и Аня остались вместе у стола
+    note: Аня может отойти к друзьям. Лёша остался у колонок.
+    review:
+      signals:
+      - focus/anya-spasibo-posizhu-s-vami
+      effect: Аня может отойти к друзьям. Лёша остался у колонок.
+  focus-watch:
+    mode: orange
+    messages:
+    - remarka-za-stolom-slyshno-kak
+    outcome:
+    - positive
+    - Вера и Аня остались вместе у стола
+    note: Аня может отойти к друзьям. Лёша остался у колонок.
+    review:
+      signals:
+      - focus/anya-spasibo-posizhu-s-vami
+      effect: Пока останусь поближе к своим и посмотрю, не подойдёт ли он снова.
+  calm-watch:
+    mode: orange
+    messages:
+    - remarka-anya-i-vera-berut
+    outcome:
+    - positive
+    - Аня провела эту песню с Верой
+    note: Аня пошла за водой с Верой. Лёша занялся танцами.
+cues:
+  pressure/anya-ya-emu-dvazhdy-skazala: Даня не слышал разговора у стены. Сейчас Аня сама говорит, чего хочет.
+  ignore/anya-dan-tam-stul-eschyo: Теперь к тебе обратились напрямую.
+  observe/anya-spasibo-posizhu-s-vami: Аня может отойти к друзьям. Лёша остался у колонок.
+  focus/anya-spasibo-posizhu-s-vami: Аня может отойти к друзьям. Лёша остался у колонок.

@@ -1,0 +1,250 @@
+scenes:
+  start:
+    mode: yellow
+    messages:
+    - lyosha-mish-kak-vchera-ty
+    - misha-est-klyuchik-lyosh-ty
+    - danya-mish-eschyo-raz-chto
+    choices:
+      pressure: Читать дальше
+      calm: Спокойный дубль
+  pressure:
+    mode: yellow
+    messages:
+    - danya-est-klyuchik-narod-slyshali
+    - misha-dan-hvatit-menya-peredraznivat
+    continuation: true
+    question: Миша хочет играть дальше. Что сделаешь?
+    choices:
+      pressure-act-0: Миша попросил перестать. Предложу играть через текст.
+      alternative: Может, если пошутить про победу, всё уляжется. Подхвачу фразу.
+      pressure-act-1: Даня передразнивает его при всех. Напишу модератору.
+      ignore: Пока играть дальше. В голосе все так шутят.
+      observe: Может, сейчас все вернутся к раунду. Пока послушаю.
+      focus: Миша уже попросил перестать. Послушаю, что Даня ответит именно на это.
+  pressure-act-0:
+    mode: orange
+    messages:
+    - ty-mish-ya-v-tekst
+    - misha-poshli-ya-u-dveri
+    - lyosha-vizhu-vas-otkryvay
+    outcome:
+    - positive
+    - Миша продолжил раунд с вами в текстовом чате
+    note: Ты предложил другой способ играть вместе. Миша согласился и снова смог договориться с Лёшей, куда идти.
+    review:
+      signals:
+      - pressure/misha-dan-hvatit-menya-peredraznivat
+      effect: Ты предложил другой способ играть вместе. Миша согласился и снова смог договориться с Лёшей, куда идти.
+  pressure-act-1:
+    mode: orange
+    messages:
+    - ty-v-tret-ey-komnate-danya
+    - moderator-igry-seychas-zaydu-v
+    - sistema-moderator-igry-voshyol-v
+    - danya-mish-pri-modere-tozhe
+    - remarka-u-imeni-mishi-zagorelsya
+    - moderator-igry-ya-v-komnate
+    question: Ты слышал тишину в канале. Что дальше?
+    choices:
+      pressure-act-1-next-0: 'Напишу Мише отдельно: «Если захочешь доиграть в тексте, я тут».'
+      pressure-act-1-next-1: Модератор уже здесь. Дам Мише время и уберу свой микрофон.
+    review:
+      signals:
+      - pressure/misha-dan-hvatit-menya-peredraznivat
+      effect: По названию комнаты модератор нашёл разговор. Ты передал слова, которые сам слышал. Мише не пришлось ещё раз повторять их для записи.
+  alternative:
+    mode: yellow
+    messages:
+    - ty-u-nas-teper-klyuchik
+    - danya-o-sasha-tozhe-zatsenil
+    - sistema-misha-pokinul-golosovoy-kanal
+    - misha-sash-hot-ty-to-zachem
+    outcome:
+    - negative
+    - Миша вышел из голосового канала
+    note: 'Ты хотел разрядить обстановку. Даня решил, что ты смеёшься вместе с ним, а Миша снова услышал шутку про свою фразу. Ему можно ответить лично: «Слышал. Зря я подхватил. Хочешь, сыграем в другом канале?»'
+    review:
+      signals:
+      - pressure/misha-dan-hvatit-menya-peredraznivat
+      effect: 'Ты хотел разрядить обстановку. Даня решил, что ты смеёшься вместе с ним, а Миша снова услышал шутку про свою фразу. Ему можно ответить лично: «Слышал. Зря я подхватил. Хочешь, сыграем в другом канале?»'
+      miss: true
+  ignore:
+    mode: white
+    messages:
+    - misha-sash-ty-v-tekste
+    question: Теперь ты знаешь ещё кое-что. Что сделаешь?
+    choices:
+      stay: Переключиться на раунд и не отвечать.
+      rejoin: Договориться о команде через текст.
+    review:
+      miss: true
+      signals:
+      - pressure/misha-dan-hvatit-menya-peredraznivat
+      effect: 'После твоего решения разговор продолжился: «Саш, ты в тексте? В голос я больше не зайду.»'
+      repair: rejoin
+      recovery: Миша выбрал текстовый чат.
+  stay:
+    mode: white
+    messages:
+    - remarka-misha-vyhodit-iz-gruppy
+    outcome:
+    - mixed
+    - Команда начала следующий раунд без Миши
+    note: Саша не ответил в личке. Миша вышел из группы, и команда продолжила игру без него.
+    review:
+      miss: true
+      signals:
+      - ignore/misha-sash-ty-v-tekste
+      effect: Саша не ответил в личке. Миша вышел из группы, и команда продолжила игру без него.
+  rejoin:
+    mode: orange
+    messages:
+    - ty-ya-tut-mozhem-v
+    - misha-davay-kinesh-kogda-nachinat
+    outcome:
+    - positive
+    - Миша выбрал текстовый чат
+    note: Саша ответил там, где Мише удобно говорить. Миша сам согласился продолжить игру в тексте.
+  calm:
+    mode: yellow
+    messages:
+    - danya-a-klyuch-ya-pravda
+    - lyosha-my-u-dveri-mish
+    continuation: true
+    question: Как продолжишь?
+    choices:
+      calm-end: Посмотреть, что будет дальше
+      ask: Уточнить свой ход
+      calm-watch: Может, Даня и правда не расслышал. Послушаю следующую реплику.
+  calm-end:
+    mode: yellow
+    messages:
+    - misha-otkryl-zahodim
+    - sistema-komanda-pereshla-na-sleduyuschiy
+    outcome:
+    - positive
+    - Команда вернулась к игре
+    note: Даня уточнил слово один раз и вернулся к игре. Команда прошла через дверь.
+  ask:
+    mode: yellow
+    messages:
+    - ty-lyosh-ya-za-vami
+    - lyosha-za-nami-misha-uzhe
+    outcome:
+    - positive
+    - Команда нашла проход
+    note: Следующая реплика про проход в игре. Уточнение Дани на этом закончилось.
+  observe:
+    mode: yellow
+    messages:
+    - danya-ladno-mish-uslyshal-vsyo
+    - lyosha-dver-otkryta-zahodim
+    question: Что изменилось для тебя сейчас?
+    choices:
+      observe-ease: Даня услышал. Можно вернуться к раунду.
+      observe-watch: Пока играю дальше. Послушаю, сдержит ли Даня слово.
+    review:
+      signals:
+      - pressure/misha-dan-hvatit-menya-peredraznivat
+      effect: Даня прямо откликнулся на просьбу. Лёша вернулся к игре.
+  observe-ease:
+    mode: yellow
+    messages:
+    - sistema-komanda-prohodit-v-sleduyuschuyu
+    outcome:
+    - positive
+    - Команда продолжила игру
+    note: Даня прямо откликнулся на просьбу. Лёша вернулся к игре.
+    review:
+      signals:
+      - observe/danya-ladno-mish-uslyshal-vsyo
+      effect: Даня прямо откликнулся на просьбу. Лёша вернулся к игре.
+  observe-watch:
+    mode: orange
+    messages:
+    - sistema-komanda-prohodit-v-sleduyuschuyu
+    outcome:
+    - positive
+    - Команда продолжила игру
+    note: Даня прямо откликнулся на просьбу. Лёша вернулся к игре.
+    review:
+      signals:
+      - observe/danya-ladno-mish-uslyshal-vsyo
+      effect: Пока играю дальше. Послушаю, сдержит ли Даня слово.
+  focus:
+    mode: orange
+    messages:
+    - danya-ladno-mish-uslyshal-vsyo
+    - lyosha-dver-otkryta-zahodim
+    question: Что изменилось для тебя сейчас?
+    choices:
+      focus-ease: Даня услышал. Можно вернуться к раунду.
+      focus-watch: Пока играю дальше. Послушаю, сдержит ли Даня слово.
+    review:
+      signals:
+      - pressure/misha-dan-hvatit-menya-peredraznivat
+      effect: Даня прямо откликнулся на просьбу. Лёша вернулся к игре.
+  focus-ease:
+    mode: yellow
+    messages:
+    - sistema-komanda-prohodit-v-sleduyuschuyu
+    outcome:
+    - positive
+    - Команда продолжила игру
+    note: Даня прямо откликнулся на просьбу. Лёша вернулся к игре.
+    review:
+      signals:
+      - focus/danya-ladno-mish-uslyshal-vsyo
+      effect: Даня прямо откликнулся на просьбу. Лёша вернулся к игре.
+  focus-watch:
+    mode: orange
+    messages:
+    - sistema-komanda-prohodit-v-sleduyuschuyu
+    outcome:
+    - positive
+    - Команда продолжила игру
+    note: Даня прямо откликнулся на просьбу. Лёша вернулся к игре.
+    review:
+      signals:
+      - focus/danya-ladno-mish-uslyshal-vsyo
+      effect: Пока играю дальше. Послушаю, сдержит ли Даня слово.
+  calm-watch:
+    mode: orange
+    messages:
+    - misha-otkryl-zahodim
+    - sistema-komanda-pereshla-na-sleduyuschiy
+    outcome:
+    - positive
+    - Команда вернулась к игре
+    note: Даня уточнил слово один раз и вернулся к игре. Команда прошла через дверь.
+  pressure-act-1-next-0:
+    mode: orange
+    messages:
+    - remarka-v-lichke-prihodit-otvet
+    outcome:
+    - positive
+    - Миша предложил вернуться к игре позже
+    note: Ты позвал модератора в нужную комнату. По тишине в наушниках ты мог понять только то, что ответа пока нет.
+    review:
+      signals:
+      - pressure-act-1/moderator-igry-ya-v-komnate
+      effect: 'В личке приходит ответ от Миши: «Давай позже. Спасибо».'
+  pressure-act-1-next-1:
+    mode: yellow
+    messages:
+    - remarka-ty-vyklyuchaesh-mikrofon-chut
+    outcome:
+    - positive
+    - Миша сам написал команде
+    note: Ты позвал модератора в нужную комнату. По тишине в наушниках ты мог понять только то, что ответа пока нет.
+    review:
+      signals:
+      - pressure-act-1/moderator-igry-ya-v-komnate
+      effect: 'Ты выключаешь микрофон. Чуть позже Миша сам пишет в командный чат: «Я этот раунд пропущу».'
+cues:
+  pressure/misha-dan-hvatit-menya-peredraznivat: В голосовом слышна просьба Миши. Ребятам уже известно, хочет ли он продолжать эту шутку.
+  pressure-act-1/moderator-igry-ya-v-komnate: Ты позвал модератора в нужную комнату. По тишине в наушниках ты мог понять только то, что ответа пока нет.
+  ignore/misha-sash-ty-v-tekste: Теперь к тебе обратились напрямую.
+  observe/danya-ladno-mish-uslyshal-vsyo: Даня прямо откликнулся на просьбу. Лёша вернулся к игре.
+  focus/danya-ladno-mish-uslyshal-vsyo: Даня прямо откликнулся на просьбу. Лёша вернулся к игре.

@@ -1,0 +1,113 @@
+scenes:
+  start:
+    mode: yellow
+    messages:
+    - papa-ler-priderzhi-dver-poslednyaya
+    - lera-davay-syuda-mashina-u
+    choices:
+      pressure: Продолжить
+      calm: Спокойный дубль
+  calm:
+    mode: yellow
+    messages:
+    - papa-podozhdi-snizu-skotch-otkleilsya
+    - lera-davay-postavim-u-menya
+    continuation: true
+    question: Что дальше?
+    choices:
+      calm-end: Заклеить коробку вместе.
+  calm-end:
+    mode: yellow
+    messages:
+    - remarka-korobku-donesli-do-mashiny
+    outcome:
+    - positive
+    - Успели вместе
+    note: В этом дубле оба хорошо себя чувствуют.
+  pressure:
+    mode: yellow
+    messages:
+    - papa-postav-korobku-u-menya
+    - remarka-papa-saditsya-na-stupen-ku
+    - papa-ler-nu-kakuyu-skoruyu
+    continuation: true
+    question: Что ты сделаешь сейчас?
+    choices:
+      call: «Пап, посиди со мной. Я звоню 103. Скажу, что давит в груди и тяжело дышать».
+      wait: «Хорошо, давай сначала посидим. Скажешь, если станет хуже».
+  wait:
+    mode: yellow
+    messages:
+    - remarka-papa-svyazyvaet-bol-s
+    - remarka-sdavlenie-v-grudi-s
+    question: Что сделаешь теперь?
+    choices:
+      call-now: «Пап, посиди со мной. Я звоню 103. Скажу, что давит в груди и тяжело дышать».
+    review:
+      signals:
+      - pressure/papa-postav-korobku-u-menya
+      - pressure/papa-ler-nu-kakuyu-skoruyu
+      miss: true
+      effect: Вызов отложили, хотя признаки уже были видны.
+      repair: call-now
+      recovery: Затем ты организовал вызов скорой.
+  call:
+    mode: red
+    messages:
+    - remarka-lera-nabiraet-103-i
+    - ty-my-na-kryl-tse-shkoly
+    - dispetcher-chto-sluchilos
+    question: Что скажешь диспетчеру?
+    choices:
+      call-report: У папы сдавило в середине груди и отдаёт в руку. Он вспотел, тяжело дышит. Началось только что, когда мы несли коробку.
+    review:
+      signals:
+      - pressure/papa-postav-korobku-u-menya
+      effect: Диспетчер принял звонок и узнал, куда ехать.
+  call-report:
+    mode: red
+    messages:
+    - ty-u-papy-sdavilo-v
+    - dispetcher-brigada-napravlena-ostavaytes-na
+    - remarka-lera-ostayotsya-ryadom-papa
+    outcome:
+    - positive
+    - Скорую вызвали
+    note: Сдавление в груди с болью, отдающей в руку, одышкой и потом может означать сердечный приступ. Скорую вызывают сразу. За руль при таких симптомах садиться опасно. В России звонят 103 или 112. Оставайся рядом и следуй указаниям диспетчера.
+    review:
+      signals:
+      - call/dispetcher-chto-sluchilos
+      effect: Диспетчер услышал, что изменилось и когда это началось.
+  call-now:
+    mode: red
+    messages:
+    - remarka-lera-nabiraet-103-i
+    - ty-my-na-kryl-tse-shkoly
+    - dispetcher-chto-sluchilos
+    question: Что скажешь диспетчеру?
+    choices:
+      call-now-report: У папы сдавило в середине груди и отдаёт в руку. Он вспотел, тяжело дышит. Началось только что, когда мы несли коробку.
+    review:
+      signals:
+      - wait/remarka-papa-svyazyvaet-bol-s
+      effect: Диспетчер принял звонок и узнал, куда ехать.
+  call-now-report:
+    mode: red
+    messages:
+    - ty-u-papy-sdavilo-v
+    - dispetcher-brigada-napravlena-ostavaytes-na
+    - remarka-lera-ostayotsya-ryadom-papa
+    outcome:
+    - positive
+    - Скорую вызвали
+    note: Сдавление в груди с болью, отдающей в руку, одышкой и потом может означать сердечный приступ. Скорую вызывают сразу. За руль при таких симптомах садиться опасно. В России звонят 103 или 112. Оставайся рядом и следуй указаниям диспетчера.
+    review:
+      signals:
+      - call-now/dispetcher-chto-sluchilos
+      effect: Диспетчер услышал, что изменилось и когда это началось.
+cues:
+  pressure/papa-postav-korobku-u-menya: Сдавление в груди с болью, отдающей в руку, одышкой и потом может означать сердечный приступ. Скорую вызывают сразу. За руль при таких симптомах садиться опасно.
+  pressure/papa-ler-nu-kakuyu-skoruyu: Папа связывает боль с коробками и собирается вести машину. Боль всё ещё есть.
+  wait/remarka-papa-svyazyvaet-bol-s: Сдавление в груди с болью, отдающей в руку, одышкой и потом может означать сердечный приступ. Скорую вызывают сразу. За руль при таких симптомах садиться опасно.
+  call/dispetcher-chto-sluchilos: Диспетчеру нужны признаки, которые можно описать своими словами.
+  call-now/dispetcher-chto-sluchilos: Диспетчеру нужны признаки, которые можно описать своими словами.
