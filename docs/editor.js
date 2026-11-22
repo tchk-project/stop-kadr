@@ -5,7 +5,10 @@ const {plain,words,clone,roles}=Drafts;
 let d, library=[], undo=[], noticeTimer, selectionToken=0, conflict=false, remoteEdit=false;
 const pendingSaves=new WeakMap();
 const attachmentPackageLimit=16_000_000;
-const live=new Map();
+function historyPosition(fallback){return window.navigation?.currentEntry?.index ?? history.state?.editorPosition ?? fallback;}
+let routePosition=historyPosition(0),restoringPosition=null;
+history.replaceState({...history.state,editorPosition:routePosition},'');
+let baseCheckToken=0, baseStatus='';
 function el(tag,text,cls){
   const node=document.createElement(tag);
   if(text!=null) node.textContent=text;
@@ -102,7 +105,7 @@ function persist(){
     localStorage.setItem(prefix+next.key,JSON.stringify(next));
     Object.assign(draft,next);saveView(draft);clearPending(journalKey);
     if(d===draft){
-      if(fork)history.replaceState(null,'','#'+next.key);
+      if(fork && location.hash==='#'+journalKey)setRoute(next.key,true);
       conflict=false;remoteEdit=false;
     }
   };
@@ -123,58 +126,128 @@ function persist(){
   return done;
 }
 function commit(change){
-  const previous={work:clone(d.work),files:d.files};
+  const previous={work:clone(d.work),files:d.files}, checked=d.checked;
   change();Drafts.pruneUnused(d);
+  previous.removedChecks=Object.fromEntries(Object.entries(checked).filter(([ref])=>!Object.hasOwn(d.checked,ref)));
   undo.push(previous);if(undo.length>16)undo.shift();
   persist();render();
 }
 function current(){const {role,step}=d.view;const r=d.work.data.routes[role];return {role,step,r,n:r.scenes[step]};}
 function go(step,role=d.view.role){d.view={role,step};saveView(d);render();document.querySelector('.scenehead h2')?.focus();}
-function openDraft(value,resumeView=true){
-  d=value;undo=[];conflict=false;remoteEdit=false;Drafts.pruneUnused(d);if(resumeView)restoreView(d);
-  location.hash=d.key;render();window.scrollTo(0,0);
+function setRoute(key,replace=false){
+  if(location.hash.slice(1)===key)return;
+  if(!replace)routePosition++;
+  history[replace?'replaceState':'pushState']({...history.state,editorPosition:routePosition},'',location.pathname+location.search+(key?'#'+key:''));
 }
-function startDraft(value){openDraft(value);persist();refreshStatus();}
+function openDraft(value,resumeView=true,verified=false){
+  ++selectionToken;d=value;undo=[];conflict=false;remoteEdit=false;Drafts.pruneUnused(d);if(resumeView)restoreView(d);
+  baseStatus=verified?'current':'';
+  setRoute(d.key);render();window.scrollTo(0,0);
+  if(d.base && !verified)checkBase();
+}
+function startDraft(value,verified=false){openDraft(value,true,verified);persist();refreshStatus();}
+function leaveDraft(change,stay=()=>{}){
+  const draft=d,token=++selectionToken;
+  function finish(){
+    if(token!==selectionToken || draft!==d)return;
+    if((sheet.open && !discardForm()) || (conflict && !window.confirm('Черновик не сохранён. Выйти без сохранения?'))){stay();return;}
+    if(draft && conflict)clearPending(draft.key);
+    if(sheet.open){dirtyForm=false;sheet.close();}
+    if(preview.open)preview.close();
+    change();
+  }
+  const saving=draft && pendingSaves.get(draft);
+  if(saving)saving.then(finish);else finish();
+}
 function syncHash(){
-  const key=location.hash.slice(1);
-  if(d && key===d.key)return;
-  const pending=key && recoverPending(key);
-  if(pending){openDraft(pending,false);persist();refreshStatus();return;}
-  try{readLibrary();}catch{home();return;}
-  const found=library.find(item=>key===item.key);if(found)openDraft(found);else home();
+  const key=location.hash.slice(1), position=historyPosition(routePosition+1);
+  if(history.state?.editorPosition!==position)history.replaceState({...history.state,editorPosition:position},'');
+  if(key===(d?.key||'') && app.hasChildNodes()){++selectionToken;routePosition=position;return;}
+  leaveDraft(()=>{
+    routePosition=position;
+    const pending=key && recoverPending(key);
+    if(pending){openDraft(pending,false);persist();refreshStatus();return;}
+    try{readLibrary();}catch{showHome(true);return;}
+    const found=library.find(item=>key===item.key);if(found)openDraft(found);else showHome(true);
+  },()=>{
+    // Return to the source entry, keeping both Back and Forward available.
+    if(routePosition!==position){restoringPosition=routePosition;history.go(routePosition-position);}
+    else setRoute(d?.key||'',true);
+  });
 }
+window.addEventListener('popstate',()=>{
+  const position=historyPosition(routePosition);
+  // A queued save may have given the source draft a new key while we were away from its entry.
+  if(position===restoringPosition)setRoute(d?.key||'',true);
+  restoringPosition=null;
+  // Jumping between two entries for the same draft does not fire hashchange.
+  if(location.hash.slice(1)===(d?.key||''))routePosition=position;
+});
 window.addEventListener('hashchange',syncHash);
 window.addEventListener('storage',e=>{
   if(d && e.key===prefix+d.key && e.newValue){
     remoteEdit=JSON.parse(e.newValue).revision!==d.revision;refreshStatus();
   }
 });
-async function original(meta){
-  if(live.has(meta.id))return live.get(meta.id);
-  const resp=await fetch('./game/stories/'+encodeURIComponent(meta.id)+'.js',{cache:'no-store'});
+async function publishedData(path,variable){
+  const resp=await fetch(path,{cache:'no-store'});
   if(!resp.ok)throw Error('История не загрузилась. Проверь соединение и попробуй ещё раз.');
-  const txt=(await resp.text()).trim(),header='const storyData = ';
+  const txt=(await resp.text()).trim(),header='const '+variable+' = ';
   const pos=txt.indexOf(header);
   if(pos<0||!txt.endsWith(';'))throw Error('Формат истории не распознан.');
-  const source={meta:clone(meta),data:JSON.parse(txt.slice(pos+header.length,-1))};
-  Drafts.verifyWork(source);live.set(meta.id,source);return source;
+  return JSON.parse(txt.slice(pos+header.length,-1));
+}
+async function original(id){
+  const catalog=await publishedData('./game/catalog.js','allStories');
+  const meta=catalog.find(item=>item.id===id);if(!meta)return null;
+  const source={meta,data:await publishedData('./game/stories/'+encodeURIComponent(id)+'.js','storyData')};
+  Drafts.verifyWork(source);return source;
 }
 async function editPublished(meta,copy=false){
   const token=++selectionToken;
   try{
-    const source=await original(meta);if(token!==selectionToken)return;
+    const source=await original(meta.id);if(token!==selectionToken)return;
+    if(!source)throw Error('Истории больше нет в каталоге игры.');
     const value=Drafts.draft(source,copy?null:source);
     if(copy){const id=Drafts.id('story');value.work.meta.id=value.work.data.id=id;value.work.meta.title+=' — копия';}
-    startDraft(value);
-  }catch(e){notice(e.message);}
+    startDraft(value,true);
+  }catch(e){if(token===selectionToken)notice(e.message);}
+}
+const baseMessages={
+  checking:'Сверяем черновик с опубликованной историей…',
+  current:'Исходная версия черновика совпадает с опубликованной историей.',
+  changed:'Опубликованная история уже изменилась. Перед переносом понадобится сверить версии.',
+  missing:'Истории больше нет в каталоге игры. Перед переносом уточни, какую версию использовать.',
+  unavailable:'Не удалось сверить черновик с опубликованной историей. Проверь соединение и открой проверку ещё раз.'
+};
+function displayBaseStatus(){
+  const warning=['changed','missing','unavailable'].includes(baseStatus);
+  for(const node of document.querySelectorAll('[data-base-status]')){
+    node.hidden=!warning && node.dataset.baseStatus!=='inspect';
+    node.classList.toggle('alert',warning);
+    node.textContent=baseMessages[baseStatus]||'';
+  }
+}
+function samePublishedValue(a,b){
+  if(a===b)return true;
+  if(!a || !b || typeof a!=='object' || typeof b!=='object' || Array.isArray(a)!==Array.isArray(b))return false;
+  const keys=Object.keys(a);
+  return keys.length===Object.keys(b).length && keys.every(k=>Object.hasOwn(b,k) && samePublishedValue(a[k],b[k]));
+}
+async function checkBase(){
+  const draft=d, token=++baseCheckToken;
+  baseStatus='checking';displayBaseStatus();
+  let result;
+  try{
+    const latest=await original(draft.base.meta.id);
+    result=!latest?'missing':samePublishedValue(draft.base,latest)?'current':'changed';
+  }catch{result='unavailable';}
+  if(d===draft && token===baseCheckToken){baseStatus=result;displayBaseStatus();}
 }
 function card(title,small,act){const b=button('',act,'storycard');b.append(el('strong',title),el('small',small));return b;}
-function home(){
-  const draft=d, saving=draft && pendingSaves.get(draft);
-  if(saving){saving.then(()=>{if(d===draft)home();});return;}
-  if(d && conflict && !window.confirm('Черновик не сохранён. Выйти без сохранения?'))return;
-  if(draft && conflict)clearPending(draft.key);
-  ++selectionToken;d=null;undo=[];conflict=false;remoteEdit=false;if(location.hash)history.replaceState(null,'',location.pathname+location.search);
+function home(){leaveDraft(()=>showHome());}
+function showHome(replace=false){
+  ++selectionToken;d=null;undo=[];conflict=false;remoteEdit=false;setRoute('',replace);
   let storageOK=true;try{readLibrary();}catch{storageOK=false;}
   app.replaceChildren();
   const h=el('section',null,'homehead');
@@ -198,7 +271,8 @@ sheet.addEventListener('close',()=>{if(!sheet.open)dirtyForm=false;});
 function discardForm(){return !dirtyForm || window.confirm('Отбросить несохранённые изменения? Чтобы продолжить писать, нажми «Отмена».');}
 sheet.addEventListener('cancel',e=>{if(!discardForm())e.preventDefault();});
 function form(title,build,accept,submit='Сохранить',focusAfter){
-  const opener=document.activeElement;
+  if(!d)++selectionToken;
+  const opener=document.activeElement,sourceDraft=d;
   const f=el('form'), h=el('h2',title);h.id='dialog-title';f.append(h);
   const fields={};
   function field(key,label,value='',type='text',options){
@@ -213,7 +287,7 @@ function form(title,build,accept,submit='Сохранить',focusAfter){
   const save=el('button',submit,'primary');save.type='submit';
   const err=el('p',null,'alert');err.hidden=true;err.setAttribute('role','alert');
   f.append(err,actions(save,button('Отмена',()=>{if(discardForm())sheet.close();})));
-  f.onsubmit=async e=>{e.preventDefault();if(save.disabled)return;save.disabled=true;try{
+  f.onsubmit=async e=>{e.preventDefault();if(save.disabled || !sheet.open || !f.isConnected || d!==sourceDraft)return;save.disabled=true;try{
     const v=Object.fromEntries(Object.entries(fields).map(([k,c])=>[k,c.value.trim()]));
     const result=accept(v);
     if(result instanceof Promise)await result;
@@ -266,8 +340,9 @@ function msgView(container,msg){
   if(msg.aside)container.append(el('small',msg.aside));if(msg.caption)container.append(el('small',msg.caption));
   if(msg.reply)container.append(el('small',msg.reply));
   if(msg.media){
-    const m=msg.media;container.append(el('small',Drafts.mediaName[m.kind]));
-    if(m.kind==='voice'||m.kind==='video'){const play=el(m.kind==='voice'?'audio':'video');play.controls=true;play.preload='none';play.src=d.files?.[m.src]||m.src;container.append(play);}
+    const m=msg.media;container.append(el('small',Drafts.mediaLabel(m)));
+    if(Drafts.emptyFile(d.files?.[m.src]))container.append(el('small','Файл пуст. Сохранилось только описание.'));
+    else if(m.kind==='voice'||m.kind==='video'){const play=el(m.kind==='voice'?'audio':'video');play.controls=true;play.preload='none';play.src=d.files?.[m.src]||m.src;container.append(play);}
     else{const img=el('img');img.src=d.files?.[m.src]||m.src;img.alt=plain(m.alt);container.append(img);}
     if(m.kind==='document'){const l=el('a','Открыть документ');l.href=m.file;l.target='_blank';l.rel='noopener';container.append(l);}
   }
@@ -391,8 +466,11 @@ function nextUnread(){
   if(target)go(target[1],target[0]);else notice('Обе роли полностью проверены.');
 }
 function inspect(){
-  const errors=Drafts.issues(d.work),title=el('h2','Проверка истории');title.id='dialog-title';formBody.replaceChildren(title);
-  if(d.base && live.has(d.base.meta.id) && JSON.stringify(d.base)!==JSON.stringify(live.get(d.base.meta.id)))formBody.append(el('p','Опубликованная история уже изменилась. Перед переносом понадобится сверить версии.','alert'));
+  const errors=Drafts.issues(d.work,d.files),title=el('h2','Проверка истории');title.id='dialog-title';formBody.replaceChildren(title);
+  if(d.base){
+    const status=el('p');status.dataset.baseStatus='inspect';status.setAttribute('role','status');
+    formBody.append(status);checkBase();
+  }
   if(!errors.length)formBody.append(el('p','У обеих ролей заполнены реплики, варианты ответа и финалы.'));
   else errors.forEach(e=>{
     const r=e.role&&d.work.data.routes[e.role],where=e.step?roleLabel(e.role)+' · '+heading(r,e.step):'Об истории';
@@ -401,6 +479,7 @@ function inspect(){
       if(e.step)go(e.step,e.role);
       if(e.meta)metadata();
       if(e.choice)branch(e.choice);
+      if(e.file)repairFile(e.file);
       if(e.line)editMessage(e.line,r.scenes[e.step].messages.indexOf(e.line));
     }));
   });
@@ -417,7 +496,7 @@ function exportReading(){
         if(channel)lines.push('['+(channel.title||'При встрече')+']');
         if(m.caption)lines.push(m.caption);
         const speaker=m.speaker==='Ты'?'Ты · '+d.work.meta.roles[role].name:m.speaker;
-        lines.push([speaker,m.aside].filter(Boolean).join(' · ')+' — '+(m.media?'('+Drafts.mediaName[m.media.kind]+') ':'')+plain(words(m)));
+        lines.push([speaker,m.aside].filter(Boolean).join(' · ')+' — '+(m.media?'('+Drafts.mediaLabel(m.media)+') ':'')+plain(words(m)));
         if(m.reply)lines.push(m.reply);
         if(m.media?.alt && m.media.alt!==words(m))lines.push(plain(m.media.alt));
         if(m.media?.description)lines.push(plain(m.media.description));
@@ -453,11 +532,10 @@ document.querySelector('#close-preview').onclick=()=>preview.close();
 preview.addEventListener('close',()=>{preview.querySelector('iframe').removeAttribute('src');delete window.editorPreviewSnapshot;});
 document.querySelector('#import-file').onchange=async e=>{
   const f=e.target.files[0];e.target.value='';if(!f)return;
-  try{const value=Drafts.unpack(await f.text());
+  const token=++selectionToken;
+  try{const value=Drafts.unpack(await f.text());if(token!==selectionToken)return;
     startDraft(value);
-    const m=allStories.find(item=>item.id===value.base?.meta.id);
-    if(m){const latest=await original(m);if(d===value && JSON.stringify(value.base)!==JSON.stringify(latest))notice('Исходная история в игре уже изменилась. Подробности в проверке.');}
-  }catch(e){notice(e.message);}
+  }catch(e){if(token===selectionToken)notice(e.message);}
 };
 function render(){
   if(!d)return home();
@@ -466,13 +544,31 @@ function render(){
   const head=el('div',null,'workhead'),title=el('div');
   title.append(el('h1',d.work.meta.title),withHelp(el('small',saveStatus()),'draft','Сохранение и передача','После правки нажми «Сохранить». Чтобы другой человек увидел изменения, скачай файл и отправь ему. Он сможет открыть файл в своём редакторе. Публикация в игре — отдельный шаг.'));
   head.append(title,actions(button('Скачать для передачи',exportDraft),button('Проверить в игре',showPreview,'primary')));app.append(head);
+  const emptyFiles=Object.keys(d.files||{}).filter(path=>Drafts.emptyFile(d.files[path]));
+  if(emptyFiles.length){
+    const warning=el('section',null,'alert');warning.setAttribute('aria-label','Пустые вложения');
+    warning.append(el('p','В черновике есть пустые вложения. Реплики и описания сохранились. Перед публикацией выбери исходные файлы.'));
+    for(const path of emptyFiles){
+      const line=Object.values(data.messages).find(m=>m.media?.src===path);
+      warning.append(button('Заменить пустой файл · '+(line?plain(words(line)):path.split('/').pop()),()=>repairFile(path)));
+    }
+    app.append(warning);
+  }
+  if(d.base){
+    const status=el('p');status.dataset.baseStatus='draft';status.setAttribute('role','status');
+    app.append(status);displayBaseStatus();
+  }
   const layout=el('div',null,'layout'),rail=el('aside',null,'rail'),article=el('article');layout.append(rail,article);app.append(layout);
   const rl=el('label','Чьими глазами читаем?'),select=el('select');rl.htmlFor=select.id='read-as';roles.forEach(k=>select.add(new Option(roleLabel(k),k)));select.value=role;
   select.onchange=()=>go('start',select.value);rail.append(withHelp(rl,'role','Выбор героя','Участник переживает ситуацию сам. Очевидец видит её со стороны и может вмешаться. Выбери имя, чтобы прочитать историю с начала глазами этого героя.'),select,button('Кто есть кто',openCharacters,'quiet'));
   const routeStamp=Object.keys(r.scenes).filter(k=>Drafts.isChecked(d,role,k)).length;
   rail.append(el('p','Проверено фрагментов: '+routeStamp+' из '+Object.keys(r.scenes).length,'where'),button('Следующий непроверенный',nextUnread));
   const tools=el('details');tools.append(el('summary','Действия с историей'));
-  const menu=el('div',null,'tools');const undoButton=button('Отменить правку',()=>{const previous=undo.pop();d.work=previous.work;d.files=previous.files;if(!d.work.data.routes[role].scenes[step])d.view.step='start';persist();render();});
+  const menu=el('div',null,'tools');const undoButton=button('Отменить правку',()=>{
+    const previous=undo.pop();
+    d.work=previous.work;d.files=previous.files;Object.assign(d.checked,previous.removedChecks);Drafts.pruneUnused(d);
+    if(!d.work.data.routes[role].scenes[step])d.view.step='start';persist();render();
+  });
   undoButton.disabled=!undo.length;
   menu.append(button('Название и герои',metadata),undoButton,button('Проверить историю',inspect),button('Скачать для вычитки',exportReading),
     button('Создать копию',()=>{const value=Drafts.draft(d.work,null);value.work.meta.id=value.work.data.id=Drafts.id('story');value.work.meta.title+=' — копия';if(d.files)value.files=clone(d.files);startDraft(value);}));
@@ -567,12 +663,44 @@ function render(){
     if(Drafts.isChecked(d,role,step))delete d.checked[role+'/'+step];else d.checked[role+'/'+step]=Drafts.stamp(d.work,role,step);persist();render();
   }),button('Проверить историю',inspect,'quiet')));
 }
+const uploadTypes={'image/png':'png','image/jpeg':'jpg','image/webp':'webp','audio/mpeg':'mp3','audio/ogg':'ogg'};
+async function readAttachment(extension){
+  const sourceForm=formBody.querySelector('form'), file=sourceForm.querySelector('input[type=file]').files[0];
+  if(!file)throw Error('Выбери файл с устройства.');
+  if(!file.size)throw Error('Файл пуст. Выбери файл с изображением или звуком.');
+  if(!Object.hasOwn(uploadTypes,file.type)||file.size>2_000_000)throw Error('Подойдёт изображение, MP3, OGG размером до 2 МБ.');
+  if(extension && uploadTypes[file.type]!==extension)throw Error('Для замены выбери файл в формате '+extension.toUpperCase()+'.');
+  const draft=d, encoded=await new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onload=()=>resolve(reader.result);
+    reader.onerror=()=>reject(Error('Файл не удалось прочитать.'));
+    reader.readAsDataURL(file);
+  });
+  if(d===draft && sheet.open && sourceForm.isConnected)return {encoded,type:file.type};
+}
+function saveAttachment(work,files){
+  const candidate={...d,work,files};
+  if(new Blob([Drafts.pack(candidate)]).size>attachmentPackageLimit){
+    throw Error('С этим файлом черновик превысит 16 МБ. Выбери файл поменьше или убери ненужное вложение.');
+  }
+  commit(()=>{d.work=work;d.files=files;});
+}
+function repairFile(path){
+  const extension=path.split('.').pop(), type=Object.keys(uploadTypes).find(key=>uploadTypes[key]===extension);
+  form('Заменить пустой файл',(field,f)=>{
+    f.append(el('p','Выбери файл '+extension.toUpperCase()+' размером до 2 МБ. Он появится во всех репликах с этим вложением.'));
+    field('file','Выбрать файл','','file').accept=type;
+  },async ()=>{
+    const upload=await readAttachment(extension);
+    if(upload)saveAttachment(d.work,{...d.files,[path]:upload.encoded});
+  },'Заменить файл');
+}
 function mediaForm(){
   const {n,role,step}=current(),data=d.work.data;
   const options=Object.entries(data.messages).filter(([,m])=>m.media);
   form('Добавить вложение',(field,f)=>{
     f.append(el('p','Выбери вложение из истории или файл с устройства до 2 МБ. При добавлении файла весь черновик должен помещаться в 16 МБ.','inline-help'));
-    const pick=field('pick','Вложение','new','',[['new','Файл с устройства'],...options.map(([key,m])=>[key,Drafts.mediaName[m.media.kind]+' · '+plain(words(m)).slice(0,60)])]);
+    const pick=field('pick','Вложение','new','',[['new','Файл с устройства'],...options.map(([key,m])=>[key,Drafts.mediaLabel(m.media)+' · '+plain(words(m)).slice(0,60)])]);
     const from=field('speaker','Кто отправляет?','Ты');from.required=true;
     const file=field('file','Выбрать файл','','file');file.accept='image/png,image/jpeg,image/webp,audio/mpeg,audio/ogg';
     const desc=field('desc','Текст голосового или описание','','textarea');const sticker=field('imageKind','Как показать изображение?','image','',[['image','Картинка'],['sticker','Стикер']]);
@@ -582,27 +710,15 @@ function mediaForm(){
     if(v.pick!=='new'){
       commit(()=>{const key=Drafts.id('media');data.messages[key]={...clone(data.messages[v.pick]),speaker:v.speaker};n.messages.push(key);});return;
     }
-    const file=formBody.querySelector('input[type=file]').files[0];if(!file)throw Error('Выбери файл с устройства.');
     needed(v.desc,'Добавь текст голосового или описание вложения.');
-    const types={'image/png':'png','image/jpeg':'jpg','image/webp':'webp','audio/mpeg':'mp3','audio/ogg':'ogg'};
-    if(!types[file.type]||file.size>2_000_000)throw Error('Подойдёт изображение, MP3, OGG размером до 2 МБ.');
-    const draft=d, sourceForm=formBody.querySelector('form');
-    const encoded=await new Promise((resolve,reject)=>{
-      const reader=new FileReader();
-      reader.onload=()=>resolve(reader.result);
-      reader.onerror=()=>reject(Error('Файл не удалось прочитать.'));
-      reader.readAsDataURL(file);
-    });
-    if(d!==draft || !sheet.open || !sourceForm.isConnected)return;
-    const key=Drafts.id('media'),src='./game/media/'+data.id+'/'+key+'.'+types[file.type];
-    const media=file.type.startsWith('audio/')?{kind:'voice',src,transcript:v.desc}:{kind:v.imageKind,src,alt:v.desc};
-    const candidate={...d,work:clone(d.work),files:{...d.files,[src]:encoded}};
-    candidate.work.data.messages[key]={speaker:v.speaker,media};
-    candidate.work.data.routes[role].scenes[step].messages.push(key);
-    if(new Blob([Drafts.pack(candidate)]).size>attachmentPackageLimit){
-      throw Error('С этим файлом черновик превысит 16 МБ. Выбери файл поменьше или убери ненужное вложение.');
-    }
-    commit(()=>{d.work=candidate.work;d.files=candidate.files;});
+    const upload=await readAttachment();
+    if(!upload)return;
+    const key=Drafts.id('media'),src='./game/media/'+data.id+'/'+key+'.'+uploadTypes[upload.type];
+    const media=upload.type.startsWith('audio/')?{kind:'voice',src,transcript:v.desc}:{kind:v.imageKind,src,alt:v.desc};
+    const work=clone(d.work);
+    work.data.messages[key]={speaker:v.speaker,media};
+    work.data.routes[role].scenes[step].messages.push(key);
+    saveAttachment(work,{...d.files,[src]:upload.encoded});
   },'Добавить вложение',()=>document.getElementById('edit-message-'+(current().n.messages.length-1))?.focus());
 }
 syncHash();

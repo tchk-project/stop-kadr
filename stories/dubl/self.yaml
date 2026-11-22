@@ -55,41 +55,44 @@ scenes:
     mode: yellow
     messages:
     - remarka-ty-ubiraesh-telefon-cherez
+    - vera-reminds-kostya
+    - kostya-withdraws-poll
+    - sistema-kostya-zakryl-opros
     - vera-mish-ya-u-kabineta
     question: Что тебе сейчас подходит?
     choices:
-      follow-up: Попросить Веру закрыть опрос
+      follow-up: Спрошу Веру, появилось ли что-нибудь в школьном чате.
       pause: Отложу телефон. К разговору с Верой можно вернуться позже.
     review:
       signals:
       - start/misha-kost-etot-v-shkol-nyy
       - pressure/kostya-davayte-golosovat-kto-za
-      effect: Ты уже сказал Косте, какой дубль можно выложить. Пока ты ждал, он оставил опрос открытым. Вера написала тебе отдельно.
+      effect: Пока ты играл, Вера напомнила Косте о твоём отказе и он снял опрос. Ты прочитал их разговор после репетиции.
       miss: false
   follow-up:
     mode: orange
     messages:
-    - ty-ver-mozhesh-zakryt-opros
-    - vera-vizhu-ego-seychas-zakroyu
+    - misha-asks-about-school-chat
+    - vera-checks-school-chat
     outcome:
     - positive
-    - Вера согласилась закрыть опрос
-    note: У Веры есть права закрыть опрос. Она откликнулась на твою просьбу. Убрали ли опрос, Миша пока не знает.
+    - Вера проверила школьный чат
+    note: Вера посмотрела школьный чат и сказала тебе, что новых сообщений там пока нет.
     review:
       signals:
-      - alternative/remarka-ty-ubiraesh-telefon-cherez
-      effect: У Веры есть права закрыть опрос. Она откликнулась на твою просьбу. Убрали ли опрос, Миша пока не знает.
+      - alternative/sistema-kostya-zakryl-opros
+      effect: Вера посмотрела школьный чат и сказала тебе, что новых сообщений там пока нет.
   pause:
     mode: yellow
     messages:
     - remarka-na-etom-dubl-zakanchivaetsya
     outcome:
     - open
-    - Опрос ещё открыт, Вера на связи
-    note: Можно отложить разговор. Ты уже сказал, какой дубль разрешаешь выложить. Опрос после твоего ответа оставил открытым Костя.
+    - Опрос закрыт. Вера на связи
+    note: Можно отложить телефон. Ты увидел, что Костя закрыл опрос. Решать, хочешь ли ты обсудить это с Верой, можно позже.
     review:
       signals:
-      - alternative/remarka-ty-ubiraesh-telefon-cherez
+      - alternative/sistema-kostya-zakryl-opros
       effect: Можно взять паузу. Решать, возвращаться ли к этому разговору, по-прежнему тебе.
   calm:
     mode: yellow
@@ -122,7 +125,8 @@ scenes:
   observe:
     mode: yellow
     messages:
-    - kostya-stop-mish-uvidel-tvoyo
+    - vera-reminds-kostya
+    - kostya-withdraws-poll
     - sistema-kostya-zakryl-opros
     question: Костя закрыл опрос. Что теперь?
     choices:
@@ -132,7 +136,7 @@ scenes:
       signals:
       - start/misha-kost-etot-v-shkol-nyy
       - pressure/kostya-davayte-golosovat-kto-za
-      effect: Костя услышал просьбу и сам закрыл голосование.
+      effect: Ты увидел ответ сразу, в перерыве. Вера напомнила про твой отказ, и Костя снял опрос.
   observe-ease:
     mode: yellow
     messages:
@@ -211,6 +215,6 @@ scenes:
 cues:
   start/misha-kost-etot-v-shkol-nyy: Миша разрешил показать запись только внутри группы.
   pressure/kostya-davayte-golosovat-kto-za: Костя предложил решать за Мишу уже после его ответа.
-  alternative/remarka-ty-ubiraesh-telefon-cherez: Опрос всё ещё виден спустя полчаса. Твоя просьба оставить дубль в группе не изменилась.
+  alternative/sistema-kostya-zakryl-opros: Ты прочитал в чате, что Костя закрыл голосование. Отправлял ли кто-нибудь запись в школьный чат, здесь не видно.
   observe/sistema-kostya-zakryl-opros: Сообщение системы появилось сразу после слов Кости о том, что он снимет опрос.
   focus/sistema-kostya-zakryl-opros: Сообщение системы появилось сразу после слов Кости о том, что он снимет опрос.

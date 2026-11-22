@@ -29,7 +29,7 @@ async function launchAttentionScene() {
     const script = document.createElement('script');
     script.onload = resolve;
     script.onerror = () => reject(new Error('Не удалось загрузить историю '+episode.id));
-    script.src = './game/stories/'+episode.id+'.js?v=audit-4';
+    script.src = './game/stories/'+episode.id+'.js?v=release-5';
     document.head.append(script);
   });
   if (document.readyState !== 'complete') {
@@ -119,13 +119,20 @@ function playScene() {
     });
   }
   scene.addEventListener('play', event => pauseMedia(event.target), true);
-  window.addEventListener('pagehide', () => pauseMedia());
   const photo = document.createElement('dialog');
   photo.className = 'photo-dialog';
   photo.setAttribute('aria-label', 'Скриншот переписки');
   const fullImage = document.createElement('img');
   photo.append(fullImage, button('dismiss', 'Закрыть скриншот', () => photo.close()));
   scene.append(photo);
+  function closePhoto() {
+    if (photo.open) photo.close();
+  }
+  window.addEventListener('popstate',closePhoto);
+  window.addEventListener('pagehide',() => {
+    pauseMedia();
+    closePhoto();
+  });
   scene.addEventListener('click', event => {
     const preview = event.target.closest('.open-image')?.querySelector('img');
     if (!preview) return;

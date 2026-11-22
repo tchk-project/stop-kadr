@@ -20,6 +20,9 @@ function renderRole(meta, role) {
   section.id = role;
   section.append(textNode('h2','Глазами '+person.viewpoint),textNode('p',person.intro));
   const stepId = id => role+'-'+id;
+  const outcome = new URLSearchParams(location.search).get('outcome');
+  const returnStop = story[outcome]?.outcome && attentionStops(routePath(story,outcome),story,decisions)
+    .find(stop => location.hash === '#'+stepId(stop.id)+'/@review');
 
   function renderStep(id, number, label, previousChannel) {
     const node = story[id];
@@ -45,7 +48,8 @@ function renderRole(meta, role) {
       sentence.append(textNode('strong',[speaker,line.aside].filter(Boolean).join(' · ')+' '));
       if (line.reply) sentence.append(textNode('small',line.reply,'reply-to'),document.createElement('br'));
       if (line.media) sentence.append(textNode('em',({
-        voice:'Голосовое',video:'Видео',sticker:'Стикер',image:'Изображение',document:'Документ'
+        voice:line.media.live ? 'Реплика в голосовом канале' : 'Голосовое',
+        video:'Видео',sticker:'Стикер',image:'Изображение',document:'Документ'
       })[line.media.kind]+' · '));
       sentence.append(line.parts?.text || line.media?.alt || '');
       if (line.media) {
@@ -67,6 +71,7 @@ function renderRole(meta, role) {
       const detail = decisions[id];
       if (detail) {
         const review = textNode('div','','review');
+        review.id = stepId(id)+'/@review';
         review.append(textNode('strong','Что было видно до выбора'));
         const signals = document.createElement('ul');
         for (const ref of detail.signals) {
@@ -96,8 +101,12 @@ function renderRole(meta, role) {
     }
     const navigation = textNode('div','','links');
     if (node.parent) navigation.append(readerLink('К предыдущей развилке','#'+stepId(node.parent)));
-    if (id !== 'start') navigation.append(readerLink('Открыть этот момент в игре',
-      './focus.html?case='+encodeURIComponent(meta.id)+'&role='+role+'#'+id));
+    if (id !== 'start') {
+      const url = new URL('./focus.html',location.href);
+      url.search = new URLSearchParams({case:meta.id,role});
+      url.hash = 'reader/'+(returnStop?.id === id ? outcome+'/'+id : id);
+      navigation.append(readerLink('Открыть этот момент в игре',url.href));
+    }
     article.append(navigation);
     section.append(article);
     for (const [index,[target,choice]] of node.links.entries()) {
@@ -129,7 +138,7 @@ function openReadingSheet() {
   document.querySelector('#title').textContent = meta.title;
   document.title = meta.title+' · Сценарий для чтения';
   const script = document.createElement('script');
-  script.src = './game/stories/'+meta.id+'.js?v=audit-4';
+  script.src = './game/stories/'+meta.id+'.js?v=release-5';
   script.onload = () => {
     const nav = document.querySelector('#roles');
     for (const role of ['witness','self']) {

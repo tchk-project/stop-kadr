@@ -117,7 +117,7 @@ class EditorCuesTest(unittest.TestCase):
         self.link_to_review("УСНУЛ")
         self.click("Проверить в игре")
         game = self.page.frame_locator("#preview iframe")
-        game.get_by_role("button", name="Какие детали мне помогли?").click()
+        game.get_by_role("button", name="Разобрать мой выбор").click()
         expect(game.locator(".signal-list")).to_contain_text("«УСНУЛ» — Даня отвечает стикером на голосовое.")
         row = game.locator("[data-ref]:has(.sticker .cue-words)")
         expect(row.locator(".cue-words mark")).to_have_text("УСНУЛ")

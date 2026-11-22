@@ -49,7 +49,10 @@ test('meeting details stay out of group chat and each friend hears from their ow
       assert.equal(row.channel.kind,'private');
       assert.match(row.channel.title,/тренером/);
     }
-    assert.equal(own[coach+1].speaker,'Ты');
+    assert.equal(coach,own.length-1, 'Sasha has not accepted either plan before his choice');
+    assert.match(own[coach].text,/вместе выйдем.*подождать/);
+    assert.match(self.story[parent].links.find(([id])=>id===parent+'-ease')[1],/Выйду с тренером/);
+    assert.match(self.story[parent].links.find(([id])=>id===parent+'-watch')[1],/побыть со мной в классе.*Миша/);
     const received = withAudience(witness.story,prefix);
     assert.ok(received.every(row=>row.speaker!=='Тренер'));
     const update = received.at(-1);
@@ -73,10 +76,19 @@ test('meeting details stay out of group chat and each friend hears from their ow
     assert.deepEqual(Array.from(answered.lines,row => row.speaker),['Ты','Саша','Ремарка']);
     assert.match(answered.lines.at(-1).parts.text,/Саша выходит с тренером/);
     const ownWalk = self.story[parent+'-ease'];
-    assert.ok(ownWalk.lines.every(row => row.speaker === 'Ремарка'));
-    const ownRequest = self.story[parent+'-watch'];
-    assert.equal(ownRequest.lines[0].channel.kind,'private');
-    assert.deepEqual(Array.from(ownRequest.lines,row => row.speaker),['Ты','Миша','Ремарка']);
+    assert.deepEqual(Array.from(ownWalk.lines,row=>row.speaker),['Ты','Ремарка']);
+    assert.equal(ownWalk.lines[0].channel.kind,'private');
+    assert.match(ownWalk.lines[0].parts.text,/пойдёмте вместе/);
+    assert.match(ownWalk.lines.at(-1).parts.text,/крыльц/);
+    const waiting = withAudience(self.story,[...prefix,parent+'-watch']).slice(own.length);
+    assert.deepEqual(waiting.map(row=>row.speaker),['Ты','Тренер','Ты','Миша','Ремарка']);
+    assert.match(waiting[0].text,/Мишу хочу дождаться/);
+    assert.match(waiting[1].text,/я с тобой/);
+    assert.deepEqual(waiting.slice(0,4).map(row=>row.channel.kind),Array(4).fill('private'));
+    assert.match(waiting[0].channel.title,/тренером/);
+    assert.match(waiting[2].channel.title,/Мишей/);
+    assert.equal(waiting[4].channel.kind,'scene');
+    assert.match(waiting[4].text,/Тренер садится рядом с тобой.*Миша заглядывает в дверь/);
   }
 });
 

@@ -139,6 +139,10 @@ class EditorStorageTest(unittest.TestCase):
         button(page, "Сохранить").click()
         attach(page, 9)
         expect(page.locator("article .message img")).to_have_count(1)
+        button(page, "＋ Добавить реплику").click()
+        page.get_by_label("Реплика", exact=True).fill("Реплика только в удалённой ветке")
+        button(page, "Сохранить").click()
+        button(page, "Отметить как проверенное").click()
         button(page, "← К другим ответам").click()
         before = json.loads(download(page))
         page.once("dialog", lambda confirm: confirm.accept())
@@ -146,9 +150,64 @@ class EditorStorageTest(unittest.TestCase):
         after = json.loads(download(page))
         self.assertFalse(after.get("files"))
         self.assertFalse(after["work"]["data"]["messages"])
+        self.assertFalse(after["checked"])
+        self.assertNotIn("Реплика только в удалённой ветке", json.dumps(after, ensure_ascii=False))
         page.locator("summary", has_text="Действия с историей").click()
         button(page, "Отменить правку").click()
         self.assertEqual(json.loads(download(page)), before)
+
+    def test_empty_file_rejection_and_repair_of_older_package(self):
+        page = self.new_story()
+        button(page, "Добавить вложение").click()
+        dialog = page.get_by_role("dialog")
+        label = "На доске расписание"
+        dialog.get_by_label("Текст голосового или описание").fill(label)
+        file = dialog.get_by_label("Выбрать файл")
+        file.set_input_files({"name": "empty.png", "mimeType": "image/png", "buffer": b""})
+        button(dialog, "Добавить вложение").click()
+        expect(dialog.get_by_role("alert")).to_contain_text("Файл пуст")
+        expect(dialog.get_by_label("Текст голосового или описание")).to_have_value(label)
+        expect(page.locator("article .message")).to_have_count(0)
+
+        payload = {"name": "photo.png", "mimeType": "image/png", "buffer": png(1)}
+        file.set_input_files(payload)
+        button(dialog, "Добавить вложение").click()
+        expect(page.locator("article .message img")).to_have_attribute("alt", label)
+        original = json.loads(download(page))
+        saved = json.loads(json.dumps(original))
+        path = next(iter(saved["files"]))
+        saved["files"][path] = "data:"
+
+        recipient = self.editor()
+        upload(recipient, json.dumps(saved, ensure_ascii=False).encode())
+        warning = recipient.get_by_role("region", name="Пустые вложения")
+        expect(warning).to_contain_text("описания сохранились")
+        self.assertEqual(json.loads(download(recipient)), saved)
+        recipient.reload()
+        expect(warning.get_by_role("button", name=f"Заменить пустой файл · {label}")).to_be_visible()
+        button(recipient, "Проверить историю").click()
+        recipient.get_by_role("dialog").get_by_role("button", name=f"Замени пустой файл у вложения «{label}».", exact=False).click()
+        repair = recipient.get_by_role("dialog")
+        repair.get_by_label("Выбрать файл").set_input_files(payload)
+        button(repair, "Заменить файл").click()
+        expect(warning).to_have_count(0)
+        image = recipient.locator("article .message img")
+        self.assertEqual(image.evaluate("async img=>{await img.decode();return img.naturalWidth}"), 730)
+        self.assertEqual(json.loads(download(recipient)), original)
+
+    def test_live_channel_label_in_editor_and_reading_download(self):
+        page = self.editor()
+        page.get_by_role("button", name="Ещё один раунд", exact=False).click()
+        label = "Реплика в голосовом канале"
+        expect(page.locator("article .message").filter(has=page.locator("audio")).first).to_contain_text(label)
+        button(page, "Добавить вложение").click()
+        pick = page.get_by_role("dialog").get_by_role("combobox", name="Вложение", exact=True)
+        expect(pick.locator("option").filter(has_text=label).first).to_contain_text(label)
+        button(page.get_by_role("dialog"), "Отмена").click()
+        page.locator("summary", has_text="Действия с историей").click()
+        with page.expect_download() as event:
+            button(page, "Скачать для вычитки").click()
+        self.assertIn(f"({label})", Path(event.value.path()).read_text("utf-8-sig"))
 
     def test_separate_view_position_and_concurrent_edits(self):
         first = self.new_story()

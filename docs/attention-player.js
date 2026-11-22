@@ -65,6 +65,7 @@ async function playAttentionPilot(ui) {
     if (!target) return;
     ui.setFollow(false);
     target.focus({preventScroll:true});
+    updateModeInset();
     target.scrollIntoView({block:'start',behavior:'instant'});
   }
 
@@ -80,9 +81,12 @@ async function playAttentionPilot(ui) {
   }
   window.addEventListener('scroll',updateJump,{passive:true});
   window.addEventListener('resize',updateJump);
-  const layoutObserver = new ResizeObserver(() => {
+  function updateModeInset() {
     const inset = getComputedStyle(bar).position === 'sticky' ? bar.offsetHeight : 0;
     document.documentElement.style.setProperty('--mode-inset',inset+'px');
+  }
+  const layoutObserver = new ResizeObserver(() => {
+    updateModeInset();
     updateJump();
   });
   layoutObserver.observe(bar);
@@ -90,6 +94,14 @@ async function playAttentionPilot(ui) {
 
   function readView() {
     const hash = location.hash.slice(1);
+    const [source,step,stopId] = hash.split('/');
+    if (!preview && source === 'reader' && pages.has(step) && step !== 'start') {
+      const path = routePath(story,step);
+      const stops = stopId && pages.get(step).outcome ? attentionStops(path,story,decisions) : [];
+      const index = stops.findIndex(stop => stop.id === stopId);
+      history.replaceState({path,reviewIndex:index >= 0 ? index : undefined,readerMoment:true},'','#'+step);
+      return {id:step,path,index:history.state.reviewIndex};
+    }
     if (pages.has(hash) && hash !== 'start') return {id:hash, path:routePath(story,hash,history.state?.path), index:history.state?.reviewIndex};
     const id = pickAttentionTake();
     const path = routePath(story,id);
@@ -370,7 +382,6 @@ async function playAttentionPilot(ui) {
     const replay = button('rewind','Попробовать другой ответ',() => navigate(stop.parent));
     replay.classList.add('review-primary');
     choices.append(replay);
-    appendNextStory();
     return title;
   }
 
@@ -423,8 +434,10 @@ async function playAttentionPilot(ui) {
       if (path.includes('calm')) {
         choices.append(button('rewind','А если бы всё пошло не так спокойно…',() => navigate('pressure')));
       } else if (stops.length) {
-        const inspect = button('inspect',stops[0].miss ? 'Что можно было сделать иначе?' : 'Какие детали мне помогли?',
-          () => navigate(view.id,0));
+        let label = 'Разобрать мой выбор';
+        if (stops[0].miss) label = 'Что можно было сделать иначе?';
+        else if (data.outcome.kind === 'positive') label = 'Какие детали мне помогли?';
+        const inspect = button('inspect',label,() => navigate(view.id,0));
         inspect.classList.add('review-primary');
         choices.append(inspect);
       }
@@ -434,12 +447,6 @@ async function playAttentionPilot(ui) {
       const replayUrl = focusLink(activeStory.id,otherRole)+'#'+path[1];
       const name = {Папа:'папа Леры', Тренер:'тренер'}[other.name] || other.name;
       controls.append(button('dismiss','Посмотреть глазами '+other.viewpoint,() => leave(replayUrl,'Теперь ты — '+name),'play'));
-      appendNextStory();
-      if (!preview) {
-        const reader = element('a','story-reader','Читать этот момент текстом');
-        reader.href = './read-story.html?case='+encodeURIComponent(activeStory.id)+'#'+role+'-'+view.id;
-        controls.append(reader);
-      }
     } else {
       freeze.hidden = false;
       question.textContent = data.question || (document.body.hasAttribute('data-preview') && !data.links.length ? 'Продолжение ещё не написано.' : '');
@@ -460,12 +467,11 @@ async function playAttentionPilot(ui) {
       }
       guide.annotate(choices, data.mode);
       if (path.length > 2) controls.append(button('rewind','На шаг назад',() => navigate(data.parent)));
-      appendNextStory();
     }
     return data.outcome ? outcome : question;
   }
 
-  function begin() {
+  function begin(opening = false) {
     ui.pauseMedia();
     const old = run;
     run = new AbortController();
@@ -496,16 +502,27 @@ async function playAttentionPilot(ui) {
     review.hidden = true;
     direction.textContent = '';
     scene.setAttribute('aria-busy','true');
-    ui.setFollow(Boolean(replacingFocus) || focused === document.body);
+    if (!opening) ui.setFollow(Boolean(replacingFocus) || focused === document.body);
     return run;
   }
 
-  function appendNextStory() {
-    if (document.body.hasAttribute('data-preview')) {
+  function appendSceneLinks(stop) {
+    if (preview) {
       controls.append(button('dismiss','Вернуться к тексту',() => parent.document.querySelector('#preview').close()));
       return;
     }
     controls.append(button('dismiss','Следующая история',() => leave(randomStoryUrl(selection),'Следующая история'),'play'));
+    const reader = element('a','story-reader','Читать этот момент текстом');
+    const url = new URL('./read-story.html',location.href);
+    url.searchParams.set('case',activeStory.id);
+    if (stop) url.searchParams.set('outcome',view.id);
+    url.hash = role+'-'+(stop ? stop.id+'/@review' : view.id);
+    reader.href = url.href;
+    reader.addEventListener('click', event => {
+      if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+      history.replaceState({...history.state,readerMoment:true},'');
+    });
+    controls.append(reader);
   }
 
   async function leave(url, label) {
@@ -530,8 +547,8 @@ async function playAttentionPilot(ui) {
   async function render(next, mode) {
     const opening = !view;
     const switchingStops = view?.id === next.id && view.index != null && next.index != null;
-    const task = begin();
-    if (opening) ui.setFollow(false);
+    const task = begin(opening);
+    if (opening && mode !== 'moment') ui.setFollow(false);
     view = next;
     const path = pathFor(next);
     const data = pages.get(next.id);
@@ -539,7 +556,7 @@ async function playAttentionPilot(ui) {
     const stop = Number.isInteger(next.index) && data.outcome && stops[next.index];
     if (!stop) view.index = undefined;
     const items = messages(next);
-    if (!motionAllowed() || mode === 'restore') task.abort();
+    if (!motionAllowed() || mode === 'restore' || mode === 'moment') task.abort();
     if (stop) {
       const end = items.findIndex(item => item.key === stop.id+'-choice')+1;
       const first = items.findIndex(item => stop.signals.includes(item.ref));
@@ -559,17 +576,16 @@ async function playAttentionPilot(ui) {
     direction.textContent = '';
     showActivity();
     promptTarget = stop ? showReview(stops,next.index) : showGame(data,path,stops);
-    const canRead = !stop && Boolean(firstNew);
+    appendSceneLinks(stop);
+    const canRead = !stop && Boolean(firstNew) && mode !== 'moment';
     readNew.hidden = !canRead;
     jump.lastChild.textContent = stop ? 'К разбору' : data.outcome ? 'К итогу' : 'К ответам';
     const announcement = stop ? review.querySelector('h2').textContent : data.outcome ? data.outcome.headline : 'Стоп-кадр. '+data.question;
     status.textContent = (canRead ? 'Появились новые сообщения. ' : '')+announcement;
     const skippedToReview = stop && skipped && document.activeElement === skip;
-    if (!opening && mode !== 'restore' && (ui.shouldFollow() || skippedToReview)) {
-      const target = canRead ? readNew : promptTarget;
-      focusForReading(target);
-    }
-    skip.hidden = document.activeElement !== skip;
+    const focusPrompt = (mode === 'moment' || !opening) && mode !== 'restore' && (ui.shouldFollow() || skippedToReview);
+    skip.hidden = focusPrompt || document.activeElement !== skip;
+    if (focusPrompt) focusForReading(canRead ? readNew : promptTarget);
     skipReadsNew = !opening && canRead;
     if (!skip.hidden) skip.lastChild.textContent = skipReadsNew ? readNew.textContent : jump.lastChild.textContent;
     updateJump();
@@ -585,6 +601,7 @@ async function playAttentionPilot(ui) {
   scene.setAttribute('aria-busy','true');
   scene.classList.add('scene-opening');
   const panel = scene.closest('.panel');
+  ui.setFollow(document.activeElement === document.body);
   panel.hidden = false;
   document.querySelector('.scene-loader').hidden = true;
   await afterPaint();
@@ -599,7 +616,9 @@ async function playAttentionPilot(ui) {
   if (location.hash === '#end') { ui.finishScene(); return; }
   const next = readView();
   const opening = pages.get(next.id).parent === 'start';
-  const excerpt = document.body.hasAttribute('data-preview') && params.has('from');
-  await render(next, excerpt ? 'excerpt' : opening ? 'conversation' : 'restore');
+  const excerpt = preview && params.has('from');
+  const openingMode = excerpt ? 'excerpt' : opening ? 'conversation' : 'restore';
+  const restoreMoment = history.state?.readerMoment || Number.isInteger(next.index);
+  await render(next, restoreMoment ? 'moment' : openingMode);
   scene.classList.remove('scene-opening');
 }

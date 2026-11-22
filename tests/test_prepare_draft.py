@@ -37,3 +37,25 @@ class PrepareDraftTest(unittest.TestCase):
                 editor.prepare(package, dest)
             with self.assertRaises(ValueError):
                 editor.prepare(package, editor.game.ROOT / "stories" / "sticker")
+
+    def test_legacy_unreachable_message_is_absent_from_diff_and_yaml(self):
+        package = self.package()
+        text = "Удалённая авторская реплика"
+        package["work"]["data"]["messages"]["removed"] = {"speaker": "Ты", "text": text}
+        with tempfile.TemporaryDirectory() as temp, patch.object(editor, "current", return_value=self.original):
+            dest = Path(temp) / "reviewed"
+            self.assertEqual(editor.prepare(package, dest), "")
+            self.assertNotIn(text, (dest / "messages.yaml").read_text("utf8"))
+
+    def test_legacy_empty_file_has_a_repair_instruction(self):
+        package = self.package()
+        data = package["work"]["data"]
+        path = "./game/media/sticker/empty.png"
+        data["messages"]["empty"] = {"speaker": "Ты", "media": {"kind": "image", "src": path, "alt": "Описание"}}
+        data["routes"]["self"]["scenes"]["start"]["messages"].append("empty")
+        package["files"] = {path: "data:"}
+        with tempfile.TemporaryDirectory() as temp, patch.object(editor, "current", return_value=self.original):
+            dest = Path(temp) / "reviewed"
+            with self.assertRaisesRegex(ValueError, "замените файл"):
+                editor.prepare(package, dest)
+            self.assertFalse(dest.exists())

@@ -8,7 +8,10 @@ const Drafts = (() => {
   const plain = text => (text || '').replace(mark,'$1');
   const quote = text => mark.exec(text)?.[1] || '';
   const words = m => m.text ?? m.media?.transcript ?? m.media?.caption ?? m.media?.alt ?? '';
+  const emptyFile = value => value==='data:' || value==='data:,' || (typeof value==='string' &&
+    /^data:(?:image\/(?:png|jpeg|webp)|audio\/(?:mpeg|ogg)|application\/octet-stream)?;base64,$/.test(value));
   const mediaName = {voice:'Голосовое',sticker:'Стикер',image:'Изображение',video:'Видео',document:'Документ'};
+  const mediaLabel = media => media.kind==='voice' && media.live ? 'Реплика в голосовом канале' : mediaName[media.kind];
   const levels = {white:'Белый',yellow:'Жёлтый',orange:'Оранжевый',red:'Красный'};
   const endings = {positive:'Удачный исход',mixed:'Смешанный исход',negative:'Неудачный исход',open:'Открытый финал'};
 
@@ -65,16 +68,26 @@ const Drafts = (() => {
     if(node.reaction) for(const prop of ['from','through']) if(node.reaction[prop]===key)node.reaction[prop]=fresh;
     return fresh;
   }
+  // A review mark needs to detect changes without keeping a copy of the author's text.
+  function fingerprint(text) {
+    let left=2166136261, right=5381;
+    for(let i=0;i<text.length;i++){
+      const code=text.charCodeAt(i);
+      left=Math.imul(left^code,16777619);
+      right=Math.imul(right,33)^code;
+    }
+    return 'v1-'+(left>>>0).toString(16).padStart(8,'0')+(right>>>0).toString(16).padStart(8,'0');
+  }
   function stamp(work,role,step) {
     const {data,meta}=work, route=data.routes[role];
-    return JSON.stringify([meta.title,meta.roles[role],...pathTo(route,step).map(key=>{
+    return fingerprint(JSON.stringify([meta.title,meta.roles[role],...pathTo(route,step).map(key=>{
       const n=route.scenes[key];
       return [n,n.messages.map(id=>[data.messages[id],data.channels[data.messages[id]?.channel],route.cues[key+'/'+id]]),
         route.cues[key+'/@choice']];
-    })]);
+    })]));
   }
-  function isChecked(d,role,step) {return d.checked[role+'/'+step]===stamp(d.work,role,step);}
-  function issues(work) {
+  function isChecked(d,role,step) {const saved=d.checked[role+'/'+step];return Boolean(saved && saved===stamp(d.work,role,step));}
+  function issues(work,files) {
     const errors=[];
     const {data,meta}=work;
     if(!meta.title?.trim() || !meta.place?.trim()) errors.push({message:'Укажи название и место действия.',meta:true});
@@ -109,6 +122,7 @@ const Drafts = (() => {
         }
         for(const k of n.messages){
           const m=data.messages[k];
+          if(m.media && emptyFile(files?.[m.media.src]))add('Замени пустой файл у вложения «'+plain(words(m))+'».',{file:m.media.src});
           if(!m.speaker.trim() || !words(m).trim())add('Заполни автора и текст реплики или описание вложения.',{line:k});
           checkMark(words(m),step+'/'+k,{line:k});
         }
@@ -153,17 +167,22 @@ const Drafts = (() => {
     return work;
   }
   function pruneUnused(d) {
-    if(!d.files)return;
-    const {data}=d.work, used=new Set();
-    for(const role of roles) for(const scene of Object.values(data.routes[role].scenes)){
+    const {data}=d.work, used=new Set(), checked={};
+    for(const role of roles) for(const [step,scene] of Object.entries(data.routes[role].scenes)){
       for(const key of scene.messages)used.add(key);
-    }
-    for(const [key,{media}] of Object.entries(data.messages)){
-      if(!used.has(key) && media && !d.base?.data.messages[key] &&
-         Object.values(media).some(path=>typeof path==='string' && Object.hasOwn(d.files,path))){
-        delete data.messages[key];
+      const ref=role+'/'+step, saved=d.checked?.[ref];
+      if(typeof saved==='string'){
+        if(saved.startsWith('['))checked[ref]=fingerprint(saved); // Original v1 packages stored the entire scene.
+        else if(/^v1-[a-f0-9]{16}$/.test(saved))checked[ref]=saved;
       }
     }
+    d.checked=checked;
+    for(const key of Object.keys(data.messages)){
+      if(used.has(key))continue;
+      if(d.base && Object.hasOwn(d.base.data.messages,key))data.messages[key]=clone(d.base.data.messages[key]);
+      else delete data.messages[key];
+    }
+    if(!d.files)return;
     const files={};
     for(const work of [d.work,d.base]){
       if(!work)continue;
@@ -178,7 +197,10 @@ const Drafts = (() => {
     if(Object.keys(files).length)d.files=files;
     else delete d.files;
   }
-  function pack(d){
+  function pack(source){
+    const data={...source.work.data,messages:{...source.work.data.messages}};
+    const d={...source,work:{...source.work,data}};
+    pruneUnused(d);
     const {format,base,work,checked,view,files}=d;
     return JSON.stringify({format,base,work,checked,view,files},null,2);
   }
@@ -192,7 +214,7 @@ const Drafts = (() => {
         d.files={};
         for(const [path,blob] of Object.entries(f.files)){
           if(!/^\.\/game\/media\/[a-z0-9-]+\/[a-z0-9-]+\.(png|jpg|webp|mp3|ogg)$/.test(path) ||
-             typeof blob!=='string'||!/^data:(image\/(png|jpeg|webp)|audio\/(mpeg|ogg));base64,[A-Za-z0-9+/]+=*$/.test(blob))throw Error();
+             typeof blob!=='string'||(!emptyFile(blob) && !/^data:(image\/(png|jpeg|webp)|audio\/(mpeg|ogg));base64,[A-Za-z0-9+/]+=*$/.test(blob)))throw Error();
           d.files[path]=blob;
         }
       }
@@ -201,5 +223,5 @@ const Drafts = (() => {
       pruneUnused(d);return d;
     }catch{throw Error('Этот файл не удалось открыть. Выбери файл черновика «Стоп-кадра».');}
   }
-  return {roles,format,clone,id,plain,quote,words,cueWords,markText,mediaName,levels,endings,blank,draft,pathTo,uses,detach,stamp,isChecked,issues,verifyWork,pruneUnused,pack,unpack};
+  return {roles,format,clone,id,plain,quote,words,cueWords,markText,mediaName,mediaLabel,levels,endings,blank,draft,pathTo,uses,detach,stamp,isChecked,issues,verifyWork,pruneUnused,pack,unpack,emptyFile};
 })();

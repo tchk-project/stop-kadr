@@ -14,7 +14,7 @@ const originalSelected = selection === 'dubl' || (!selection && location.hash.le
 const isCatalogue = !isAttentionPilot && !episode && !originalSelected;
 function focusLink(id, pointOfView) {
   const page = document.body?.hasAttribute('data-preview') ? './editor-preview.html' : './focus.html';
-  return page+'?case='+encodeURIComponent(id)+'&role='+pointOfView+'&v=audit-4';
+  return page+'?case='+encodeURIComponent(id)+'&role='+pointOfView+'&v=release-5';
 }
 function randomStoryUrl(excludeId, startingRole = role) {
   const pool = allStories.filter(item => item.id !== excludeId);
@@ -143,7 +143,11 @@ function messageBubble(message) {
       media.append(paragraph(words.transcript));
     }
     const src = words.src.startsWith('./assets/') ? words.src + '?v=voices-2' : words.src;
-    const label = (words.live ? 'Реплика в голосовом канале · ' : 'Голосовое · ') + (who === 'Ты' ? playerName : who);
+    const speakerName = speaker === 'Ты' ? playerName : speaker;
+    const phrase = parts.text.trim().split(/\s+/);
+    const excerpt = phrase.slice(0,8).join(' ') + (phrase.length > 8 ? '…' : '');
+    const label = [words.live ? 'Реплика в голосовом канале' : 'Голосовое',
+      speakerName, aside, message.caption, excerpt].filter(Boolean).join(' · ');
     const transcript = element('details', 'transcript');
     transcript.append(element('summary', '', 'Текст голосового'), paragraph(words.transcript));
     media.append(recordingButton(src, label));

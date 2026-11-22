@@ -124,81 +124,85 @@ scenes:
     messages:
     - vera-asks-about-card
     - trener-pro-podarok-uvidel-sash
-    - sasha-da-ya-s-vami
-    question: Ты видишь тренера у кабинета. Как хочешь выйти?
+    question: Тренер уже у кабинета. Как тебе удобнее?
     choices:
-      observe-ease: Пройду с тренером до крыльца. Пока ни о чём говорить не хочу.
-      observe-watch: Попрошу Мишу встретить меня у крыльца.
+      observe-ease: Выйду с тренером. Пока ни о чём говорить не хочу.
+      observe-watch: Попрошу тренера побыть со мной в классе, пока не придёт Миша.
     review:
       signals:
       - pressure/danya-togda-s-tebya-dvesti
-      effect: Вера спросила про открытку. А в личке тебе написал тренер. Ты согласился выйти вместе с ним.
+      effect: Ты дочитал разговор про открытку. После звонка тренер написал тебе в личку и предложил встретить у кабинета.
   observe-ease:
     mode: yellow
     messages:
+    - sasha-accepts-walk
     - remarka-trener-i-sasha-vmeste
     outcome:
     - positive
     - Вы с тренером дошли до крыльца
-    note: Тренер сам подошёл к кабинету. Ты принял его предложение. До крыльца вы дошли вместе.
+    note: Ты согласился выйти с тренером. Вы дошли до крыльца вместе, разговор о деньгах можно оставить на потом.
     review:
       signals:
-      - observe/sasha-da-ya-s-vami
-      effect: Тренер сам подошёл к кабинету. Ты принял его предложение. До крыльца вы дошли вместе.
+      - observe/trener-pro-podarok-uvidel-sash
+      effect: Ты согласился выйти вместе. Тренер шёл рядом до самого крыльца.
   observe-watch:
     mode: orange
     messages:
-    - sasha-vstretish-u-kryltsa
-    - misha-zhdu-u-kryltsa
-    - remarka-misha-zhdyot-u-kryltsa
+    - sasha-asks-coach-to-wait
+    - coach-waits-with-sasha
+    - sasha-asks-misha-to-come
+    - misha-comes-to-class
+    - misha-joins-sasha-and-coach
     outcome:
     - positive
-    - Ты вышел с тренером, у крыльца тебя ждал Миша
-    note: Тренер подошёл к кабинету. Ты сам выбрал место встречи с Мишей и ещё до выхода получил его ответ.
+    - Вы с тренером дождались Миши в классе
+    note: Ты попросил тренера подождать. Он остался с тобой, и Миша пришёл за тобой в класс.
     review:
       signals:
-      - observe/sasha-da-ya-s-vami
-      effect: Тренер подошёл к кабинету. Ты сам выбрал место встречи с Мишей и ещё до выхода получил его ответ.
+      - observe/trener-pro-podarok-uvidel-sash
+      effect: Тренер остался с тобой по твоей просьбе. Ты написал Мише в личку, и через пару минут он пришёл.
   focus:
     mode: orange
     messages:
     - sasha-rereads-threat
     - trener-pro-podarok-uvidel-sash
-    - sasha-private-agreement
-    question: Тренер уже у двери. Как тебе удобнее выйти?
+    question: Тренер уже у кабинета. Как тебе удобнее?
     choices:
-      focus-ease: Пройду с тренером до крыльца. Пока ни о чём говорить не хочу.
-      focus-watch: Попрошу Мишу встретить меня у крыльца.
+      focus-ease: Выйду с тренером. Пока ни о чём говорить не хочу.
+      focus-watch: Попрошу тренера побыть со мной в классе, пока не придёт Миша.
     review:
       signals:
       - pressure/danya-togda-s-tebya-dvesti
-      effect: Сообщение про двести осталось в чате. Тренер видел его и сам написал тебе в личку. Вы уже видите друг друга.
+      effect: Перечитав угрозу, ты увидел личное сообщение от тренера. Он тоже прочитал слова Дани и уже подошёл к кабинету.
   focus-ease:
     mode: yellow
     messages:
+    - sasha-accepts-walk
     - sasha-walk-in-silence
     outcome:
     - positive
     - Вы с тренером дошли до крыльца
-    note: Ты видел сообщение Дани, когда согласился пойти с тренером. До крыльца вы дошли рядом, и о деньгах по дороге говорить не пришлось.
+    note: Ты согласился выйти с тренером. Вы дошли до крыльца вместе, разговор о деньгах можно оставить на потом.
     review:
       signals:
-      - focus/sasha-private-agreement
-      effect: Ты видел сообщение Дани, когда согласился пойти с тренером. До крыльца вы дошли рядом, и о деньгах по дороге говорить не пришлось.
+      - focus/trener-pro-podarok-uvidel-sash
+      effect: Ты согласился выйти вместе. Тренер шёл рядом до самого крыльца.
   focus-watch:
     mode: orange
     messages:
-    - sasha-picks-time-with-misha
-    - misha-can-wait
-    - sasha-sees-misha
+    - sasha-asks-coach-to-wait
+    - coach-waits-with-sasha
+    - sasha-asks-misha-to-come
+    - misha-comes-to-class
+    - misha-joins-sasha-and-coach
     outcome:
     - positive
-    - Ты вышел с тренером, у крыльца тебя ждал Миша
-    note: Сначала ты договорился с тренером. Мише ты написал в личку, где встретиться. На крыльце он уже ждал тебя.
+    - Вы с тренером дождались Миши в классе
+    note: Ты попросил тренера подождать. Он остался с тобой, и Миша пришёл за тобой в класс.
     review:
       signals:
-      - focus/sasha-private-agreement
-      effect: Сначала ты договорился с тренером. Мише ты написал в личку, где встретиться. На крыльце он уже ждал тебя.
+      - focus/trener-pro-podarok-uvidel-sash
+      effect: Тренер остался с тобой по твоей просьбе. Ты написал Мише в личку, и через пару минут он пришёл.
   calm-watch:
     mode: white
     messages:
@@ -259,6 +263,6 @@ cues:
   pressure/danya-togda-s-tebya-dvesti: За отказ Даня повысил сумму и сказал, что будет ждать после уроков.
   pressure/sasha-mish-oni-vchera-tozhe-2: У раздевалки тебя ждали вчера. Сегодня ты можешь попросить Мишу и тренера прийти к тебе в класс.
   alternative/danya-sto-segodnya-pro-zavtra: Даже на предложение заплатить Даня ответил новой угрозой. Саша ещё может обратиться к взрослому до выхода из школы.
-  observe/sasha-da-ya-s-vami: Ты видишь тренера у кабинета и уже сказал, что пойдёшь с ним.
-  focus/sasha-private-agreement: Ты уже увидел тренера у своей двери и ответил ему лично.
+  observe/trener-pro-podarok-uvidel-sash: Тренер уже у кабинета. Саша может выйти с ним или попросить его остаться.
+  focus/trener-pro-podarok-uvidel-sash: Тренер уже у кабинета. Саша может выйти с ним или попросить его остаться.
   meet-at-door/misha-ya-zdes-trener-tozhe: Ты дождался Миши и тренера в классе с учительницей. Когда ты услышал Даню, Миша уже стоял рядом и мог увидеть твой ответ.

@@ -48,9 +48,9 @@ scenes:
       signals:
       - pressure/remarka-trener-tol-ko-chto-govoril
       miss: true
-      effect: Внезапное нарушение речи или асимметрия лица — уже повод заподозрить инсульт и сразу вызвать скорую. Ожидание отложило вызов.
+      effect: Тренер снова смог чётко произнести твоё имя. Улыбка осталась неровной, а вызова к этому моменту ещё не было.
       repair: call-now
-      recovery: После этого скорую всё-таки вызвали.
+      recovery: Ты всё-таки позвонила в 112 и рассказала, что тренер снова произнёс твоё имя, а улыбка осталась неровной.
   call:
     mode: red
     messages:
@@ -64,7 +64,7 @@ scenes:
     review:
       signals:
       - pressure/remarka-trener-tol-ko-chto-govoril
-      effect: Вызов 112 принят. Внезапное нарушение речи или асимметрия лица — уже повод заподозрить инсульт и сразу вызвать скорую.
+      effect: Диспетчер услышал от тебя, как изменилась речь тренера, и записал, где вас найти.
   call-time:
     mode: red
     messages:
@@ -77,7 +77,7 @@ scenes:
     review:
       signals:
       - call/dispetcher-zapisal-adres-shkoly-i
-      effect: Диспетчер получил время, которое участники действительно помнят.
+      effect: Диспетчер узнал, что в 16:10 тренер ещё говорил как обычно. Он подтвердил, что бригаду направили.
   delegate:
     mode: red
     messages:
@@ -92,7 +92,7 @@ scenes:
     review:
       signals:
       - pressure/remarka-trener-tol-ko-chto-govoril
-      effect: Рядом с тобой набрали 112. Внезапное нарушение речи или асимметрия лица — уже повод заподозрить инсульт и сразу вызвать скорую.
+      effect: Саша дозвонился и описал диспетчеру, что случилось. Ты осталась с тренером.
   delegate-time:
     mode: red
     messages:
@@ -106,7 +106,7 @@ scenes:
     review:
       signals:
       - delegate/dispetcher-zapisal-adres-shkoly-i
-      effect: Диспетчер получил время, которое участники действительно помнят.
+      effect: Ты напомнила Саше про скамейку. Он передал диспетчеру, что в 16:10 тренер ещё говорил как обычно.
   call-now:
     mode: red
     messages:
@@ -121,7 +121,7 @@ scenes:
     review:
       signals:
       - wait/remarka-trener-snova-mozhet-otchyotlivo
-      effect: Вызов 112 принят. Внезапное нарушение речи или асимметрия лица — уже повод заподозрить инсульт и сразу вызвать скорую.
+      effect: Ты рассказала диспетчеру, как тренер говорил сначала и что изменилось, пока вы ждали.
   call-now-time:
     mode: red
     messages:
@@ -134,7 +134,7 @@ scenes:
     review:
       signals:
       - call-now/dispetcher-zapisal-adres-shkoly-i
-      effect: Диспетчер получил время, которое участники действительно помнят.
+      effect: Диспетчер узнал, что в 16:10 тренер ещё говорил как обычно. Он подтвердил, что бригаду направили.
 cues:
   pressure/remarka-trener-tol-ko-chto-govoril: Внезапное нарушение речи или асимметрия лица — уже повод заподозрить инсульт и сразу вызвать скорую.
   wait/remarka-trener-snova-mozhet-otchyotlivo: Даже если симптомы прошли или ослабли, вызов скорой по-прежнему нужен немедленно.

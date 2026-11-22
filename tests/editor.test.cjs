@@ -49,3 +49,30 @@ test('unfinished story can be reopened; malformed files and external media links
  d.work.data.messages.m={speaker:'Ты',media:{kind:'voice',src:'https://invalid.example/x',transcript:'x'}};
  assert.throws(()=>model.unpack(JSON.stringify(d)));
 });
+
+test('v1 transfer drops unreachable author text and migrates current and stale review snapshots',()=>{
+ const original=model.blank('Тест','Вера','Лера');
+ original.data.messages.published={speaker:'Ты',text:'Опубликованная реплика'};
+ original.data.routes.self.scenes.start.messages.push('published');
+ const d=model.draft(original,original), data=d.work.data;
+ data.routes.self.scenes.start.messages=['shared'];
+ data.routes.witness.scenes.start.messages=['shared'];
+ data.messages.shared={speaker:'Ты',text:'Реплика в обеих ролях'};
+ data.messages.removed={speaker:'Ты',text:'Черновая реплика из удалённой ветки'};
+ data.messages.published.text='Отброшенная правка исходной реплики';
+ const {meta}=d.work;
+ function oldStamp(role){
+   const scene=data.routes[role].scenes.start;
+   return JSON.stringify([meta.title,meta.roles[role],[scene,[[data.messages.shared,null,null]],null]]);
+ }
+ d.checked={'self/start':oldStamp('self'),'witness/start':oldStamp('witness').replace('обеих ролях','старом варианте'),
+            'self/deleted':JSON.stringify(['Прежний текст проверки удалённой сцены'])};
+ const reopened=model.unpack(JSON.stringify(d)), packed=model.pack(reopened);
+ assert.equal(model.isChecked(reopened,'self','start'),true);
+ assert.equal(model.isChecked(reopened,'witness','start'),false);
+ assert.deepEqual(Object.keys(reopened.checked).sort(),['self/start','witness/start']);
+ assert.doesNotMatch(packed,/Черновая реплика|Отброшенная правка|старом варианте|Прежний текст/);
+ assert.equal(JSON.stringify(reopened.base),JSON.stringify(original));
+ assert.equal(model.uses(reopened.work.data,'shared').length,2);
+ assert.equal(model.pack(model.unpack(packed)),packed);
+});

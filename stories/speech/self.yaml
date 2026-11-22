@@ -48,9 +48,9 @@ scenes:
       signals:
       - pressure/remarka-hochesh-poprosit-rebyat-podvinut-sya
       miss: true
-      effect: Внезапное нарушение речи или асимметрия лица — уже повод заподозрить инсульт и сразу вызвать скорую. Ожидание отложило вызов.
+      effect: Когда тебе удалось чётко произнести «Вера», угол рта всё ещё был опущен. Скорую к этому моменту ещё не вызвали.
       repair: call-now
-      recovery: После этого скорую всё-таки вызвали.
+      recovery: Ты набрал 112 и передал телефон Вере. Она смогла рассказать и о первых признаках, и о том, что изменилось.
   call:
     mode: red
     messages:
@@ -64,7 +64,7 @@ scenes:
     review:
       signals:
       - pressure/remarka-hochesh-poprosit-rebyat-podvinut-sya
-      effect: Вызов 112 принят. Внезапное нарушение речи или асимметрия лица — уже повод заподозрить инсульт и сразу вызвать скорую.
+      effect: Вера взяла у тебя телефон и смогла сразу объяснить диспетчеру, что с тобой произошло.
   call-time:
     mode: red
     messages:
@@ -78,7 +78,7 @@ scenes:
     review:
       signals:
       - call/dispetcher-zapisal-adres-shkoly-i
-      effect: Диспетчер получил время, которое участники действительно помнят.
+      effect: Вера вспомнила, что в 16:10 ты ещё говорил как обычно, и передала это диспетчеру. Он сказал, что бригаду направили.
   delegate:
     mode: red
     messages:
@@ -92,7 +92,7 @@ scenes:
     review:
       signals:
       - pressure/remarka-hochesh-poprosit-rebyat-podvinut-sya
-      effect: Вера поняла твой жест и набрала 112. Внезапное нарушение речи или асимметрия лица — уже повод заподозрить инсульт и сразу вызвать скорую.
+      effect: Вера поняла твой жест. После твоего кивка она набрала 112 и назвала адрес школы.
   delegate-time:
     mode: red
     messages:
@@ -106,7 +106,7 @@ scenes:
     review:
       signals:
       - delegate/dispetcher-zapisal-adres-shkoly-i
-      effect: Диспетчер получил время, которое участники действительно помнят.
+      effect: Вера вспомнила, что в 16:10 ты ещё говорил как обычно, и передала это диспетчеру. Он сказал, что бригаду направили.
   call-now:
     mode: red
     messages:
@@ -121,7 +121,7 @@ scenes:
     review:
       signals:
       - wait/remarka-teper-poluchaetsya-otchyotlivo-skazat
-      effect: Вызов 112 принят. Внезапное нарушение речи или асимметрия лица — уже повод заподозрить инсульт и сразу вызвать скорую.
+      effect: Вера взяла у тебя телефон и рассказала диспетчеру, что речь стала чётче, а улыбка осталась неровной.
   call-now-time:
     mode: red
     messages:
@@ -135,7 +135,7 @@ scenes:
     review:
       signals:
       - call-now/dispetcher-zapisal-adres-shkoly-i
-      effect: Диспетчер получил время, которое участники действительно помнят.
+      effect: Вера вспомнила, что в 16:10 ты ещё говорил как обычно, и передала это диспетчеру. Он сказал, что бригаду направили.
 cues:
   pressure/remarka-hochesh-poprosit-rebyat-podvinut-sya: Внезапное нарушение речи или асимметрия лица — уже повод заподозрить инсульт и сразу вызвать скорую.
   wait/remarka-teper-poluchaetsya-otchyotlivo-skazat: Даже если симптомы прошли или ослабли, вызов скорой по-прежнему нужен немедленно.
