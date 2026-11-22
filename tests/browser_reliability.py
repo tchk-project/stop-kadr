@@ -1,4 +1,6 @@
 """Run with python tests/browser_reliability.py after installing Playwright Chromium."""
+import base64
+import json
 import os
 import re
 import threading
@@ -179,6 +181,32 @@ class BrowserReliabilityTest(unittest.TestCase):
         expect(page.locator(".decision-review")).to_be_visible()
         self.assertTrue(player.evaluate("el => el.paused && !el.ended"))
         self.assertEqual(set(recordings), {chosen_url})
+
+    def test_editor_preview_plays_an_embedded_voice_chat_recording(self):
+        def compiled(path):
+            return json.loads(path.read_text().split(" = ", 1)[1].rstrip(";\n"))
+
+        data = compiled(DOCS / "game/stories/voice.js")
+        meta = next(m for m in compiled(DOCS / "game/catalog.js") if m["id"] == "voice")
+        first = data["routes"]["witness"]["scenes"]["start"]["messages"][0]
+        media = data["messages"][first]["media"]
+        encoded = base64.b64encode((DOCS / media["src"]).read_bytes()).decode("ascii")
+        media["src"] = "./game/media/voice/test.mp3"
+        draft = {"format": "stop-kadr-draft/1", "base": None, "work": {"meta": meta, "data": data},
+                 "view": {"role": "witness", "step": "pressure"},
+                 "files": {media["src"]: "data:audio/mpeg;base64," + encoded}}
+        self.page.goto(self.base + "editor.html")
+        self.page.locator("#import-file").set_input_files({
+            "name": "test.stop-kadr.json", "mimeType": "application/json",
+            "buffer": json.dumps(draft).encode(),
+        })
+        self.page.get_by_role("button", name="Проверить в игре").click()
+        preview = self.page.frame_locator("#preview iframe")
+        play = preview.locator(".play-audio").first
+        expect(play).to_have_attribute("data-src", draft["files"][media["src"]])
+        play.click()
+        expect(preview.locator("audio")).to_have_js_property("paused", False)
+        expect(preview.locator("audio")).not_to_have_js_property("currentTime", 0)
 
     def test_voice_download_can_retry(self):
         page = self.page
