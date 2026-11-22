@@ -75,7 +75,7 @@ scenes:
     mode: white
     messages:
     - timur-mish-u-tebya-ryadom
-    question: Теперь ты знаешь ещё кое-что. Что сделаешь?
+    question: Тимур остановился у твоего ряда. Что сделаешь?
     choices:
       stay: Сделать вид, что занят сумкой.
       rejoin: Снять сумку с сиденья.
@@ -84,7 +84,7 @@ scenes:
       signals:
       - pressure/kostya-togda-sadish-sya-otdel-no-s
       - pressure/timur-ya-voobsche-uzhe-ehat
-      effect: 'После твоего решения разговор продолжился: «Миш, у тебя рядом свободно или тут тоже только с песней?»'
+      effect: Тимур всё ещё в проходе. Теперь он спросил про свободное место прямо у тебя.
       repair: rejoin
       recovery: Тимур сел рядом без условий.
   stay:
@@ -117,9 +117,9 @@ scenes:
     continuation: true
     question: Как продолжишь?
     choices:
-      calm-end: Посмотреть, что будет дальше
+      calm-end: Зайду в автобус вместе с командой.
       ask: Позвать Тимура на соседнее место
-      calm-watch: Посмотрю, где Тимур сядет, когда автобус тронется.
+      calm-watch: Посмотрю, кому достанется микрофон после отказа Тимура.
   calm-end:
     mode: yellow
     messages:
@@ -158,11 +158,11 @@ scenes:
     outcome:
     - positive
     - Тимур едет на игру рядом с Сашей
-    note: Рядом нашлось место без условия про песню.
+    note: Тренер объявил выезд, когда Тимур уже сидел рядом с Сашей.
     review:
       signals:
       - observe/remarka-timur-saditsya-ryadom-s
-      effect: Рядом нашлось место без условия про песню.
+      effect: Тренер объявил выезд, когда Тимур уже сидел рядом с Сашей.
   observe-watch:
     mode: orange
     messages:
@@ -198,11 +198,11 @@ scenes:
     outcome:
     - positive
     - Тимур едет на игру рядом с Сашей
-    note: Рядом нашлось место без условия про песню.
+    note: Тренер объявил выезд, когда Тимур уже сидел рядом с Сашей.
     review:
       signals:
       - focus/remarka-timur-saditsya-ryadom-s
-      effect: Рядом нашлось место без условия про песню.
+      effect: Тренер объявил выезд, когда Тимур уже сидел рядом с Сашей.
   focus-watch:
     mode: orange
     messages:
@@ -219,11 +219,11 @@ scenes:
   calm-watch:
     mode: orange
     messages:
-    - remarka-timur-saditsya-u-okna
+    - misha-notices-who-sings
     outcome:
     - positive
-    - Тимур поехал на игру со всеми
-    note: После отказа место осталось свободным. Петь вызвался Саша.
+    - Микрофон взял Саша
+    note: Миша увидел, кто в итоге запел. Тимур занял место у окна без песни.
   pressure-act-0-next-0:
     mode: orange
     messages:
@@ -252,6 +252,6 @@ cues:
   pressure/kostya-togda-sadish-sya-otdel-no-s: После отказа Костя поставил условие даже для места в автобусе.
   pressure/timur-ya-voobsche-uzhe-ehat: Тимур написал в личку, что теперь думает пропустить поездку.
   pressure-act-0/trener-mish-ya-u-peredney: Ты освободил место у окна. Теперь вы можете поговорить вдвоём, даже когда остальные смотрят на Тимура.
-  ignore/timur-mish-u-tebya-ryadom: Теперь к тебе обратились напрямую.
-  observe/remarka-timur-saditsya-ryadom-s: Рядом нашлось место без условия про песню.
-  focus/remarka-timur-saditsya-ryadom-s: Рядом нашлось место без условия про песню.
+  ignore/timur-mish-u-tebya-ryadom: Тимур спрашивает про место рядом с тобой, где можно просто ехать.
+  observe/remarka-timur-saditsya-ryadom-s: Ты видел, как Тимур занял место рядом с Сашей, а Костя унёс микрофон.
+  focus/remarka-timur-saditsya-ryadom-s: Ты видел, как Тимур занял место рядом с Сашей, а Костя унёс микрофон.

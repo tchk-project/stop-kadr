@@ -68,7 +68,7 @@ scenes:
     mode: white
     messages:
     - anya-dan-tam-stul-eschyo
-    question: Теперь ты знаешь ещё кое-что. Что сделаешь?
+    question: Аня не слышит тебя из-за музыки. Как ответишь про стул?
     choices:
       stay: Вернуться к музыке, посмотреть потом.
       rejoin: Помахать Ане и освободить стул.
@@ -76,7 +76,7 @@ scenes:
       miss: true
       signals:
       - pressure/anya-ya-emu-dvazhdy-skazala
-      effect: 'После твоего решения разговор продолжился: «Дань, там стул ещё есть? Я из-за музыки не слышу.»'
+      effect: Аня ищет место за вашим столом. Из-за музыки ответ до неё может не дойти.
       repair: rejoin
       recovery: Аня знает, где её ждут.
   stay:
@@ -109,9 +109,9 @@ scenes:
     continuation: true
     question: Как продолжишь?
     choices:
-      calm-end: Посмотреть, что будет дальше
-      ask: Ответить Вере про воду
-      calm-watch: Они разошлись. Ещё немного посмотрю, как пойдёт вечер.
+      calm-end: Послушаю, что сейчас поставят.
+      ask: Попрошу Веру взять и мне воды.
+      calm-watch: Покажу Вере, что у меня уже есть вода.
   calm-end:
     mode: yellow
     messages:
@@ -210,15 +210,15 @@ scenes:
       - focus/anya-spasibo-posizhu-s-vami
       effect: Ты спросил Аню, нужна ли компания. Она согласилась и сама заговорила о музыке.
   calm-watch:
-    mode: orange
+    mode: yellow
     messages:
-    - remarka-anya-i-vera-berut
+    - danya-shows-bottle
     outcome:
     - positive
-    - Аня провела эту песню с Верой
-    note: Аня пошла за водой с Верой. Лёша занялся танцами.
+    - Вера взяла воду на двоих
+    note: Даня ответил жестом. Вера его увидела и поняла, сколько нужно стаканов.
 cues:
   pressure/anya-ya-emu-dvazhdy-skazala: Даня не слышал разговора у стены. Сейчас Аня сама говорит, чего хочет.
-  ignore/anya-dan-tam-stul-eschyo: Теперь к тебе обратились напрямую.
+  ignore/anya-dan-tam-stul-eschyo: Аня спросила о конкретном месте за вашим столом.
   observe/anya-spasibo-posizhu-s-vami: Аня уже подошла и сама сказала, что хочет посидеть с вами.
   focus/anya-spasibo-posizhu-s-vami: Аня уже подошла и сама сказала, что хочет посидеть с вами.

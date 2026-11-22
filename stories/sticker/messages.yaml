@@ -204,7 +204,8 @@ vera-da-nesu-pro-kotov:
   text: Да, несу. Про котов поговорим потом.
 remarka-na-etom-dubl-zakanchivaetsya:
   speaker: Ремарка
-  text: На этом дубль заканчивается.
+  channel: scene
+  text: Ты кладёшь телефон экраном вниз. Последнее сообщение от Веры остаётся в личке.
 ty-hvatit-nesi-pryamo-k:
   speaker: Ты
   text: Хватит, неси прямо к кабинету.
@@ -233,3 +234,20 @@ lera-repeats-request:
 danya-acknowledges-request:
   speaker: Даня
   text: Понял, Лер. Больше не буду.
+lera-starts-headline:
+  speaker: Ремарка
+  channel: scene
+  caption: У стола со стенгазетой
+  text: Ты откладываешь телефон. Пока Даня идёт, ты вырезаешь первую букву для заголовка.
+lera-asks-about-sticker:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-daney
+  text: Дань, спасибо за клей. Ты вчера видел мою просьбу про кота?
+danya-read-message:
+  speaker: Даня
+  text: Видел, Лер. Больше под голосовые его не кидаю.
+vera-cuts-paper:
+  speaker: Ремарка
+  channel: scene
+  caption: У стола со стенгазетой
+  text: Ты откладываешь телефон и берёшься за ножницы. Когда Даня приносит тюбик, у тебя уже готовы буквы для заголовка.

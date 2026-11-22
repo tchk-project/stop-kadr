@@ -1,7 +1,7 @@
 id: money
 title: Сбор после уроков
 order: 8
-place: Школьная столовая
+place: Чат секции и школьный коридор
 roles:
   witness:
     name: Миша
@@ -35,3 +35,6 @@ channels:
   lichnaya-perepiska-s-mamoy:
     kind: private
     title: Личная переписка с мамой
+  lichnaya-perepiska-s-trenerom:
+    kind: private
+    title: Личная переписка с тренером

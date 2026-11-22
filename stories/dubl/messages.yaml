@@ -1,7 +1,7 @@
 vera-u-kogo-video-s:
   speaker: Вера
   channel: chat-shkol-noy-gruppy
-  text: У кого видео с репетиции? Хочу посмотреть, как мы вышли.
+  text: У кого видео с прогона? Хочу посмотреть, как мы вышли.
 misha-est-eschyo-dubl-gde:
   speaker: Миша
   reactions:
@@ -120,7 +120,7 @@ remarka-ty-vyklyuchaesh-zvuk-u:
   text: Ты выключаешь звук у чата и идёшь к Вере.
 remarka-ty-ubiraesh-telefon-cherez:
   speaker: Ремарка
-  text: Ты убираешь телефон. Через полчаса на экране [[всё тот же опрос]].
+  text: Ты убираешь телефон. Через полчаса репетиция заканчивается. На экране [[всё тот же опрос]].
 vera-mish-ya-u-kabineta:
   speaker: Вера
   channel: lichnaya-perepiska-s-veroy
@@ -133,7 +133,8 @@ vera-vizhu-ego-seychas-zakroyu:
   text: Вижу его. Сейчас закрою.
 remarka-na-etom-dubl-zakanchivaetsya:
   speaker: Ремарка
-  text: На этом дубль заканчивается.
+  channel: scene
+  text: Ты гасишь экран. Вера написала, где её найти.
 ty-posledniy-gde-my:
   speaker: Ты
   text: Последний — где мы все вместе вступаем.

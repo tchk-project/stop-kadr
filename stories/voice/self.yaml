@@ -67,7 +67,7 @@ scenes:
     question: Что тебе сейчас подходит?
     choices:
       follow-up: Написать Лёше отдельно
-      pause: Закончить этот дубль здесь
+      pause: Оставлю личку до завтра.
     review:
       signals:
       - pressure/ty-dan-hvatit-menya-peredraznivat
@@ -91,9 +91,9 @@ scenes:
     messages:
     - remarka-na-etom-dubl-zakanchivaetsya
     outcome:
-    - mixed
+    - open
     - Лёшина оговорка тоже разошлась по чату
-    note: 'Тебе хотелось, чтобы Даня переключился. За его насмешки отвечает он. Но Лёша теперь слышит в общем чате слова из вашей вчерашней игры. Можно написать ему отдельно: «Зря я про вчерашнее рассказал».'
+    note: Можно сделать перерыв. За насмешки отвечает Даня. Лёшины слова из вашей игры в общий чат написал ты. Позже можно признать это в личке, когда захочешь.
     review:
       signals:
       - alternative/lyosha-mish-my-zh-vchera
@@ -106,9 +106,9 @@ scenes:
     continuation: true
     question: Как продолжишь?
     choices:
-      calm-end: Посмотреть, что будет дальше
+      calm-end: Скажу ребятам, что дверь открылась.
       ask: Подсказать команде, где проход
-      calm-watch: Может, Даня и правда не расслышал. Послушаю следующую реплику.
+      calm-watch: Открою дверь и займусь уровнем.
   calm-end:
     mode: yellow
     messages:
@@ -147,11 +147,11 @@ scenes:
     outcome:
     - positive
     - Команда продолжила игру
-    note: Даня прямо откликнулся на просьбу. Лёша вернулся к игре.
+    note: Твоя команда перешла в следующую комнату. Можно было продолжить раунд.
     review:
       signals:
       - observe/danya-ladno-mish-uslyshal-vsyo
-      effect: Даня прямо откликнулся на просьбу. Лёша вернулся к игре.
+      effect: Твоя команда перешла в следующую комнату. Можно было продолжить раунд.
   observe-watch:
     mode: orange
     messages:
@@ -186,11 +186,11 @@ scenes:
     outcome:
     - positive
     - Команда продолжила игру
-    note: Даня прямо откликнулся на просьбу. Лёша вернулся к игре.
+    note: Твоя команда перешла в следующую комнату. Можно было продолжить раунд.
     review:
       signals:
       - focus/danya-ladno-mish-uslyshal-vsyo
-      effect: Даня прямо откликнулся на просьбу. Лёша вернулся к игре.
+      effect: Твоя команда перешла в следующую комнату. Можно было продолжить раунд.
   focus-watch:
     mode: orange
     messages:
@@ -205,14 +205,13 @@ scenes:
       - focus/danya-ladno-mish-uslyshal-vsyo
       effect: Ты спросил в тексте и получил ответ там же. Вы продолжаете играть вместе.
   calm-watch:
-    mode: orange
+    mode: white
     messages:
-    - misha-otkryl-zahodim
-    - sistema-komanda-pereshla-na-sleduyuschiy
+    - misha-opens-in-silence
     outcome:
     - positive
-    - Команда вернулась к игре
-    note: Даня уточнил слово один раз и вернулся к игре. Команда прошла через дверь.
+    - Миша перешёл в следующую комнату
+    note: Даня расслышал слово «ключ». Миша мог сосредоточиться на игре.
   pressure-act-1-next-0:
     mode: orange
     messages:
@@ -241,5 +240,5 @@ cues:
   pressure/ty-dan-hvatit-menya-peredraznivat: В голосовом слышна просьба Миши. Ребятам уже известно, хочет ли он продолжать эту шутку.
   pressure-act-1/moderator-igry-ya-tut-mozhesh: Ты сам пригласил модератора. К тому моменту, когда в голосе стало трудно ответить, у вас уже была открыта личка.
   alternative/lyosha-mish-my-zh-vchera: Лёша напомнил в личке, что вчера вы играли вдвоём. Общая команда раньше об оговорке не слышала.
-  observe/danya-ladno-mish-uslyshal-vsyo: Даня прямо откликнулся на просьбу. Лёша вернулся к игре.
-  focus/danya-ladno-mish-uslyshal-vsyo: Даня прямо откликнулся на просьбу. Лёша вернулся к игре.
+  observe/danya-ladno-mish-uslyshal-vsyo: Даня ответил тебе про повторение слова. Лёша уже спросил, кто войдёт в дверь.
+  focus/danya-ladno-mish-uslyshal-vsyo: Даня ответил тебе про повторение слова. Лёша уже спросил, кто войдёт в дверь.

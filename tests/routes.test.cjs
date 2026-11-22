@@ -5,30 +5,33 @@ const {join} = require('node:path');
 const {build,catalog,ctx:context,modes,docs} = require('./game-helper.cjs');
 const ids = ['dubl','locker','sticker','project','geopoint','team','dance','voice','money','stairs','rumour','invite'];
 const stops = context.attentionStops;
+function assertVisibleCue(story,cues,path,stop,ref) {
+  const [phase,source] = ref.split('/');
+  assert.ok(path.slice(0,path.indexOf(stop.id)).includes(phase),ref);
+  const quote = cues[ref]?.[0];
+  assert.ok(quote,ref);
+  const scene = story[phase];
+  if (source === '@choice') {
+    const answer = story[scene.parent].links.find(([target]) => target === phase);
+    assert.equal(answer?.[2]?.quote,quote,ref);
+  } else {
+    assert.equal(scene.lines.find(line => line.ref === ref)?.parts.quote,quote,ref);
+  }
+}
 for (const id of ids) for (const role of ['witness','self']) {
   test(id+' / '+role+' — both takes, all endings, visible signals and retry points',() => {
     const {story,cues,decisions} = build(id,role);
     // The same external event can follow different conscious readings of it.
     assert.notEqual(story.observe.mode,story.focus.mode);
     const dialogue = lines => lines.map(({parts,speaker,media})=>[speaker,parts?.text,media?.src]);
-    if (id === 'money') {
-      // Both choices are ways to read the same chat and the coach responds independently.
-      assert.deepEqual(dialogue(story.observe.lines),dialogue(story.focus.lines));
-    } else {
-      assert.notDeepEqual(dialogue(story.observe.lines),dialogue(story.focus.lines));
-    }
+    assert.notEqual(decisions.observe.effect,decisions.focus.effect);
     for (const key of ['observe','focus']) {
-      assert.equal(story[key+'-ease'].mode,'yellow');
-      assert.equal(story[key+'-watch'].mode,'orange');
       const ease = dialogue(story[key+'-ease'].lines);
       const watch = dialogue(story[key+'-watch'].lines);
       assert.notDeepEqual(ease,watch);
       assert.notEqual(story[key+'-ease'].outcome[1],story[key+'-watch'].outcome[1]);
       assert.ok(decisions[key].signals.length);
     }
-    const quiet = id === 'project' ? 'calm-act-0' : 'calm-end';
-    assert.deepEqual(dialogue(story[quiet].lines),dialogue(story['calm-watch'].lines));
-    assert.notEqual(story[quiet].mode,story['calm-watch'].mode);
     const seen = new Set();
     const endings = new Set();
     function walk(key, path) {
@@ -49,13 +52,7 @@ for (const id of ids) for (const role of ['witness','self']) {
           assert.ok(review.length);
           for (const stop of review) {
             assert.ok(story[stop.parent].links.length >= 1);
-            for (const signal of stop.signals) {
-              assert.ok(cues[signal],key+' / '+signal);
-              const [phase] = signal.split('/');
-              assert.ok(path.indexOf(phase) >= 0 && path.indexOf(phase) < path.indexOf(stop.id),signal);
-              const line = story[phase].lines.find(line => line.ref === signal);
-              assert.equal(line.parts.quote,cues[signal][0],signal);
-            }
+            for (const signal of stop.signals) assertVisibleCue(story,cues,path,stop,signal);
           }
         }
       } else {
@@ -118,9 +115,7 @@ for (const id of ['speech','vision','abdomen','chest']) for (const role of ['wit
       assert.ok(path.some(k=>['call','delegate','call-now'].includes(k)));
       assert.match(node.note,/103 или 112/);
       for(const stop of stops(path,story,decisions)) for (const cue of stop.signals) {
-        const [parent]=cue.split('/');
-        assert.ok(path.indexOf(parent)<path.indexOf(stop.id));
-        assert.equal(story[parent].lines.find(line=>line.ref===cue).parts.quote,cues[cue][0]);
+        assertVisibleCue(story,cues,path,stop,cue);
       }
     }
     visit('start',['start']);

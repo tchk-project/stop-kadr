@@ -43,9 +43,7 @@ test('every pressure ending in the catalog can rewind to a real decision', () =>
         for (const ref of stop.signals) {
           assert.ok(cues[ref] && known.includes(ref.split('/')[0]),label+' '+ref);
         }
-        let retry = stop.parent;
-        while (story[retry].links.length < 2 && story[retry].parent) retry = story[retry].parent;
-        assert.ok(story[retry].links.length >= 2,label);
+        assert.ok(story[stop.parent].links.length >= 2,label);
       }
     }
   }

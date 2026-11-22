@@ -60,7 +60,7 @@ scenes:
     question: Что тебе сейчас подходит?
     choices:
       follow-up: Рассказать учительнице, почему опоздал
-      pause: Закончить этот дубль здесь
+      pause: Сейчас переоденусь и пойду играть. Про рюкзак расскажу, если захочу.
     review:
       signals:
       - pressure/danya-proydyosh-nash-kvest-2
@@ -85,9 +85,9 @@ scenes:
     messages:
     - remarka-na-etom-dubl-zakanchivaetsya
     outcome:
-    - mixed
+    - open
     - Из-за чужой «игры» ты пропустил разминку
-    note: Казалось, так получится быстрее. Но срок по-прежнему назначал Даня, который забрал рюкзак. Можно рассказать учителю, почему ты опоздал, и попросить помочь вернуть вещи сразу, если это повторится.
+    note: Можно сейчас присоединиться к ребятам. Разминку ты пропустил, потому что Даня удерживал рюкзак. Когда рассказать учительнице о вчерашнем и сегодняшнем, решаешь ты.
     review:
       signals:
       - alternative/remarka-danya-otdayot-ryukzak-posle
@@ -100,9 +100,9 @@ scenes:
     continuation: true
     question: Как продолжишь?
     choices:
-      calm-end: Посмотреть, что будет дальше
+      calm-end: Догоню ребят по дороге в зал.
       ask: Сказать Дане про рюкзак
-      calm-watch: Форма у меня. Успею переодеться до звонка?
+      calm-watch: Форма нашлась. Переоденусь и пойду играть.
   calm-end:
     mode: yellow
     messages:
@@ -143,11 +143,11 @@ scenes:
     outcome:
     - positive
     - Рюкзак вернулся к хозяину до звонка
-    note: Рюкзак вернули. Миша может сам достать свои вещи.
+    note: Когда Вера позвала в зал, форма уже была у тебя. Звонок прозвенел, пока вы ещё были в раздевалке.
     review:
       signals:
       - observe/remarka-danya-stavit-ryukzak-ryadom
-      effect: Рюкзак вернули. Миша может сам достать свои вещи.
+      effect: Когда Вера позвала в зал, форма уже была у тебя. Звонок прозвенел, пока вы ещё были в раздевалке.
   observe-watch:
     mode: orange
     messages:
@@ -184,11 +184,11 @@ scenes:
     outcome:
     - positive
     - Рюкзак вернулся к хозяину до звонка
-    note: Рюкзак вернули. Миша может сам достать свои вещи.
+    note: Когда Вера позвала в зал, форма уже была у тебя. Звонок прозвенел, пока вы ещё были в раздевалке.
     review:
       signals:
       - focus/remarka-danya-stavit-ryukzak-ryadom
-      effect: Рюкзак вернули. Миша может сам достать свои вещи.
+      effect: Когда Вера позвала в зал, форма уже была у тебя. Звонок прозвенел, пока вы ещё были в раздевалке.
   focus-watch:
     mode: orange
     messages:
@@ -203,17 +203,16 @@ scenes:
       - focus/remarka-danya-stavit-ryukzak-ryadom
       effect: Рюкзак вернули. Ты сам решил, с кем пойти на урок.
   calm-watch:
-    mode: orange
+    mode: white
     messages:
-    - vera-poshli-v-zal-eschyo
-    - remarka-misha-vhodit-v-zal
+    - misha-changes-shoes
     outcome:
     - positive
-    - Рюкзак вернули до звонка
-    note: Миша получил рюкзак и достал форму до урока. На этот раз никто не потребовал пройти квест.
+    - Миша успел к началу урока
+    note: Форма снова у тебя. Ты потратил оставшиеся минуты на то, чтобы переодеться.
 cues:
   pressure/danya-proydyosh-nash-kvest-2: Даня поставил условие, прежде чем вернуть чужую вещь.
   pressure/ty-kakoy-eschyo-kvest-mne: Миша говорит, что это повторилось.
   alternative/remarka-danya-otdayot-ryukzak-posle: Пока рюкзак был у Дани, разминка закончилась. Миша может объяснить учителю своё опоздание.
-  observe/remarka-danya-stavit-ryukzak-ryadom: Рюкзак вернули. Миша может сам достать свои вещи.
-  focus/remarka-danya-stavit-ryukzak-ryadom: Рюкзак вернули. Миша может сам достать свои вещи.
+  observe/remarka-danya-stavit-ryukzak-ryadom: Рюкзак уже рядом. Ты достал из него форму, пока звонок ещё не прозвенел.
+  focus/remarka-danya-stavit-ryukzak-ryadom: Рюкзак уже рядом. Ты достал из него форму, пока звонок ещё не прозвенел.

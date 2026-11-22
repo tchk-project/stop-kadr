@@ -85,7 +85,7 @@ misha-sash-hot-ty-to-zachem:
   speaker: Миша
   aside: лично тебе
   channel: lichnaya-perepiska-s-mishey
-  text: Саш, хоть ты-то зачем? Слышал же, я просил перестать.
+  text: Саш, хоть ты-то зачем? [[Слышал же, я просил перестать]].
 misha-sash-ty-v-tekste:
   speaker: Миша
   channel: lichnaya-perepiska-s-mishey
@@ -196,7 +196,8 @@ remarka-soobschenie-otpravleno-lyosha-poka:
   text: Сообщение отправлено. Лёша пока не ответил.
 remarka-na-etom-dubl-zakanchivaetsya:
   speaker: Ремарка
-  text: На этом дубль заканчивается.
+  channel: scene
+  text: Ты закрываешь переписку. Ответа на приглашение этим вечером нет.
 ty-dver-sprava-ya-uzhe:
   speaker: Ты
   text: Дверь справа, я уже открыл.
@@ -231,3 +232,21 @@ misha-asks-for-teammate:
 lyosha-offers-to-join:
   speaker: Лёша
   text: Я с тобой. Маякну, как дойду до двери.
+misha-opens-in-silence:
+  speaker: Ремарка
+  text: Ты нажимаешь на дверь. На карте появляется следующая комната, и ты ведёшь персонажа туда.
+sasha-listens-at-door:
+  speaker: Даня
+  channel: golosovoy-kanal-komnata-3
+  text: Миш, дверь вижу. Я за тобой!
+sasha-apologises-for-echo:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-mishey
+  text: Слышал. Прости, Миш. Зря я про ключик написал, больше не буду. Если захочешь доиграть в тексте, я тут.
+misha-asks-for-time:
+  speaker: Миша
+  text: Может, позже. Сейчас играть не хочу.
+sasha-leaves-message-unanswered:
+  speaker: Ремарка
+  channel: scene
+  text: Ты возвращаешься к раунду. Мишино сообщение остаётся без ответа.

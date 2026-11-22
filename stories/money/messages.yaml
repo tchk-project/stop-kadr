@@ -148,11 +148,11 @@ sasha-uzhe-v-ryukzake:
   text: Уже в рюкзаке :)
 trener-pro-podarok-uvidel-sash:
   speaker: Тренер
-  channel: chat-sektsii
+  channel: lichnaya-perepiska-s-trenerom
   caption: После звонка
   text: Саш, видел, что Даня про двести написал. Я у твоего кабинета. Хочешь, вместе выйдем?
 sasha-da-ya-s-vami:
-  speaker: Саша
+  speaker: Ты
   text: Да, я с вами пойду. [[Уже вижу вас]].
 remarka-trener-i-sasha-vmeste:
   speaker: Ремарка
@@ -235,7 +235,8 @@ marina-sergeevna-konechno-ostanus-s:
   text: Конечно. Останусь с тобой, давай решим, кого позвать.
 remarka-na-etom-dubl-zakanchivaetsya:
   speaker: Ремарка
-  text: На этом дубль заканчивается.
+  channel: scene
+  text: Ты остаёшься в классе. Марина Сергеевна рядом, у своего стола.
 danya-ok-sash-vycherknul-ver-2:
   speaker: Даня
   text: Ок, Саш, вычеркнул. Вер, сколько у нас тогда?
@@ -248,14 +249,14 @@ vera-konechno-na-trene-dam:
 ty-mish-vstret-menya-u:
   speaker: Ты
   channel: lichnaya-perepiska-s-mishey
-  text: Миш, встреть меня у раздевалки, ладно?
+  text: Миш, после звонка я останусь в классе с Мариной Сергеевной. Можешь прийти за мной с тренером?
 misha-da-ya-s-trenerom:
   speaker: Миша
-  text: Да. Я у тренерской, подойду с тренером.
+  text: Да. Тренер рядом, мы вместе к вам в класс зайдём.
 danya-sash-a-den-gi-2:
   speaker: Даня
   channel: scene
-  caption: После звонка · у раздевалки
+  caption: После звонка · у двери класса
   text: Саш! А деньги?
 remarka-ya-sobiralsya-skazat-chto:
   speaker: Ремарка
@@ -320,3 +321,63 @@ misha-mogu-posidet-ryadom:
   speaker: Ты
   channel: scene
   text: Хочешь остаться с тренером? Я могу посидеть с тобой.
+vera-asks-about-card:
+  speaker: Вера
+  channel: chat-sektsii
+  text: Ребят, а на открытке когда расписываться?
+sasha-coach-with-me:
+  speaker: Саша
+  channel: lichnaya-perepiska-s-sashey
+  caption: После звонка
+  text: Миш, тренер сам подошёл. [[Я уже с ним]]. Собираемся выходить.
+sasha-still-wants-answer:
+  speaker: Саша
+  channel: lichnaya-perepiska-s-sashey
+  caption: После звонка
+  text: Тренер ко мне подошёл. Миш, [[ты всё-таки выйдешь с нами]]?
+sasha-rereads-threat:
+  speaker: Ремарка
+  channel: chat-sektsii
+  text: Ты листаешь чат до сообщения про двести. Даня его оставил как есть.
+sasha-private-agreement:
+  speaker: Ты
+  text: Да. [[Я вас у двери вижу]]. Рюкзак возьму и подойду.
+misha-asks-meeting-place:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-sashey
+  text: Да, Саш. Где тебя дождаться?
+sasha-chooses-porch:
+  speaker: Саша
+  text: У крыльца, ладно? Мы с тренером уже идём.
+sasha-and-coach-pass-misha:
+  speaker: Ремарка
+  channel: scene
+  caption: У крыльца
+  text: Саша выходит с тренером и машет тебе. Ты ждёшь, пока он застегнёт куртку.
+sasha-walk-in-silence:
+  speaker: Ремарка
+  channel: scene
+  caption: У выхода из школы
+  text: Ты идёшь рядом с тренером до крыльца. Он придерживает дверь, пока ты поправляешь рюкзак.
+sasha-picks-time-with-misha:
+  speaker: Ты
+  channel: lichnaya-perepiska-s-mishey
+  text: Миш, я уже с тренером. Мы сейчас выходим. Ещё можешь у крыльца подождать?
+misha-can-wait:
+  speaker: Миша
+  text: Могу. Как выйдешь, помашу тебе.
+sasha-sees-misha:
+  speaker: Ремарка
+  channel: scene
+  caption: У крыльца
+  text: У крыльца Миша поднимает руку. Тренер ждёт, пока ты подойдёшь к другу.
+sasha-waits-in-class:
+  speaker: Ремарка
+  channel: scene
+  caption: После звонка · в классе
+  text: Марина Сергеевна ещё в классе с тобой, когда приходят Миша и тренер. Даню слышно из коридора.
+pack-training-kit:
+  speaker: Ремарка
+  channel: scene
+  caption: Перед тренировкой
+  text: Ты откладываешь телефон и собираешь сумку на тренировку. Форма, бутсы, бутылка — всё на месте.

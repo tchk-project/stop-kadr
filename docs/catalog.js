@@ -14,7 +14,7 @@ const originalSelected = selection === 'dubl' || (!selection && location.hash.le
 const isCatalogue = !isAttentionPilot && !episode && !originalSelected;
 function focusLink(id, pointOfView) {
   const page = document.body?.hasAttribute('data-preview') ? './editor-preview.html' : './focus.html';
-  return page+'?case='+encodeURIComponent(id)+'&role='+pointOfView+'&v=review-3';
+  return page+'?case='+encodeURIComponent(id)+'&role='+pointOfView+'&v=audit-4';
 }
 function randomStoryUrl(excludeId, startingRole = role) {
   const pool = allStories.filter(item => item.id !== excludeId);
@@ -223,9 +223,12 @@ function makeTakePreview() {
   const change = element('div','preview-change');
   change.setAttribute('aria-live','polite');
   change.setAttribute('aria-atomic','true');
-  change.append(reply,mode,note);
+  change.append(reply);
   const swap = element('button','take-toggle');
   swap.type = 'button';
+  mode.id = 'example-mode';
+  note.id = 'example-meaning';
+  swap.setAttribute('aria-describedby', 'example-mode example-meaning');
 
   function render(code) {
     const pressure = code === 'orange';
@@ -246,7 +249,7 @@ function makeTakePreview() {
   };
   const channel = element('header','preview-channel');
   channel.append(element('small','','Пример из игры'),element('strong','','Чат секции'));
-  preview.append(channel,original,change,swap);
+  preview.append(channel,original,change,swap,mode,note);
   return preview;
 }
 
@@ -272,7 +275,7 @@ function showCatalogue(panel) {
     roles.remove();
     const title = element('h1','','Давай ');
     title.append(element('em','','поиграем?'));
-    const intro = element('p','intro-copy','В чате или в школе что-то происходит. Попробуй заметить, когда обычная ситуация меняется, и выбери, как поступишь.');
+    const intro = element('p','intro-copy','В школе и в чате бывает по-разному. Кто-то шутит, на кого-то давят, кому-то стало плохо. Что ты заметишь и как поступишь?');
     const start = element('button','start-game','Играть');
     start.type = 'button';
     start.onclick = () => location.assign(randomStoryUrl(undefined, Math.random() < .5 ? 'witness' : 'self'));

@@ -159,7 +159,8 @@ vera-poydyom-ya-videla-mogu:
   text: Пойдём. Я видела, могу с тобой остаться.
 remarka-na-etom-dubl-zakanchivaetsya:
   speaker: Ремарка
-  text: На этом дубль заканчивается.
+  channel: scene
+  text: Вы с Верой сидите у стены рядом.
 lyosha-ladno-ya-togda-k:
   speaker: Лёша
   text: Ладно. Я тогда к ребятам.
@@ -215,3 +216,13 @@ remark-danya-space:
   speaker: Ремарка
   channel: scene
   text: Ты убираешь со стола свою бутылку. Аня садится, а ребята спорят, кто поёт припев.
+anya-listens-to-music:
+  speaker: Ремарка
+  channel: scene
+  caption: У стола
+  text: Ты берёшь стакан воды и садишься у стола. Играет знакомая песня. До припева ещё целый куплет.
+danya-shows-bottle:
+  speaker: Ремарка
+  channel: scene
+  caption: У стола
+  text: Ты показываешь Вере свою полную бутылку. Она кивает и берёт два стакана для себя и Ани.

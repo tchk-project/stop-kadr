@@ -62,7 +62,7 @@ scenes:
     question: Что тебе сейчас подходит?
     choices:
       follow-up: Предложить Вере вместе подойти к дежурной
-      pause: Закончить этот дубль здесь
+      pause: Побуду с Верой у стены.
     review:
       signals:
       - pressure/remarka-ty-othodish-k-stene
@@ -86,9 +86,9 @@ scenes:
     messages:
     - remarka-na-etom-dubl-zakanchivaetsya
     outcome:
-    - mixed
-    - Вере тоже пришлось отказываться от танца
-    note: За то, что Лёша тебя держал, отвечает он. Желание поскорее освободиться понятно. Когда ты предложила Веру, ей тоже пришлось отказываться. Ей можно прямо сказать, какая помощь тебе нужна, например попросить позвать дежурную.
+    - open
+    - Лёша отпустил руку. Вы с Верой сидите рядом
+    note: Можно посидеть с Верой. Ты хотела, чтобы Лёша отпустил руку. Он отпустил тебя, а потом позвал Веру, и она тоже отказалась. Когда заговорить об этом, каждая из вас решает сама.
     review:
       signals:
       - alternative/vera-ya-k-tebe-podoshla
@@ -101,9 +101,9 @@ scenes:
     continuation: true
     question: Как продолжишь?
     choices:
-      calm-end: Посмотреть, что будет дальше
+      calm-end: Схожу с Верой за водой.
       ask: Позвать Веру посидеть рядом
-      calm-watch: Пойду с Верой за водой. Посмотрю, как дальше пойдёт вечер.
+      calm-watch: Возьму воды и посижу. Хочу послушать эту песню.
   calm-end:
     mode: yellow
     messages:
@@ -202,13 +202,13 @@ scenes:
       - focus/remarka-vera-podhodit-lyosha-otpuskaet
       effect: Ты попросила Веру остаться с тобой. Она услышала, чего тебе сейчас хочется.
   calm-watch:
-    mode: orange
+    mode: white
     messages:
-    - remarka-anya-i-vera-berut
+    - anya-listens-to-music
     outcome:
     - positive
-    - Аня провела эту песню с Верой
-    note: Аня и Вера пошли за водой. Лёша сказал, что пойдёт к ребятам.
+    - Аня устроилась послушать музыку
+    note: Лёша принял твой отказ. У стола ты отдохнула и послушала песню.
 cues:
   pressure/remarka-ty-othodish-k-stene: Лёша удерживает тебя после отказа. Вера и дежурная рядом.
   alternative/vera-ya-k-tebe-podoshla: Вера объяснила, зачем подошла. Она тоже не хотела танцевать.

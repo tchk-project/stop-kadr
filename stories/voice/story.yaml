@@ -36,3 +36,6 @@ channels:
   lichnaya-perepiska-s-lyoshey:
     kind: private
     title: Личная переписка с Лёшей
+  scene:
+    kind: scene
+    title: ''

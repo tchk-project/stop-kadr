@@ -90,7 +90,7 @@ def validate_route(route, messages):
             require(row in messages, f"{step}: unknown message {row}")
             message = messages[row]
             media = message.get("media", {})
-            phrase = message.get("text") or media.get("transcript") or media.get("caption")
+            phrase = message.get("text") or media.get("transcript") or media.get("caption") or media.get("alt")
             ref = step + "/" + row
             if ref in cues:
                 require(phrase and marked(phrase) and cues[ref], f"{ref}: missing marked phrase or explanation")
@@ -155,7 +155,7 @@ def build():
                 else:
                     media = msg["media"]
                     require(media["kind"] in MEDIA and all(media.get(k) for k in MEDIA[media["kind"]]), key)
-                    for prop in ("transcript", "caption", "description"):
+                    for prop in ("transcript", "caption", "description", "alt"):
                         if prop in media:
                             marked(media[prop])
                     for prop in ("src", "poster", "file", "html", "captions"):

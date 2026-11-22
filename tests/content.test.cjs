@@ -27,13 +27,23 @@ test('both perspectives share the presentation and voice recordings', () => {
 });
 
 test('every medical story links to an on-site first-aid article with official sources', () => {
+  const clinicalSources = {
+    './stroke.html':['congress-med.ru','www.nhs.uk'],
+    './heart-attack.html':['www.who.int','firstaidchampions.redcross.org.uk'],
+    './abdominal-pain.html':['nikid.ru','www.nhs.uk']
+  };
   for (const {id, article} of catalog.filter(s=>s.article)) {
     assert.match(article, /^\.\/[a-z-]+\.html$/, id);
     const html = read(article);
-    for (const label of ['Какие признаки заметить', 'Что делать', 'Что сказать диспетчеру', 'Официальные источники']) {
+    for (const label of ['Какие признаки заметить', 'Что делать', 'Что сказать диспетчеру', 'Источники памятки']) {
       assert.ok(html.includes('<h2>' + label + '</h2>'), id + ': ' + label);
     }
     assert.ok(html.includes('103 или 112'), id);
-    assert.ok((html.match(/href="https:\/\//g) || []).length >= 2, id);
+    const urls = [...html.matchAll(/href="(https:\/\/[^"]+)"/g)].map(match => new URL(match[1]));
+    assert.ok(new Set(urls.map(url => url.host)).size >= 2, id);
+    for (const host of ['mo03.ru', ...(clinicalSources[article] || [])]) {
+      assert.ok(urls.some(url => url.host === host), id + ': ' + host);
+    }
+    assert.match(html, /<time datetime="\d{4}-\d{2}-\d{2}">/);
   }
 });

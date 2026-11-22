@@ -62,7 +62,7 @@
 .preview-mode { display:flex; align-items:baseline; gap:7px; margin:18px 0 5px; font-weight:750; line-height:1.35; }
 .preview-mode::before { content:var(--symbol); color:var(--ink); }
 .preview-note { min-height:3em; font-size:.94rem; line-height:1.45; }
-.take-toggle { width:100%; min-height:44px; margin-top:12px; padding:7px 10px; border:1px solid var(--ink);
+.take-toggle { width:100%; min-height:44px; padding:7px 10px; border:1px solid var(--ink);
   border-radius:8px; background:var(--ink); color:white; cursor:pointer; font:650 .94rem/1.35 system-ui; }
 @media (prefers-reduced-motion:no-preference) {
   .take-preview,.preview-row,.take-toggle { transition:background-color .2s ease; }

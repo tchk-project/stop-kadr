@@ -145,7 +145,8 @@ marina-sergeevna-spasibo-chto-skazal:
   text: Спасибо, что сказал. Присоединяйся к ребятам. После урока я подойду.
 remarka-na-etom-dubl-zakanchivaetsya:
   speaker: Ремарка
-  text: На этом дубль заканчивается.
+  channel: scene
+  text: Рюкзак наконец у тебя. В зале уже начали играть.
 ty-dan-ostavlyay-ego-na:
   speaker: Ты
   text: Дань, оставляй его на лавке, ладно? Я по всей раздевалке бегал.
@@ -174,3 +175,13 @@ misha-asks-vera-to-wait:
 vera-gets-ball:
   speaker: Вера
   text: Конечно. Я пока мяч возьму.
+misha-changes-shoes:
+  speaker: Ремарка
+  channel: scene
+  caption: Перед уроком
+  text: Ты садишься на лавку, надеваешь кеды и успеваешь за Верой в зал. Звонок уже там.
+kostya-waits-in-gym:
+  speaker: Ремарка
+  channel: scene
+  caption: У спортзала
+  text: Ты доходишь до зала с Верой. Уже у двери оглядываешься и видишь Мишу в форме. Звонка ещё не было.

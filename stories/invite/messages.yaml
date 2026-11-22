@@ -139,7 +139,8 @@ ty-ya-na-odin-soglashalas:
   text: Я на один соглашалась. Спокойной ночи.
 remarka-na-etom-dubl-zakanchivaetsya:
   speaker: Ремарка
-  text: На этом дубль заканчивается.
+  channel: scene
+  text: Ты кладёшь телефон рядом. Костя уже нажал кнопку реванша.
 remarka-utrom-v-spiske-chatov:
   speaker: Ремарка
   text: Утром в списке чатов «После отбоя» больше нет.
@@ -169,3 +170,9 @@ anya-says-goodnight-to-team:
   speaker: Ты
   channel: chat-posle-otboya
   text: Всё, я спать. Удачи вам на турнире!
+anya-puts-phone-away:
+  speaker: Ремарка
+  text: Ты ставишь телефон на зарядку и выключаешь свет.
+lera-switches-off:
+  speaker: Ремарка
+  text: Ты ставишь телефон на беззвучный и убираешь его с подушки. Состав команды посмотришь утром.

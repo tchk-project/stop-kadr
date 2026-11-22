@@ -178,7 +178,7 @@ async function exercise() {
             if (hash !== '#pressure') expected.push('Общий чат класса');
             check(JSON.stringify(titles) === JSON.stringify(expected),'Порядок окон переписки '+hash);
             check(blocks[0].querySelector('button.play-audio') && blocks[1].querySelector('[data-key="pressure-2"]'),'Реплики в своих чатах');
-            if (blocks[2]) check(blocks[2].querySelector('[data-key="'+hash.slice(1)+'-0"]'),'Ответ Ани снова в общем');
+            if (blocks[2]) check(blocks[2].querySelector('[data-ref="'+hash.slice(1)+'/anya-rebyat-vy-golosovoe-slushali"]'),'Ответ Ани снова в общем');
           }
           check(!find('.scene-role').textContent.includes('null'),'Пустой портрет в подписи роли');
           if (id === 'dance' && role === 'witness' && ['#observe','#focus'].includes(hash)) {
@@ -189,7 +189,13 @@ async function exercise() {
             check(find('[data-key="pressure-act-1-2"]').closest('.thread').dataset.channel === '', 'Посадка в автобус после лички');
           }
           if (id === 'sticker' && /^#(?:observe|focus)-(?:watch|ease)$/.test(hash)) {
-            check(find('.outcome').dataset.kind === 'mixed','Клей найден, просьба про стикеры остаётся открытой');
+            if (hash.endsWith('-ease')) {
+              check(find('.outcome').dataset.kind === 'mixed','Клей найден, просьба про стикеры остаётся открытой');
+            } else {
+              const expected = role === 'self' ? 'Даня ответил Лере про стикеры' : 'Лера попросила помочь со стенгазетой';
+              check(find('.outcome').dataset.kind === 'positive' && find('#outcome-title').textContent === expected,
+                'Личный разговор о стикере показан глазами выбранной героини');
+            }
           }
           if (role === 'self' && ['chest','abdomen'].includes(id) && hash.endsWith('-report')) {
             const key=hash.slice(1);

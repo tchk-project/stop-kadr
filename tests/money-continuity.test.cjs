@@ -5,7 +5,15 @@ const {build} = require('./game-helper.cjs');
 const witness = build('money','witness');
 const self = build('money','self');
 
-test('both friends read the same threat and request, with separate audiences', () => {
+function withAudience(story, path) {
+  let channel;
+  return path.flatMap(id => Array.from(story[id].lines, line => {
+    channel = line.channel || channel;
+    return {speaker:line.speaker, text:line.parts.text, channel};
+  }));
+}
+
+test('both friends read the same threat and private request, then Sasha can wait for adults in class', () => {
   for (const {story} of [witness,self]) {
     const [threat,request] = story.pressure.lines;
     assert.equal(threat.channel.kind,'group');
@@ -19,29 +27,51 @@ test('both friends read the same threat and request, with separate audiences', (
     Array.from(self.story.pressure.lines,row => row.parts.text)
   );
   const choice = self.story.pressure.links.find(([id]) => id === 'meet-at-door');
-  assert.match(choice[1],/вчера.*Миш/iu);
-  const [requestToMeet] = self.story['meet-at-door'].lines;
-  assert.equal(requestToMeet.channel.kind,'private');
-  assert.match(requestToMeet.parts.text,/встреть меня у раздевалки/);
+  assert.match(choice[1],/в классе с учительницей.*Мишу.*с тренером/iu);
+  const [request,confirmation,arrive,threat] = self.story['meet-at-door'].lines;
+  assert.equal(request.channel.kind,'private');
+  assert.match(request.parts.text,/останусь в классе с Мариной Сергеевной/);
+  assert.match(confirmation.parts.text,/вместе к вам в класс/);
+  assert.equal(arrive.speaker,'Ремарка');
+  assert.match(arrive.parts.text,/Марина Сергеевна.*в классе.*приходят Миша и тренер/);
+  assert.equal(threat.speaker,'Даня');
   assert.doesNotMatch(self.story['follow-up'].note,/назвал место|у раздевалки/);
 });
 
-test('the coach can act independently, and Misha can still answer the private request', () => {
+test('meeting details stay out of group chat and each friend hears from their own contact', () => {
   for (const parent of ['observe','focus']) {
-    const initial = witness.story[parent];
-    assert.equal(initial.lines[0].speaker,'Тренер');
-    assert.equal(initial.lines[0].channel.kind,'group');
-    assert.equal(initial.lines[1].speaker,'Саша');
-
+    const prefix = ['start','pressure',parent];
+    const own = withAudience(self.story,prefix);
+    const coach = own.findIndex(row=>row.speaker==='Тренер');
+    assert.ok(coach>=0);
+    assert.match(own[coach].text,/у твоего кабинета/);
+    for (const row of own.slice(coach)) {
+      assert.equal(row.channel.kind,'private');
+      assert.match(row.channel.title,/тренером/);
+    }
+    assert.equal(own[coach+1].speaker,'Ты');
+    const received = withAudience(witness.story,prefix);
+    assert.ok(received.every(row=>row.speaker!=='Тренер'));
+    const update = received.at(-1);
+    assert.equal(update.speaker,'Саша');
+    assert.equal(update.channel.kind,'private');
+    assert.match(update.channel.title,/Сашей/);
+    assert.match(update.text,/тренер.*подошёл/i);
+    for (const {story} of [self,witness]) {
+      for (const suffix of ['-ease','-watch']) {
+        const path = [...prefix,parent+suffix];
+        for (const row of withAudience(story,path).filter(r=>r.channel.kind==='group')) {
+          assert.doesNotMatch(row.text,/крыльц|кабинет|раздевалк|жду у|вижу вас|у двер/iu);
+        }
+      }
+    }
     const waited = witness.story[parent+'-ease'];
     assert.ok(waited.lines.every(row => row.speaker !== 'Ты'));
     assert.match(waited.lines.at(-1).parts.text,/с тренером вышел/);
-
     const answered = witness.story[parent+'-watch'];
     assert.equal(answered.lines[0].channel.kind,'private');
     assert.deepEqual(Array.from(answered.lines,row => row.speaker),['Ты','Саша','Ремарка']);
-    assert.match(answered.lines.at(-1).parts.text,/Саша выходит с тренером и подходит к тебе/);
-
+    assert.match(answered.lines.at(-1).parts.text,/Саша выходит с тренером/);
     const ownWalk = self.story[parent+'-ease'];
     assert.ok(ownWalk.lines.every(row => row.speaker === 'Ремарка'));
     const ownRequest = self.story[parent+'-watch'];

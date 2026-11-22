@@ -24,7 +24,7 @@ test('every choice has one replayable path, a mode and a consequence or next dec
   assert.equal(seen.size,Object.keys(story).length);
 });
 
-test('white is a decision to ignore an observed signal and can be reversed', () => {
+test('Misha can miss a direct request about the collection and answer later', () => {
   assert.equal(story.start.mode,'yellow');
   assert.equal(story.calm.mode,'yellow');
   assert.equal(story['calm-end'].mode,'yellow');
@@ -59,7 +59,9 @@ test('the initial draw gives the calm take exactly one tenth of the interval', (
 
 test('review follows only the player’s decisions, in order, and recognises repairs', () => {
   assert.deepEqual(Array.from(stops(pathTo('silence')),s => s.id),['ignore','silence']);
-  assert.deepEqual(Array.from(stops(pathTo('meet')),s => s.id),['check','call','meet']);
+  const atDoor = stops(pathTo('meet'));
+  assert.deepEqual(Array.from(atDoor,s => s.id),['check','call']);
+  assert.equal(atDoor[1].continuation[0].answer,story.call.links[0][1]);
   for (const [end,miss] of [['together','ignore'],['late-call','doubt']]) {
     const review = stops(pathTo(end));
     assert.equal(review.length,1);

@@ -2,7 +2,9 @@
 const app=document.querySelector('#app'), sheet=document.querySelector('#sheet'), formBody=document.querySelector('#form-body');
 const preview=document.querySelector('#preview'), prefix='stop-kadr.editor.v1.';
 const {plain,words,clone,roles}=Drafts;
-let d, library=[], undo=[], noticeTimer, selectionToken=0, conflict=false;
+let d, library=[], undo=[], noticeTimer, selectionToken=0, conflict=false, remoteEdit=false;
+const pendingSaves=new WeakMap();
+const attachmentPackageLimit=16_000_000;
 const live=new Map();
 function el(tag,text,cls){
   const node=document.createElement(tag);
@@ -33,7 +35,7 @@ function download(name,content,type){
   const url=URL.createObjectURL(new Blob([content],{type})), a=el('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1500);
 }
 function exportDraft(){
-  download(d.work.meta.title+'.stop-kadr.json',JSON.stringify(d,null,2),'application/json');
+  download(d.work.meta.title+'.stop-kadr.json',Drafts.pack(d),'application/json');
   if(sheet.open)sheet.close();
   notice('Отправь скачанный файл Сергею, чтобы он увидел твои правки.');
 }
@@ -54,22 +56,99 @@ function readLibrary(){
   }
   library.sort((a,b)=>(b.time||0)-(a.time||0));
 }
-function persist(){
-  try{
-    const stored=JSON.parse(localStorage.getItem(prefix+d.key));
-    if(stored && stored.revision!==d.revision)throw Error('В другой вкладке есть более свежая версия.');
-    const next={...d,time:Date.now(),revision:d.revision+1};
-    localStorage.setItem(prefix+d.key,JSON.stringify(next));Object.assign(d,next);conflict=false;
-    return true;
-  }catch(e){conflict=true;notice('Сохранение в браузере не удалось. Скачай черновик, чтобы сохранить правки.');return false;}
+function saveView(draft){
+  const key=prefix+'view.'+draft.key, value=JSON.stringify(draft.view);
+  try{sessionStorage.setItem(key,value);}catch{}
+  try{localStorage.setItem(key,value);}catch{}
 }
-function commit(change){undo.push(clone(d.work));if(undo.length>16)undo.shift();change();persist();render();}
+function restoreView(draft){
+  const key=prefix+'view.'+draft.key;
+  for(const store of ['sessionStorage','localStorage']){
+    try{
+      const view=JSON.parse(window[store].getItem(key));
+      if(roles.includes(view?.role) && Object.hasOwn(draft.work.data.routes[view.role].scenes,view.step)){
+        draft.view=view;return;
+      }
+    }catch{}
+  }
+}
+function saveStatus(){
+  if(conflict)return remoteEdit?'Другая версия сохранена в браузере. Твой черновик в памяти · скачай файл для сохранения.':'Черновик в памяти · скачай файл для сохранения';
+  if(pendingSaves.has(d))return 'Сохраняем черновик…';
+  if(remoteEdit)return 'В другой вкладке сохранена правка. Открой черновик заново, чтобы увидеть её. Если продолжишь редактировать здесь, появится отдельная версия.';
+  if(d.parallel)return 'Твои правки сохранены отдельной версией. Обе версии доступны в «Моих черновиках».';
+  return 'Черновик сохранён в этом браузере. Можно закрыть редактор и вернуться позже.';
+}
+function refreshStatus(){
+  const status=app.querySelector('.workhead small');
+  if(status)status.textContent=saveStatus();
+}
+function recoverPending(key){
+  try{
+    const pending=JSON.parse(sessionStorage.getItem(prefix+'pending.'+key));
+    if(pending?.format===Drafts.format && pending.key===key)return pending;
+  }catch{}
+}
+function clearPending(key){try{sessionStorage.removeItem(prefix+'pending.'+key);}catch{}}
+function persist(){
+  const draft=d, journalKey=d.key;
+  // A reload can cancel a queued Web Lock before it runs. Keep this tab's unsaved edit until it lands.
+  try{sessionStorage.setItem(prefix+'pending.'+journalKey,JSON.stringify(draft));}catch{}
+  const save=()=>{
+    const stored=JSON.parse(localStorage.getItem(prefix+draft.key));
+    const fork=stored && stored.revision!==draft.revision;
+    const next={...draft,time:Date.now(),revision:(draft.revision||0)+1};
+    if(fork){next.key=Drafts.id('draft');next.revision=1;next.parallel=true;}
+    localStorage.setItem(prefix+next.key,JSON.stringify(next));
+    Object.assign(draft,next);saveView(draft);clearPending(journalKey);
+    if(d===draft){
+      if(fork)history.replaceState(null,'','#'+next.key);
+      conflict=false;remoteEdit=false;
+    }
+  };
+  // Serialize compare-and-write across tabs, including two saves made in the same instant.
+  const write=async()=>{
+    try{
+      if(navigator.locks)await navigator.locks.request(prefix+'save',save);
+      else save();
+    }catch{
+      if(d===draft){conflict=true;notice('Сохранение в браузере не удалось. Скачай черновик, чтобы сохранить правки.');}
+    }
+  };
+  const done=write().finally(()=>{
+    if(pendingSaves.get(draft)===done)pendingSaves.delete(draft);
+    if(d===draft)refreshStatus();
+  });
+  pendingSaves.set(draft,done);
+  return done;
+}
+function commit(change){
+  const previous={work:clone(d.work),files:d.files};
+  change();Drafts.pruneUnused(d);
+  undo.push(previous);if(undo.length>16)undo.shift();
+  persist();render();
+}
 function current(){const {role,step}=d.view;const r=d.work.data.routes[role];return {role,step,r,n:r.scenes[step]};}
-function go(step,role=d.view.role){d.view={role,step};persist();render();document.querySelector('.scenehead h2')?.focus();}
-function openDraft(value,saved=true){d=value;undo=[];conflict=!saved;location.hash=d.key;render();window.scrollTo(0,0);}
-function syncHash(){if(d && location.hash==='#'+d.key)return;try{readLibrary();}catch{home();return;}const found=library.find(item=>location.hash==='#'+item.key);if(found)openDraft(found);else home();}
+function go(step,role=d.view.role){d.view={role,step};saveView(d);render();document.querySelector('.scenehead h2')?.focus();}
+function openDraft(value,resumeView=true){
+  d=value;undo=[];conflict=false;remoteEdit=false;Drafts.pruneUnused(d);if(resumeView)restoreView(d);
+  location.hash=d.key;render();window.scrollTo(0,0);
+}
+function startDraft(value){openDraft(value);persist();refreshStatus();}
+function syncHash(){
+  const key=location.hash.slice(1);
+  if(d && key===d.key)return;
+  const pending=key && recoverPending(key);
+  if(pending){openDraft(pending,false);persist();refreshStatus();return;}
+  try{readLibrary();}catch{home();return;}
+  const found=library.find(item=>key===item.key);if(found)openDraft(found);else home();
+}
 window.addEventListener('hashchange',syncHash);
-window.addEventListener('storage',e=>{if(d && e.key===prefix+d.key){conflict=true;render();notice('Черновик изменён в другой вкладке. Сохрани свою версию файлом.');}});
+window.addEventListener('storage',e=>{
+  if(d && e.key===prefix+d.key && e.newValue){
+    remoteEdit=JSON.parse(e.newValue).revision!==d.revision;refreshStatus();
+  }
+});
 async function original(meta){
   if(live.has(meta.id))return live.get(meta.id);
   const resp=await fetch('./game/stories/'+encodeURIComponent(meta.id)+'.js',{cache:'no-store'});
@@ -86,13 +165,16 @@ async function editPublished(meta,copy=false){
     const source=await original(meta);if(token!==selectionToken)return;
     const value=Drafts.draft(source,copy?null:source);
     if(copy){const id=Drafts.id('story');value.work.meta.id=value.work.data.id=id;value.work.meta.title+=' — копия';}
-    d=value;openDraft(value,persist());
+    startDraft(value);
   }catch(e){notice(e.message);}
 }
 function card(title,small,act){const b=button('',act,'storycard');b.append(el('strong',title),el('small',small));return b;}
 function home(){
+  const draft=d, saving=draft && pendingSaves.get(draft);
+  if(saving){saving.then(()=>{if(d===draft)home();});return;}
   if(d && conflict && !window.confirm('Черновик не сохранён. Выйти без сохранения?'))return;
-  ++selectionToken;d=null;undo=[];if(location.hash)history.replaceState(null,'',location.pathname+location.search);
+  if(draft && conflict)clearPending(draft.key);
+  ++selectionToken;d=null;undo=[];conflict=false;remoteEdit=false;if(location.hash)history.replaceState(null,'',location.pathname+location.search);
   let storageOK=true;try{readLibrary();}catch{storageOK=false;}
   app.replaceChildren();
   const h=el('section',null,'homehead');
@@ -100,7 +182,7 @@ function home(){
   app.append(h);
   if(!storageOK)app.append(el('p','Браузер ограничил сохранение. Скачивай черновик файлом.','alert'));
   if(library.length){app.append(el('h2','Мои черновики'));const grid=el('div',null,'shelf');
-    library.forEach(x=>grid.append(card(x.work.meta.title,'Продолжить · '+new Date(x.time).toLocaleString('ru-RU'),()=>openDraft(clone(x)))));app.append(grid);}
+    library.forEach(x=>grid.append(card(x.work.meta.title,(x.parallel?'Отдельная версия · ':'Продолжить · ')+new Date(x.time).toLocaleString('ru-RU'),()=>openDraft(clone(x)))));app.append(grid);}
   const cast=el('details',null,'cast-home');
   cast.append(el('summary','Кто есть кто'),characters());
   app.append(withHelp(el('h2','Какую историю хочешь проверить?'),'home','Работа с историями',
@@ -111,9 +193,12 @@ function home(){
   })));app.append(grid,actions(button('Написать историю',newStory),button('Открыть файл черновика',()=>document.querySelector('#import-file').click())));
 }
 let dirtyForm=false;
-window.addEventListener('beforeunload',e=>{if(dirtyForm || conflict){e.preventDefault();e.returnValue='';}});
-sheet.addEventListener('close',()=>{dirtyForm=false;});
-function form(title,build,accept,submit='Сохранить'){
+window.addEventListener('beforeunload',e=>{if(dirtyForm || conflict || pendingSaves.has(d)){e.preventDefault();e.returnValue='';}});
+sheet.addEventListener('close',()=>{if(!sheet.open)dirtyForm=false;});
+function discardForm(){return !dirtyForm || window.confirm('Отбросить несохранённые изменения? Чтобы продолжить писать, нажми «Отмена».');}
+sheet.addEventListener('cancel',e=>{if(!discardForm())e.preventDefault();});
+function form(title,build,accept,submit='Сохранить',focusAfter){
+  const opener=document.activeElement;
   const f=el('form'), h=el('h2',title);h.id='dialog-title';f.append(h);
   const fields={};
   function field(key,label,value='',type='text',options){
@@ -127,11 +212,17 @@ function form(title,build,accept,submit='Сохранить'){
   dirtyForm=false;f.addEventListener('input',()=>dirtyForm=true);
   const save=el('button',submit,'primary');save.type='submit';
   const err=el('p',null,'alert');err.hidden=true;err.setAttribute('role','alert');
-  f.append(err,actions(save,button('Отмена',()=>sheet.close())));
-  f.onsubmit=e=>{e.preventDefault();try{
+  f.append(err,actions(save,button('Отмена',()=>{if(discardForm())sheet.close();})));
+  f.onsubmit=async e=>{e.preventDefault();if(save.disabled)return;save.disabled=true;try{
     const v=Object.fromEntries(Object.entries(fields).map(([k,c])=>[k,c.value.trim()]));
-    accept(v);dirtyForm=false;sheet.close();
-  }catch(e){err.textContent=e.message;err.hidden=false;}};
+    const result=accept(v);
+    if(result instanceof Promise)await result;
+    if(!sheet.open || !f.isConnected)return;
+    dirtyForm=false;sheet.close();
+    if(focusAfter)focusAfter();
+    else if(!opener.isConnected)app.querySelector('.scenehead h2')?.focus();
+  }catch(e){err.textContent=e.message;err.hidden=false;}
+  finally{save.disabled=false;}};
   formBody.replaceChildren(f);sheet.showModal();
 }
 function needed(s,msg){if(!s)throw Error(msg);return s;}
@@ -140,7 +231,7 @@ function newStory(){
     field('title','Как называется история?').required=true;
     field('name','Как зовут героя, с которым это происходит?','Лера').required=true;
     field('witness','Кто видит это со стороны?','Вера').required=true;
-  },v=>{const value=Drafts.draft(Drafts.blank(v.title,v.witness,v.name),null);d=value;openDraft(value,persist());},'Начать писать');
+  },v=>{const value=Drafts.draft(Drafts.blank(v.title,v.witness,v.name),null);startDraft(value);},'Начать писать');
 }
 function metadata(){
   const m=d.work.meta;
@@ -177,11 +268,29 @@ function msgView(container,msg){
   if(msg.media){
     const m=msg.media;container.append(el('small',Drafts.mediaName[m.kind]));
     if(m.kind==='voice'||m.kind==='video'){const play=el(m.kind==='voice'?'audio':'video');play.controls=true;play.preload='none';play.src=d.files?.[m.src]||m.src;container.append(play);}
-    else{const img=el('img');img.src=d.files?.[m.src]||m.src;img.alt=m.alt||'';container.append(img);}
+    else{const img=el('img');img.src=d.files?.[m.src]||m.src;img.alt=plain(m.alt);container.append(img);}
     if(m.kind==='document'){const l=el('a','Открыть документ');l.href=m.file;l.target='_blank';l.rel='noopener';container.append(l);}
   }
   const p=el('p');readText(p,words(msg));container.append(p);
   if(msg.reactions)container.append(el('small',Object.entries(msg.reactions).map(([e,people])=>e+' '+people.join(', ')).join(' · ')));
+}
+function cueFields(field,body,original,explanation){
+  const label=explanation?'Фраза для разбора':'Фраза для разбора (по желанию)';
+  const detail=field('quote',label,Drafts.quote(original));
+  const why=field('why','Что в этой фразе важно?',explanation);
+  const pick=button('Отметить выделенную фразу',()=>{
+    const selected=body.value.slice(body.selectionStart,body.selectionEnd);
+    if(selected){
+      detail.value=selected;detail.dispatchEvent(new Event('input',{bubbles:true}));why.focus();
+    }else{detail.focus();notice('Выдели фразу в тексте или впиши её в поле.');}
+  },'quiet');
+  detail.parentElement.before(pick);
+}
+function markedInput(text,values,linked,original){
+  const marked=Drafts.markText(text,values.quote);
+  if(!values.quote && (linked || values.why))throw Error('Укажи фразу, к которой относится пояснение в разборе.');
+  if(!values.why && (linked || (values.quote && !Drafts.quote(original))))throw Error('Объясни, что в этой фразе важно для разбора.');
+  return marked;
 }
 function editMessage(key,index){
   const {role,step,r,n}=current(),data=d.work.data,old=data.messages[key],shared=old?Drafts.uses(data,key):[];
@@ -195,21 +304,13 @@ function editMessage(key,index){
     const name=field('name','Название для игрока');
     const toggle=()=>{kind.parentElement.hidden=name.parentElement.hidden=chan.value!=='+';};chan.onchange=toggle;toggle();
     const body=field('body',old?.media?'Текст или описание вложения':'Реплика',plain(old?words(old):''),'textarea');body.required=true;
-    const originalQuote=old && /\[\[([^\]]+)\]\]/.exec(words(old))?.[1];
-    const detail=field('quote','Фраза для разбора (по желанию)',originalQuote);
-    const why=field('why','Что в этой фразе важно?',r.cues[step+'/'+key]||'');
-    const pick=button('Отметить выделенную фразу',()=>{
-      const s=body.value.slice(body.selectionStart,body.selectionEnd);
-      if(s){detail.value=s;why.focus();}else{detail.focus();notice('Выдели фразу в реплике или впиши её в поле.');}
-    },'quiet');detail.parentElement.before(pick);
+    cueFields(field,body,old?words(old):'',r.cues[step+'/'+key]||'');
     if(shared.length>1){
       f.append(el('p','Реплика используется в '+shared.length+' местах. Герои: '+[...new Set(shared.map(x=>d.work.meta.roles[x.role].name))].join(', ')+'.','inline-help'));
       field('scope','Где применить правку?','one','',[['one','Только здесь'],['all','Во всех этих местах']]);
     }
   },v=>{
-    if(v.quote && !v.body.includes(v.quote))throw Error('Выбранная фраза должна встречаться в тексте реплики.');
-    if(/[\[\]]{2}/.test(v.body))throw Error('Для выделения фразы используй отдельное поле.');
-    if(v.why && !v.quote)throw Error('Укажи фразу, к которой относится пояснение.');
+    const text=markedInput(v.body,v,Object.hasOwn(r.cues,step+'/'+key),old?words(old):'');
     if(v.channel==='+' && v.kind!=='scene')needed(v.name,'Введи название чата.');
     if(old && !v.quote && shared.some(x=>data.routes[x.role].cues[x.step+'/'+key] && (v.scope==='all'||(x.role===role && x.step===step))))throw Error('Эта фраза уже связана с разбором. Отметь её в новом тексте.');
     commit(()=>{
@@ -219,12 +320,11 @@ function editMessage(key,index){
       const msg=data.messages[target];msg.speaker=v.who;
       if(v.channel==='+'){const id=Drafts.id('chat');data.channels[id]={kind:v.kind,title:v.kind==='scene'?'':v.name};msg.channel=id;}
       else if(v.channel)msg.channel=v.channel;else delete msg.channel;
-      const text=v.quote?v.body.replace(v.quote,()=> '[['+v.quote+']]'):v.body;
       if(msg.media){const prop='transcript' in msg.media?'transcript':'caption' in msg.media?'caption':'alt';msg.media[prop]=text;}
       else msg.text=text;
       if(v.why)r.cues[step+'/'+target]=v.why;
     });
-  });
+  },undefined,()=>document.getElementById('edit-message-'+index)?.focus());
 }
 function sceneForm(){
   const {n,step}=current();
@@ -234,20 +334,21 @@ function sceneForm(){
   },v=>commit(()=>{n.mode=v.mode;if(step!=='start')n.question=v.question;}));
 }
 function branch(target){
-  const {r,n,step}=current();
+  const {r,n}=current(), original=target?n.choices[target]:'';
   form(target?'Изменить ответ':'Добавить вариант ответа',(field,f)=>{
     if(!target)f.append(el('p','После сохранения откроется продолжение. Там ты напишешь, что произойдёт после этого ответа.','inline-help'));
-    field('label','Что выберет игрок?',target?plain(n.choices[target]):'','textarea').required=true;
+    const body=field('label','Что выберет игрок?',plain(original),'textarea');body.required=true;
+    cueFields(field,body,original,r.cues[target+'/@choice'] || '');
     if(!target){field('question','Вопрос игроку',n.question||'Что сделаешь?');field('mode','Уровень после выбора',n.mode,'',Object.entries(Drafts.levels));}
-  },v=>commit(()=>{
-    if(target){
-      const old=n.choices[target],quote=/\[\[([^\]]+)\]\]/.exec(old)?.[1];
-      n.choices[target]=quote && v.label.includes(quote)?v.label.replace(quote,()=> '[['+quote+']]'):v.label;
-    }else{
-      const key=Drafts.id('answer');n.choices??={};n.choices[key]=v.label;n.question=v.question;
-      r.scenes[key]={mode:v.mode,messages:[]};d.view.step=key;
-    }
-  })); 
+  },v=>{
+    const key=target || Drafts.id('answer'),ref=key+'/@choice';
+    const label=markedInput(v.label,v,Object.hasOwn(r.cues,ref),original);
+    commit(()=>{
+      n.choices??={};n.choices[key]=label;
+      if(v.why)r.cues[ref]=v.why;
+      if(!target){n.question=v.question;r.scenes[key]={mode:v.mode,messages:[]};d.view.step=key;}
+    });
+  });
 }
 function ending(){
   const {n}=current();
@@ -258,15 +359,14 @@ function ending(){
   },v=>commit(()=>{n.outcome=[v.kind,v.title];n.note=v.note;delete n.choices;delete n.question;}));
 }
 function reviewForm(){
-  const {role,step,r,n}=current(),path=Drafts.pathTo(r,step).slice(0,-1);
+  const {step,r,n}=current(),path=Drafts.pathTo(r,step).slice(0,-1);
   const entries=Object.entries(r.cues).filter(([ref])=>path.includes(ref.split('/')[0]));
   const boxes=[];
   form('Разбор выбора',(field,f)=>{
-    if(!entries.length)f.append(el('p','Сначала отметь важную фразу и добавь пояснение в одной из предыдущих реплик.'));
+    if(!entries.length)f.append(el('p','Сначала выбери фразу в предыдущей реплике, описании вложения или ответе игрока. Добавь к ней пояснение.'));
     for(const [ref,why] of entries){
-      const [at,key]=ref.split('/'), m=d.work.data.messages[key];
       const label=el('label'),check=el('input');check.type='checkbox';check.checked=n.review?.signals.includes(ref)||false;boxes.push([ref,check]);
-      label.append(check,' '+(m?plain(words(m)):heading(r,at))+' — '+why);f.append(label);
+      label.append(check,' «'+Drafts.quote(Drafts.cueWords(d.work.data,r,ref))+'» — '+why);f.append(label);
     }
     field('effect','Что изменилось после ответа?',n.review?.effect||'','textarea');
     field('miss','Как показать этот выбор?',n.review?.miss?'yes':'no','',[['no','Деталь помогла'],['yes','Деталь пропущена']]);
@@ -296,7 +396,13 @@ function inspect(){
   if(!errors.length)formBody.append(el('p','У обеих ролей заполнены реплики, варианты ответа и финалы.'));
   else errors.forEach(e=>{
     const r=e.role&&d.work.data.routes[e.role],where=e.step?roleLabel(e.role)+' · '+heading(r,e.step):'Об истории';
-    formBody.append(card(e.message,where,()=>{sheet.close();if(e.step)go(e.step,e.role);if(e.meta)metadata();}));
+    formBody.append(card(e.message,where,()=>{
+      sheet.close();
+      if(e.step)go(e.step,e.role);
+      if(e.meta)metadata();
+      if(e.choice)branch(e.choice);
+      if(e.line)editMessage(e.line,r.scenes[e.step].messages.indexOf(e.line));
+    }));
   });
   formBody.append(actions(button('Вернуться к тексту',()=>sheet.close()),button('Скачать для передачи',exportDraft)));sheet.showModal();
 }
@@ -309,14 +415,24 @@ function exportReading(){
       const n=r.scenes[key];lines.push(number+'  '+heading(r,key),'Уровень — '+Drafts.levels[n.mode]);
       for(const id of n.messages){const m=d.work.data.messages[id];if(m.channel)channel=d.work.data.channels[m.channel];
         if(channel)lines.push('['+(channel.title||'При встрече')+']');
-        lines.push(m.speaker+' — '+(m.media?'('+Drafts.mediaName[m.media.kind]+') ':'')+plain(words(m)));
+        if(m.caption)lines.push(m.caption);
+        const speaker=m.speaker==='Ты'?'Ты · '+d.work.meta.roles[role].name:m.speaker;
+        lines.push([speaker,m.aside].filter(Boolean).join(' · ')+' — '+(m.media?'('+Drafts.mediaName[m.media.kind]+') ':'')+plain(words(m)));
+        if(m.reply)lines.push(m.reply);
+        if(m.media?.alt && m.media.alt!==words(m))lines.push(plain(m.media.alt));
+        if(m.media?.description)lines.push(plain(m.media.description));
+        if(m.reactions)lines.push('Реакции · '+Object.entries(m.reactions).map(([symbol,names])=>symbol+' '+names.join(', ')).join(' / '));
+        if(n.reaction?.from===id)lines.push(n.reaction.summary);
         if(r.cues[key+'/'+id])lines.push('Деталь для разбора — '+r.cues[key+'/'+id]);
       }
       if(n.question)lines.push(n.question);
       const options=Object.entries(n.choices||{});
-      options.forEach(([k,label],i)=>lines.push('→ '+number+'.'+(i+1)+'  '+plain(label)));
+      options.forEach(([k,label],i)=>{
+        lines.push('→ '+number+'.'+(i+1)+'  '+plain(label));
+        if(r.cues[k+'/@choice'])lines.push('Деталь ответа — «'+Drafts.quote(label)+'» — '+r.cues[k+'/@choice']);
+      });
       if(n.outcome)lines.push('Финал — '+n.outcome[1],n.note);
-      if(n.review)lines.push('Разбор — '+n.review.effect,...n.review.signals.map(ref=>'• '+r.cues[ref]));
+      if(n.review)lines.push('Разбор — '+n.review.effect,...n.review.signals.map(ref=>'• «'+Drafts.quote(Drafts.cueWords(d.work.data,r,ref))+'» — '+r.cues[ref]));
       lines.push('');options.forEach(([k],i)=>walk(k,number+'.'+(i+1),channel));
     }
     walk('start','1',null);
@@ -337,8 +453,8 @@ document.querySelector('#close-preview').onclick=()=>preview.close();
 preview.addEventListener('close',()=>{preview.querySelector('iframe').removeAttribute('src');delete window.editorPreviewSnapshot;});
 document.querySelector('#import-file').onchange=async e=>{
   const f=e.target.files[0];e.target.value='';if(!f)return;
-  try{if(f.size>12_000_000)throw Error('Файл слишком большой для этого редактора.');const value=Drafts.unpack(await f.text());
-    d=value;openDraft(value,persist());
+  try{const value=Drafts.unpack(await f.text());
+    startDraft(value);
     const m=allStories.find(item=>item.id===value.base?.meta.id);
     if(m){const latest=await original(m);if(d===value && JSON.stringify(value.base)!==JSON.stringify(latest))notice('Исходная история в игре уже изменилась. Подробности в проверке.');}
   }catch(e){notice(e.message);}
@@ -348,7 +464,7 @@ function render(){
   const {role,step,r,n}=current(),data=d.work.data;
   app.replaceChildren();app.append(button('← Все истории',home,'quiet'));
   const head=el('div',null,'workhead'),title=el('div');
-  title.append(el('h1',d.work.meta.title),withHelp(el('small',conflict?'Черновик в памяти · скачай файл для сохранения':'Черновик сохранён в этом браузере. Можно закрыть редактор и вернуться позже.'),'draft','Сохранение и передача','После правки нажми «Сохранить». Чтобы другой человек увидел изменения, скачай файл и отправь ему. Он сможет открыть файл в своём редакторе. Публикация в игре — отдельный шаг.'));
+  title.append(el('h1',d.work.meta.title),withHelp(el('small',saveStatus()),'draft','Сохранение и передача','После правки нажми «Сохранить». Чтобы другой человек увидел изменения, скачай файл и отправь ему. Он сможет открыть файл в своём редакторе. Публикация в игре — отдельный шаг.'));
   head.append(title,actions(button('Скачать для передачи',exportDraft),button('Проверить в игре',showPreview,'primary')));app.append(head);
   const layout=el('div',null,'layout'),rail=el('aside',null,'rail'),article=el('article');layout.append(rail,article);app.append(layout);
   const rl=el('label','Чьими глазами читаем?'),select=el('select');rl.htmlFor=select.id='read-as';roles.forEach(k=>select.add(new Option(roleLabel(k),k)));select.value=role;
@@ -356,10 +472,10 @@ function render(){
   const routeStamp=Object.keys(r.scenes).filter(k=>Drafts.isChecked(d,role,k)).length;
   rail.append(el('p','Проверено фрагментов: '+routeStamp+' из '+Object.keys(r.scenes).length,'where'),button('Следующий непроверенный',nextUnread));
   const tools=el('details');tools.append(el('summary','Действия с историей'));
-  const menu=el('div',null,'tools');const undoButton=button('Отменить правку',()=>{d.work=undo.pop();if(!d.work.data.routes[role].scenes[step])d.view.step='start';persist();render();});
+  const menu=el('div',null,'tools');const undoButton=button('Отменить правку',()=>{const previous=undo.pop();d.work=previous.work;d.files=previous.files;if(!d.work.data.routes[role].scenes[step])d.view.step='start';persist();render();});
   undoButton.disabled=!undo.length;
   menu.append(button('Название и герои',metadata),undoButton,button('Проверить историю',inspect),button('Скачать для вычитки',exportReading),
-    button('Создать копию',()=>{const value=Drafts.draft(d.work,null);value.work.meta.id=value.work.data.id=Drafts.id('story');value.work.meta.title+=' — копия';if(d.files)value.files=clone(d.files);d=value;openDraft(value,persist());}));
+    button('Создать копию',()=>{const value=Drafts.draft(d.work,null);value.work.meta.id=value.work.data.id=Drafts.id('story');value.work.meta.title+=' — копия';if(d.files)value.files=clone(d.files);startDraft(value);}));
   tools.append(menu);rail.append(tools);
   const path=Drafts.pathTo(r,step),head2=el('div',null,'scenehead');
   if(path.length>1)head2.append(button('← К другим ответам',()=>go(path.at(-2)), 'quiet'));
@@ -389,7 +505,8 @@ function render(){
     }
     const box=el('div',null,'message');msgView(box,m);
     if(r.cues[step+'/'+key])box.append(el('small','В разборе · '+r.cues[step+'/'+key]));
-    box.append(actions(button('Изменить реплику',()=>editMessage(key,index),'quiet'),button('Вставить перед',()=>editMessage(null,index),'quiet'),button('Проиграть отсюда',()=>showPreview(key),'quiet')));const more=el('details');more.append(el('summary','Ещё действия'));
+    const edit=button('Изменить реплику',()=>editMessage(key,index),'quiet');edit.id='edit-message-'+index;
+    box.append(actions(edit,button('Вставить перед',()=>editMessage(null,index),'quiet'),button('Проиграть отсюда',()=>showPreview(key),'quiet')));const more=el('details');more.append(el('summary','Ещё действия'));
     const up=button('Выше',()=>commit(()=>{[n.messages[index-1],n.messages[index]]=[n.messages[index],n.messages[index-1]];}));
     const down=button('Ниже',()=>commit(()=>{[n.messages[index+1],n.messages[index]]=[n.messages[index],n.messages[index+1]];}));
     up.disabled=index===0 || Boolean(n.reaction);down.disabled=index===n.messages.length-1 || Boolean(n.reaction);
@@ -441,27 +558,27 @@ function render(){
   if(path.length>2){
     const rev=el('details',null,'reviewbox');rev.append(el('summary','Что увидит игрок в разборе'));
     if(n.review){
-      for(const ref of n.review.signals){const [,key]=ref.split('/'),m=data.messages[key];rev.append(el('p',(m?'«'+(/\[\[([^\]]+)\]\]/.exec(words(m))?.[1]||plain(words(m)))+'» — ':'')+r.cues[ref]));}
+      for(const ref of n.review.signals)rev.append(el('p','«'+Drafts.quote(Drafts.cueWords(data,r,ref))+'» — '+r.cues[ref]));
       rev.append(el('p',n.review.effect));
     }
-    rev.append(withHelp(button('Изменить разбор',reviewForm),'review','Разбор выбора','Здесь игрок узнаёт, какую деталь он заметил или пропустил. Отметь фразу в предыдущей реплике, затем свяжи её с последствием в «Изменить разбор».'));article.append(rev);
+    rev.append(withHelp(button('Изменить разбор',reviewForm),'review','Разбор выбора','Здесь игрок узнаёт, какую деталь он заметил или пропустил. Отметь фразу в предыдущей реплике, описании вложения или ответе игрока. Затем свяжи её с последствием в «Изменить разбор».'));article.append(rev);
   }
   article.append(actions(button(Drafts.isChecked(d,role,step)?'Снять отметку «Проверено»':'Отметить как проверенное',()=>{
     if(Drafts.isChecked(d,role,step))delete d.checked[role+'/'+step];else d.checked[role+'/'+step]=Drafts.stamp(d.work,role,step);persist();render();
   }),button('Проверить историю',inspect,'quiet')));
 }
 function mediaForm(){
-  const {n}=current(),data=d.work.data;
+  const {n,role,step}=current(),data=d.work.data;
   const options=Object.entries(data.messages).filter(([,m])=>m.media);
   form('Добавить вложение',(field,f)=>{
-    f.append(el('p','Можно использовать вложение из этой истории или приложить файл с устройства.','inline-help'));
+    f.append(el('p','Выбери вложение из истории или файл с устройства до 2 МБ. При добавлении файла весь черновик должен помещаться в 16 МБ.','inline-help'));
     const pick=field('pick','Вложение','new','',[['new','Файл с устройства'],...options.map(([key,m])=>[key,Drafts.mediaName[m.media.kind]+' · '+plain(words(m)).slice(0,60)])]);
     const from=field('speaker','Кто отправляет?','Ты');from.required=true;
     const file=field('file','Выбрать файл','','file');file.accept='image/png,image/jpeg,image/webp,audio/mpeg,audio/ogg';
     const desc=field('desc','Текст голосового или описание','','textarea');const sticker=field('imageKind','Как показать изображение?','image','',[['image','Картинка'],['sticker','Стикер']]);
     const toggle=()=>{for(const c of [file,desc,sticker])c.parentElement.hidden=pick.value!=='new';};
     pick.onchange=toggle;toggle();
-  },v=>{
+  },async v=>{
     if(v.pick!=='new'){
       commit(()=>{const key=Drafts.id('media');data.messages[key]={...clone(data.messages[v.pick]),speaker:v.speaker};n.messages.push(key);});return;
     }
@@ -469,13 +586,23 @@ function mediaForm(){
     needed(v.desc,'Добавь текст голосового или описание вложения.');
     const types={'image/png':'png','image/jpeg':'jpg','image/webp':'webp','audio/mpeg':'mp3','audio/ogg':'ogg'};
     if(!types[file.type]||file.size>2_000_000)throw Error('Подойдёт изображение, MP3, OGG размером до 2 МБ.');
-    const reader=new FileReader(),draft=d;
-    reader.onload=()=>{if(d!==draft)return;commit(()=>{
-      const key=Drafts.id('media'),src='./game/media/'+data.id+'/'+key+'.'+types[file.type],isVoice=file.type.startsWith('audio/');
-      d.files??={};d.files[src]=reader.result;
-      const media=isVoice?{kind:'voice',src,transcript:v.desc}:{kind:v.imageKind,src,alt:v.desc};
-      data.messages[key]={speaker:v.speaker,media};n.messages.push(key);
-    });};reader.onerror=()=>notice('Файл не удалось прочитать.');reader.readAsDataURL(file);
-  },'Добавить вложение');
+    const draft=d, sourceForm=formBody.querySelector('form');
+    const encoded=await new Promise((resolve,reject)=>{
+      const reader=new FileReader();
+      reader.onload=()=>resolve(reader.result);
+      reader.onerror=()=>reject(Error('Файл не удалось прочитать.'));
+      reader.readAsDataURL(file);
+    });
+    if(d!==draft || !sheet.open || !sourceForm.isConnected)return;
+    const key=Drafts.id('media'),src='./game/media/'+data.id+'/'+key+'.'+types[file.type];
+    const media=file.type.startsWith('audio/')?{kind:'voice',src,transcript:v.desc}:{kind:v.imageKind,src,alt:v.desc};
+    const candidate={...d,work:clone(d.work),files:{...d.files,[src]:encoded}};
+    candidate.work.data.messages[key]={speaker:v.speaker,media};
+    candidate.work.data.routes[role].scenes[step].messages.push(key);
+    if(new Blob([Drafts.pack(candidate)]).size>attachmentPackageLimit){
+      throw Error('С этим файлом черновик превысит 16 МБ. Выбери файл поменьше или убери ненужное вложение.');
+    }
+    commit(()=>{d.work=candidate.work;d.files=candidate.files;});
+  },'Добавить вложение',()=>document.getElementById('edit-message-'+(current().n.messages.length-1))?.focus());
 }
 syncHash();

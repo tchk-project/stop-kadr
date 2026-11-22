@@ -43,6 +43,7 @@ function renderRole(meta, role) {
       if (line.caption) sentence.append(textNode('small',line.caption),document.createElement('br'));
       const speaker = line.speaker === 'Ты' ? person.name : line.speaker;
       sentence.append(textNode('strong',[speaker,line.aside].filter(Boolean).join(' · ')+' '));
+      if (line.reply) sentence.append(textNode('small',line.reply,'reply-to'),document.createElement('br'));
       if (line.media) sentence.append(textNode('em',({
         voice:'Голосовое',video:'Видео',sticker:'Стикер',image:'Изображение',document:'Документ'
       })[line.media.kind]+' · '));
@@ -128,7 +129,7 @@ function openReadingSheet() {
   document.querySelector('#title').textContent = meta.title;
   document.title = meta.title+' · Сценарий для чтения';
   const script = document.createElement('script');
-  script.src = './game/stories/'+meta.id+'.js?v=review-3';
+  script.src = './game/stories/'+meta.id+'.js?v=audit-4';
   script.onload = () => {
     const nav = document.querySelector('#roles');
     for (const role of ['witness','self']) {
@@ -137,7 +138,12 @@ function openReadingSheet() {
     }
     status.textContent = 'Выберите роль. В каждой развилке можно нажать на ответ и перейти к его последствиям.';
     const anchor = document.getElementById(location.hash.slice(1));
-    if (anchor) anchor.scrollIntoView();
+    if (anchor) {
+      const target = anchor.querySelector(':scope > h2,:scope > h3') || anchor;
+      target.tabIndex = -1;
+      target.focus({preventScroll:true});
+      anchor.scrollIntoView({block:'start',behavior:'instant'});
+    }
   };
   script.onerror = showError;
   document.head.append(script);

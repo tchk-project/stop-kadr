@@ -62,7 +62,7 @@ scenes:
     question: Что тебе сейчас подходит?
     choices:
       follow-up: Выйти после первого матча
-      pause: Закончить этот дубль здесь
+      pause: Пока отложу телефон.
     review:
       signals:
       - pressure/ty-ya-sama-vyshla-ot
@@ -87,9 +87,9 @@ scenes:
     messages:
     - remarka-na-etom-dubl-zakanchivaetsya
     outcome:
-    - mixed
-    - Первый матч закончился, а Аня всё ещё ждёт, когда можно уйти
-    note: Аня согласилась на один матч. Костя записал её на следующий без вопроса. Даже если первый матч понравился, Аня в любой момент может уйти.
+    - open
+    - Костя объявил реванш без твоего согласия
+    note: Можно закончить на одном матче и пойти спать. На реванш тебя записал Костя. Согласиться на второй матч ты не обещала.
     review:
       signals:
       - alternative/kostya-nu-chto-revansh-sostav
@@ -102,18 +102,18 @@ scenes:
     continuation: true
     question: Как продолжишь?
     choices:
-      calm-end: Посмотреть, что будет дальше
+      calm-end: Выйду из шумной беседы и лягу спать.
       ask: Договориться про расписание отдельно
-      calm-watch: Выйду из беседы. Утром посмотрю, вернули ли меня.
+      calm-watch: Утром проверю, вернули ли меня в «После отбоя».
   calm-end:
-    mode: yellow
+    mode: white
     messages:
     - sistema-ty-vyshla-iz-besedy
-    - remarka-utrom-v-spiske-chatov
+    - anya-puts-phone-away
     outcome:
     - positive
-    - Аня вышла из беседы
-    note: Костя принял объяснение. На турнир можно позвать тех, кто сам хочет сыграть.
+    - Аня закончила переписку на ночь
+    note: Костя услышал просьбу. Аня вышла из беседы и легла спать.
   ask:
     mode: yellow
     messages:
@@ -137,19 +137,19 @@ scenes:
       - pressure/kostya-an-nas-pyatero-na
       effect: Костя увидел прошлую просьбу. Место в составе он предложил другому игроку.
   observe-ease:
-    mode: yellow
+    mode: white
     messages:
     - sistema-ty-vyshla-iz-besedy
     outcome:
     - positive
     - Аня закончила разговор о турнире
-    note: Костя увидел прошлую просьбу. Место в составе он предложил другому игроку.
+    note: Ты вышла из беседы. Система подтвердила выход, и на сегодня можно было закончить переписку.
     review:
       signals:
       - observe/kostya-an-vizhu-vcherashnee-bol-she
-      effect: Костя увидел прошлую просьбу. Место в составе он предложил другому игроку.
+      effect: Ты вышла из беседы. Система подтвердила выход, и на сегодня можно было закончить переписку.
   observe-watch:
-    mode: orange
+    mode: yellow
     messages:
     - anya-says-goodnight-to-team
     - sistema-ty-vyshla-iz-besedy
@@ -176,19 +176,19 @@ scenes:
       - pressure/kostya-an-nas-pyatero-na
       effect: Ты договорилась с Верой в личке. В общем чате Костя написал, что позвал Даню.
   focus-ease:
-    mode: yellow
+    mode: white
     messages:
     - sistema-ty-vyshla-iz-besedy
     outcome:
     - positive
     - Аня закончила разговор о турнире
-    note: Костя увидел прошлую просьбу. Место в составе он предложил другому игроку.
+    note: Ты вышла из беседы. Система подтвердила выход, и на сегодня можно было закончить переписку.
     review:
       signals:
       - focus/kostya-an-vizhu-vcherashnee-bol-she
-      effect: Костя увидел прошлую просьбу. Место в составе он предложил другому игроку.
+      effect: Ты вышла из беседы. Система подтвердила выход, и на сегодня можно было закончить переписку.
   focus-watch:
-    mode: orange
+    mode: yellow
     messages:
     - anya-says-goodnight-to-team
     - sistema-ty-vyshla-iz-besedy
@@ -207,11 +207,11 @@ scenes:
     - remarka-utrom-v-spiske-chatov
     outcome:
     - positive
-    - Аня вышла из беседы
-    note: Костя принял объяснение. На турнир можно позвать тех, кто сам хочет сыграть.
+    - Утром «После отбоя» не было в списке
+    note: После твоего выхода прошла ночь. Утром ты открыла список чатов и проверила его сама.
 cues:
   pressure/ty-ya-sama-vyshla-ot: Аня объяснила, что вышла сама.
   pressure/kostya-an-nas-pyatero-na: После её просьбы Костя снова добавил Аню ради команды.
   alternative/kostya-nu-chto-revansh-sostav: Костя записал тот же состав на реванш, хотя обещание было только на одну игру.
-  observe/kostya-an-vizhu-vcherashnee-bol-she: Костя увидел прошлую просьбу. Место в составе он предложил другому игроку.
-  focus/kostya-an-vizhu-vcherashnee-bol-she: Костя увидел прошлую просьбу. Место в составе он предложил другому игроку.
+  observe/kostya-an-vizhu-vcherashnee-bol-she: Костя прочитал твою прежнюю просьбу и написал, что на шестое место позвал Даню.
+  focus/kostya-an-vizhu-vcherashnee-bol-she: Костя прочитал твою прежнюю просьбу и написал, что на шестое место позвал Даню.

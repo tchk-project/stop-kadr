@@ -173,7 +173,8 @@ sasha-davay-mikrofon-koste-ostav:
   text: Давай. Я у прохода сяду.
 remarka-na-etom-dubl-zakanchivaetsya:
   speaker: Ремарка
-  text: На этом дубль заканчивается.
+  channel: scene
+  text: Микрофон снова у Кости. Ты остаёшься на своём месте.
 ty-sash-syadu-s-toboy:
   speaker: Ты
   text: Саш, сяду с тобой. Мяч под сиденьем твой?
@@ -208,3 +209,13 @@ timur-asks-about-match:
 sasha-talks-goalkeepers:
   speaker: Саша
   text: Первый тайм мой. Ты во втором встанешь?
+timur-listens-by-window:
+  speaker: Ремарка
+  channel: scene
+  caption: В автобусе
+  text: Ты кладёшь рюкзак под сиденье, надеваешь наушники и выбираешь песню. За окном проплывает школьный двор.
+misha-notices-who-sings:
+  speaker: Ремарка
+  channel: scene
+  caption: В автобусе
+  text: Тимур уже у окна. Микрофон в руках у Саши, он сам выбирает песню и начинает петь.

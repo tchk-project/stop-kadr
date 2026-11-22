@@ -69,7 +69,7 @@ scenes:
     question: Что тебе сейчас подходит?
     choices:
       follow-up: Позвать Сашу к себе
-      pause: Закончить этот дубль здесь
+      pause: Пока побуду на своём месте.
     review:
       signals:
       - pressure/kostya-togda-sadish-sya-otdel-no-s
@@ -94,9 +94,9 @@ scenes:
     messages:
     - remarka-na-etom-dubl-zakanchivaetsya
     outcome:
-    - mixed
+    - open
     - Ты вернул микрофон. Костя позвал Сашу
-    note: Ты хотел поскорее закончить. Когда ты спел, Костя сам решил вызвать Сашу. За его решение ты не отвечаешь. Теперь и Саша просит оставить его в покое.
+    note: Можно остаться на своём месте. Ты уже вернул микрофон. Вызвать к нему Сашу решил Костя, и Саша попросил дать ему спокойно доехать.
     review:
       signals:
       - alternative/sasha-ya-to-pri-chyom-dayte
@@ -109,9 +109,9 @@ scenes:
     continuation: true
     question: Как продолжишь?
     choices:
-      calm-end: Посмотреть, что будет дальше
-      ask: Выбрать место у окна
-      calm-watch: Сяду у окна и поеду с командой.
+      calm-end: Поеду с ребятами, послушаю Сашину песню.
+      ask: Сяду с Сашей и спрошу, чей мяч под сиденьем.
+      calm-watch: Сяду у окна, надену наушники и послушаю свой плейлист.
   calm-end:
     mode: yellow
     messages:
@@ -137,7 +137,7 @@ scenes:
     question: Ты уже сел с Сашей. Как поедешь дальше?
     choices:
       observe-ease: С местом разобрались. Поехали.
-      observe-watch: Спрошу Сашу про сегодняшний матч.
+      observe-watch: Спрошу Сашу, кто начнёт матч в воротах.
     review:
       signals:
       - pressure/kostya-togda-sadish-sya-otdel-no-s
@@ -150,13 +150,13 @@ scenes:
     outcome:
     - positive
     - Тимур едет на игру рядом с Сашей
-    note: Рядом нашлось место без условия про песню.
+    note: Тренер объявил выезд. Ты остался у окна рядом с Сашей.
     review:
       signals:
       - observe/remarka-timur-saditsya-ryadom-s
-      effect: Рядом нашлось место без условия про песню.
+      effect: Тренер объявил выезд. Ты остался у окна рядом с Сашей.
   observe-watch:
-    mode: orange
+    mode: yellow
     messages:
     - timur-asks-about-match
     - sasha-talks-goalkeepers
@@ -177,7 +177,7 @@ scenes:
     question: Ты уже сел с Сашей. Как поедешь дальше?
     choices:
       focus-ease: С местом разобрались. Поехали.
-      focus-watch: Спрошу Сашу про сегодняшний матч.
+      focus-watch: Спрошу Сашу, кто начнёт матч в воротах.
     review:
       signals:
       - pressure/kostya-togda-sadish-sya-otdel-no-s
@@ -190,13 +190,13 @@ scenes:
     outcome:
     - positive
     - Тимур едет на игру рядом с Сашей
-    note: Рядом нашлось место без условия про песню.
+    note: Тренер объявил выезд. Ты остался у окна рядом с Сашей.
     review:
       signals:
       - focus/remarka-timur-saditsya-ryadom-s
-      effect: Рядом нашлось место без условия про песню.
+      effect: Тренер объявил выезд. Ты остался у окна рядом с Сашей.
   focus-watch:
-    mode: orange
+    mode: yellow
     messages:
     - timur-asks-about-match
     - sasha-talks-goalkeepers
@@ -209,13 +209,13 @@ scenes:
       - focus/remarka-timur-saditsya-ryadom-s
       effect: Ты сам начал разговор о том, ради чего поехал с командой.
   calm-watch:
-    mode: orange
+    mode: white
     messages:
-    - remarka-timur-saditsya-u-okna
+    - timur-listens-by-window
     outcome:
     - positive
-    - Тимур поехал на игру со всеми
-    note: После отказа место осталось свободным. Петь вызвался Саша.
+    - Тимур устроился у окна со своим плейлистом
+    note: Микрофон взял Саша. Тимур занял свободное место и сам выбрал, что слушать в дороге.
   pressure-act-1-next-0:
     mode: orange
     messages:
@@ -245,5 +245,5 @@ cues:
   pressure/ty-ya-voobsche-uzhe-ehat: Тимур написал в личку, что теперь думает пропустить поездку.
   pressure-act-1/misha-tim-ya-tut-hochesh: Ты спросил про место ещё у автобуса. Когда ребята обернулись, Миша уже сидел рядом и мог заметить даже твой кивок.
   alternative/sasha-ya-to-pri-chyom-dayte: Саша сам сказал, что хочет спокойно доехать. Костя передал очередь ему без спроса.
-  observe/remarka-timur-saditsya-ryadom-s: Рядом нашлось место без условия про песню.
-  focus/remarka-timur-saditsya-ryadom-s: Рядом нашлось место без условия про песню.
+  observe/remarka-timur-saditsya-ryadom-s: Ты уже сидишь у окна с Сашей. Костя понёс микрофон дальше по салону.
+  focus/remarka-timur-saditsya-ryadom-s: Ты уже сидишь у окна с Сашей. Костя понёс микрофон дальше по салону.
