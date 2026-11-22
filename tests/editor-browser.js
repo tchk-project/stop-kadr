@@ -35,7 +35,7 @@ async function run(){
  let blob;
  try {
    w.HTMLAnchorElement.prototype.click=function(){blob=w.fetch(this.href).then(response=>response.text());};
-   click('Скачать черновик');
+   click('Скачать для передачи');
  } finally {w.HTMLAnchorElement.prototype.click=oldClick;}
  const exported=await blob;
  check(JSON.parse(exported).base.meta.id==='sticker','Файл содержит исходную версию истории');

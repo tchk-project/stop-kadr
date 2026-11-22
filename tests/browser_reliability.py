@@ -86,6 +86,34 @@ class BrowserReliabilityTest(unittest.TestCase):
         self.page.get_by_role("button", name="Играть").click()
         expect(self.page.locator(".action.coded").first).to_be_visible()
 
+    def test_editor_character_help_and_handoff(self):
+        page = self.page
+        page.goto(self.base + "editor.html")
+        page.locator("summary", has_text="Кто есть кто").click()
+        expect(page.locator("main .cast-list li")).to_have_count(9)
+        expect(page.locator("main .cast-list")).to_contain_text("Даня")
+        page.get_by_role("button", name=re.compile("Кот под голосовым")).click()
+        page.get_by_role("button", name="Читать дальше →").click()
+        page.get_by_role("button", name="Кто есть кто").click()
+        expect(page.get_by_role("dialog").locator(".cast-list li")).to_have_count(9)
+        page.get_by_role("button", name="Вернуться к истории").click()
+        page.locator(".group.private").get_by_role("button", name="Изменить реплику").first.click()
+        line = page.get_by_role("dialog").get_by_label("Реплика", exact=True)
+        changed = line.input_value() + " Проверка передачи."
+        line.fill(changed)
+        page.get_by_role("button", name="Сохранить", exact=True).click()
+        page.reload()
+        expect(page.locator(".group.private")).to_contain_text(changed)
+        with page.expect_download() as transfer:
+            page.get_by_role("button", name="Скачать для передачи").click()
+        expect(page.get_by_role("status")).to_contain_text("Отправь скачанный файл")
+        other = self.browser.new_context()
+        self.addCleanup(other.close)
+        recipient = other.new_page()
+        recipient.goto(self.base + "editor.html")
+        recipient.locator("#import-file").set_input_files(str(transfer.value.path()))
+        expect(recipient.locator(".group.private")).to_contain_text(changed)
+
     def test_editor_can_download_when_browser_storage_is_blocked(self):
         page = self.page
         page.add_init_script("Object.defineProperty(window, 'localStorage', {get(){throw Error('blocked')}})")
@@ -93,7 +121,7 @@ class BrowserReliabilityTest(unittest.TestCase):
         page.get_by_role("button", name=re.compile("Кот под голосовым")).click()
         expect(page.get_by_text("Черновик в памяти", exact=False)).to_be_visible()
         with page.expect_download() as download:
-            page.get_by_role("button", name="Скачать черновик", exact=True).click()
+            page.get_by_role("button", name="Скачать для передачи", exact=True).click()
         self.assertTrue(download.value.suggested_filename.endswith(".stop-kadr.json"))
 
     def test_editor_draft_survives_reload_and_only_appears_in_preview(self):

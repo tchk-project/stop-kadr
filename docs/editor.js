@@ -18,7 +18,20 @@ function notice(text){const n=document.querySelector('#feedback');n.textContent=
 function download(name,content,type){
   const url=URL.createObjectURL(new Blob([content],{type})), a=el('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1500);
 }
-function exportDraft(){download(d.work.meta.title+'.stop-kadr.json',JSON.stringify(d,null,2),'application/json');}
+function exportDraft(){
+  download(d.work.meta.title+'.stop-kadr.json',JSON.stringify(d,null,2),'application/json');
+  if(sheet.open)sheet.close();
+  notice('Отправь скачанный файл Сергею, чтобы он увидел твои правки.');
+}
+function characters(){
+  return document.querySelector('#character-list').content.cloneNode(true);
+}
+function openCharacters(){
+  const title=el('h2','Кто есть кто');
+  title.id='dialog-title';
+  formBody.replaceChildren(title,button('Вернуться к истории',()=>sheet.close()),characters());
+  sheet.showModal();
+}
 function readLibrary(){
   library=[];
   for(let i=0;i<localStorage.length;i++){
@@ -69,17 +82,18 @@ function home(){
   let storageOK=true;try{readLibrary();}catch{storageOK=false;}
   app.replaceChildren();
   const h=el('section',null,'homehead');
-  h.append(el('h1','Редактор историй'),el('p','Открой историю для вычитки или напиши свою. Изменения сохраняются в черновике на этом устройстве.'),
-    actions(button('Написать историю',newStory,'primary'),button('Открыть файл черновика',()=>document.querySelector('#import-file').click())));
+  h.append(el('h1','Редактор историй'),el('p','Открой историю, прочитай переписку и выбери ответ, чтобы увидеть продолжение.'));
   app.append(h);
   if(!storageOK)app.append(el('p','Браузер ограничил сохранение. Скачивай черновик файлом.','alert'));
   if(library.length){app.append(el('h2','Мои черновики'));const grid=el('div',null,'shelf');
     library.forEach(x=>grid.append(card(x.work.meta.title,'Продолжить · '+new Date(x.time).toLocaleString('ru-RU'),()=>openDraft(clone(x)))));app.append(grid);}
-  app.append(el('h2','Истории из игры'));
+  const cast=el('details',null,'cast-home');
+  cast.append(el('summary','Кто есть кто'),characters());
+  app.append(el('h2','Какую историю хочешь проверить?'),cast);
   const grid=el('div',null,'shelf');
   allStories.forEach(m=>grid.append(card(m.title,m.place,()=>{
     const existing=library.find(x=>x.base?.meta.id===m.id);if(existing)openDraft(clone(existing));else editPublished(m);
-  })));app.append(grid);
+  })));app.append(grid,actions(button('Написать историю',newStory),button('Открыть файл черновика',()=>document.querySelector('#import-file').click())));
 }
 let dirtyForm=false;
 window.addEventListener('beforeunload',e=>{if(dirtyForm || conflict){e.preventDefault();e.returnValue='';}});
@@ -109,8 +123,8 @@ function needed(s,msg){if(!s)throw Error(msg);return s;}
 function newStory(){
   form('Новая история',(field)=>{
     field('title','Как называется история?').required=true;
-    field('name','За кого играет герой?','Лера').required=true;
-    field('witness','Кто видит ситуацию со стороны?','Вера').required=true;
+    field('name','Как зовут героя, с которым это происходит?','Лера').required=true;
+    field('witness','Кто видит это со стороны?','Вера').required=true;
   },v=>{const value=Drafts.draft(Drafts.blank(v.title,v.witness,v.name),null);d=value;openDraft(value,persist());},'Начать писать');
 }
 function metadata(){
@@ -206,7 +220,8 @@ function sceneForm(){
 }
 function branch(target){
   const {r,n,step}=current();
-  form(target?'Изменить ответ':'Добавить вариант ответа',(field)=>{
+  form(target?'Изменить ответ':'Добавить вариант ответа',(field,f)=>{
+    if(!target)f.append(el('p','После сохранения откроется продолжение. Там ты напишешь, что произойдёт после этого ответа.','inline-help'));
     field('label','Что выберет игрок?',target?plain(n.choices[target]):'','textarea').required=true;
     if(!target){field('question','Вопрос игроку',n.question||'Что сделаешь?');field('mode','Уровень после выбора',n.mode,'',Object.entries(Drafts.levels));}
   },v=>commit(()=>{
@@ -268,7 +283,7 @@ function inspect(){
     const r=e.role&&d.work.data.routes[e.role],where=e.step?roleLabel(e.role)+' · '+heading(r,e.step):'Об истории';
     formBody.append(card(e.message,where,()=>{sheet.close();if(e.step)go(e.step,e.role);if(e.meta)metadata();}));
   });
-  formBody.append(actions(button('Вернуться к тексту',()=>sheet.close()),button('Скачать черновик',exportDraft)));sheet.showModal();
+  formBody.append(actions(button('Вернуться к тексту',()=>sheet.close()),button('Скачать для передачи',exportDraft)));sheet.showModal();
 }
 function exportReading(){
   const lines=[d.work.meta.title,d.work.meta.place,''];
@@ -318,11 +333,11 @@ function render(){
   const {role,step,r,n}=current(),data=d.work.data;
   app.replaceChildren();app.append(button('← Все истории',home,'quiet'));
   const head=el('div',null,'workhead'),title=el('div');
-  title.append(el('h1',d.work.meta.title),el('small',conflict?'Черновик в памяти · скачай файл для сохранения':'Черновик · сохранён в этом браузере'));
-  head.append(title,actions(button('Скачать черновик',exportDraft),button('Проверить в игре',showPreview,'primary')));app.append(head);
+  title.append(el('h1',d.work.meta.title),el('small',conflict?'Черновик в памяти · скачай файл для сохранения':'Черновик сохранён в этом браузере. Можно закрыть редактор и вернуться позже.'));
+  head.append(title,actions(button('Скачать для передачи',exportDraft),button('Проверить в игре',showPreview,'primary')));app.append(head);
   const layout=el('div',null,'layout'),rail=el('aside',null,'rail'),article=el('article');layout.append(rail,article);app.append(layout);
   const rl=el('label','Чьими глазами читаем?'),select=el('select');roles.forEach(k=>select.add(new Option(roleLabel(k),k)));select.value=role;
-  select.onchange=()=>go('start',select.value);rl.append(select);rail.append(rl);
+  select.onchange=()=>go('start',select.value);rl.append(select);rail.append(rl,button('Кто есть кто',openCharacters,'quiet'));
   const routeStamp=Object.keys(r.scenes).filter(k=>Drafts.isChecked(d,role,k)).length;
   rail.append(el('p','Проверено фрагментов: '+routeStamp+' из '+Object.keys(r.scenes).length,'where'),button('Следующий непроверенный',nextUnread));
   const tools=el('details');tools.append(el('summary','Действия с историей'));
