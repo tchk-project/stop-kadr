@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ru" data-code="yellow">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#59450a">
+  <title>Стоп-кадр</title>
+  <link rel="preload" href="./assets/avatars.webp" as="image">
+  <link rel="stylesheet" href="./attention-colors.css?v=review-3">
+<link rel="stylesheet" href="./scene.css?v=review-3">
+  <link rel="stylesheet" href="./attention.css?v=review-3">
+  <script src="./editor-preview.js" defer></script>
+  <script src="./catalog.js?v=editor-1" defer></script>
+  <script src="./attention.js?v=review-3" defer></script>
+  <script src="./engine.js?v=review-3" defer></script>
+  <script src="./attention-guide.js?v=review-3" defer></script>
+  <script src="./attention-player.js?v=editor-1" defer></script>
+  <script src="./scene.js?v=editor-1" defer></script>
+<link rel="stylesheet" href="./studio.css?v=review-3">
+<link rel="stylesheet" href="./cooper.css?v=review-3">
+</head>
+<body data-attention-pilot data-preview>
+  <div class="scene-loader" role="status">
+    <p>Загружаем ситуацию…</p>
+    <button type="button" hidden onclick="location.reload()">Повторить загрузку</button>
+  </div>
+  <noscript><style>.scene-loader { display:none }</style>Чтобы читать переписку и выбирать ответы, включи JavaScript в браузере.</noscript>
+  <main class="panel" hidden>
+    <header class="top">Стоп-кадр</header>
+    <aside class="mode-bar" aria-label="Мой режим внимания">
+      <span class="signal" aria-hidden="true"></span>
+      <div><small>Мой режим внимания</small><strong id="mode-name"><span class="level-name">Жёлтый</span><span class="level-meaning"> · спокойно замечаю, что вокруг</span></strong></div>
+      <a class="cooper-link" href="./colors.html" target="_blank" rel="noopener" aria-label="Цвета в игре"><span class="mode-help-label">Цвета в игре</span><span class="mode-help-icon" aria-hidden="true">?</span></a>
+    </aside>
+
+  </main>
+  <script>
+    function showLoadingError() {
+      const loader = document.querySelector('.scene-loader');
+      loader.classList.add('load-failed');
+      loader.querySelector('p').textContent = 'Открой предпросмотр из редактора историй.';
+      loader.querySelector('button').hidden = false;
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!document.querySelector('.scene-loader').hasAttribute('data-started')) showLoadingError();
+    });
+  </script>
+</body>
+</html>

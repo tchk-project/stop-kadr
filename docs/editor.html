@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Редактор историй · Стоп-кадр</title>
+<link rel="stylesheet" href="./editor.css">
+<script defer src="./game/catalog.js"></script><script defer src="./editor-model.js"></script><script defer src="./editor.js"></script>
+</head>
+<body>
+<header class="mast"><a href="./editor.html" class="brand">Стоп-кадр<span> / Редактор историй</span></a><a class="game-link" href="./index.html">К игре ↗</a></header>
+<main id="app"></main>
+<div id="feedback" role="status" aria-live="polite"></div>
+<dialog id="sheet" aria-labelledby="dialog-title"><div id="form-body"></div></dialog>
+<dialog id="preview" aria-label="Предпросмотр игры"><header><b>Предпросмотр черновика</b><button id="close-preview">Вернуться к тексту</button></header><iframe title="Черновик глазами игрока"></iframe></dialog>
+<input type="file" id="import-file" accept=".json,application/json" hidden>
+<noscript>Для редактора нужен JavaScript.</noscript>
+</body></html>
