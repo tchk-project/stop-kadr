@@ -69,6 +69,15 @@ class BrowserReliabilityTest(unittest.TestCase):
         expect(page.locator("#self")).to_be_visible()
         expect(page.get_by_role("heading", level=1)).to_have_text("Скрин в личке")
 
+    def test_reader_labels_the_pressure_take_in_both_dance_roles(self):
+        page = self.page
+        page.goto(self.base + "read-story.html?case=dance")
+        for role in ("self", "witness"):
+            link = page.locator(f'#{role}-start a[href="#{role}-pressure"]')
+            expect(link).to_have_text("Напряжённый дубль")
+            link.click()
+            expect(page.locator(":target h3")).to_contain_text("Напряжённый дубль")
+
     def test_home_retry(self):
         self.retry("**/catalog-home.js*", url=self.base + "index.html")
         expect(self.page.get_by_role("button", name="Играть")).to_be_visible()

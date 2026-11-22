@@ -12,14 +12,14 @@ scenes:
     messages:
     - anya-ya-emu-dvazhdy-skazala
     continuation: true
-    question: Аня просится к вам. Что ответишь?
+    question: Аня пишет, что хочет к вам за стол. Что ты сделаешь?
     choices:
-      pressure-act-0: Аня сама попросила место. Придержу ей стул.
-      pressure-act-1: Я не слышал разговора у стены. Предложу встретить её.
-      alternative: Может, одного танца хватит. Предложу Ане согласиться.
-      ignore: Отложить телефон. Вера с Аней разберутся.
-      observe: Придвину свободный стул к столу. Здесь можно посидеть.
-      focus: После второго отказа хочется держаться рядом со своими. Придвину стул к столу.
+      pressure-act-0: Напишу Ане, что рядом со мной свободно.
+      pressure-act-1: Спрошу у Ани в личке, встретить ли её.
+      alternative: Предложу всё-таки станцевать с Лёшей один раз.
+      ignore: Отложу телефон, вернусь к музыке.
+      observe: Молча подвину для неё свободный стул.
+      focus: Помашу Ане, чтобы она увидела свободное место.
   pressure-act-0:
     mode: orange
     messages:
@@ -132,77 +132,83 @@ scenes:
   observe:
     mode: yellow
     messages:
+    - remark-danya-chair
     - remarka-vera-i-anya-podhodyat
     - anya-spasibo-posizhu-s-vami
-    question: Что изменилось для тебя сейчас?
+    question: Аня подошла с Верой. Как поступишь?
     choices:
-      observe-ease: Теперь можно спокойно посидеть с ребятами.
-      observe-watch: Пока останусь поближе к своим и посмотрю, не подойдёт ли он снова.
+      observe-ease: Освобожу край стола и вернусь к разговору о музыке.
+      observe-watch: Тихо спрошу Аню, посидеть ли с ней.
     review:
       signals:
       - pressure/anya-ya-emu-dvazhdy-skazala
-      effect: Аня может отойти к друзьям. Лёша остался у колонок.
+      effect: Ты освободил место. На сообщение Ани ты не ответил. Когда она подошла с Верой, стул был свободен.
   observe-ease:
     mode: yellow
     messages:
+    - remark-danya-space
     - remarka-za-stolom-slyshno-kak
     outcome:
     - positive
-    - Вера и Аня остались вместе у стола
-    note: Аня может отойти к друзьям. Лёша остался у колонок.
+    - Для Ани нашлось место за столом
+    note: Ты подвинул вещи. Аня смогла сесть с вами и послушать музыку.
     review:
       signals:
       - observe/anya-spasibo-posizhu-s-vami
-      effect: Аня может отойти к друзьям. Лёша остался у колонок.
+      effect: Ты подвинул вещи. Аня смогла сесть с вами и послушать музыку.
   observe-watch:
     mode: orange
     messages:
-    - remarka-za-stolom-slyshno-kak
+    - danya-stay-near
+    - anya-stay-near
     outcome:
     - positive
-    - Вера и Аня остались вместе у стола
-    note: Аня может отойти к друзьям. Лёша остался у колонок.
+    - Аня попросила Даню остаться и сменила тему
+    note: Ты спросил Аню, нужна ли компания. Она согласилась и сама заговорила о музыке.
     review:
       signals:
       - observe/anya-spasibo-posizhu-s-vami
-      effect: Пока останусь поближе к своим и посмотрю, не подойдёт ли он снова.
+      effect: Ты спросил Аню, нужна ли компания. Она согласилась и сама заговорила о музыке.
   focus:
     mode: orange
     messages:
+    - remark-danya-waves
     - remarka-vera-i-anya-podhodyat
     - anya-spasibo-posizhu-s-vami
-    question: Что изменилось для тебя сейчас?
+    question: Аня подошла с Верой. Как поступишь?
     choices:
-      focus-ease: Теперь можно спокойно посидеть с ребятами.
-      focus-watch: Пока останусь поближе к своим и посмотрю, не подойдёт ли он снова.
+      focus-ease: Освобожу край стола и вернусь к разговору о музыке.
+      focus-watch: Тихо спрошу Аню, посидеть ли с ней.
     review:
       signals:
       - pressure/anya-ya-emu-dvazhdy-skazala
-      effect: Аня может отойти к друзьям. Лёша остался у колонок.
+      effect: Ты показал, куда идти. Аня помахала в ответ и подошла с Верой.
   focus-ease:
     mode: yellow
     messages:
+    - remark-danya-space
     - remarka-za-stolom-slyshno-kak
     outcome:
     - positive
-    - Вера и Аня остались вместе у стола
-    note: Аня может отойти к друзьям. Лёша остался у колонок.
+    - Для Ани нашлось место за столом
+    note: Ты подвинул вещи. Аня смогла сесть с вами и послушать музыку.
     review:
       signals:
       - focus/anya-spasibo-posizhu-s-vami
-      effect: Аня может отойти к друзьям. Лёша остался у колонок.
+      effect: Ты подвинул вещи. Аня смогла сесть с вами и послушать музыку.
   focus-watch:
     mode: orange
     messages:
-    - remarka-za-stolom-slyshno-kak
+    - danya-stay-near
+    - anya-stay-near
     outcome:
     - positive
-    - Вера и Аня остались вместе у стола
-    note: Аня может отойти к друзьям. Лёша остался у колонок.
+    - Аня попросила Даню остаться и сменила тему
+    note: Ты спросил Аню, нужна ли компания. Она согласилась и сама заговорила о музыке.
     review:
       signals:
       - focus/anya-spasibo-posizhu-s-vami
-      effect: Пока останусь поближе к своим и посмотрю, не подойдёт ли он снова.
+      effect: Ты спросил Аню, нужна ли компания. Она согласилась и сама заговорила о музыке.
   calm-watch:
     mode: orange
     messages:
@@ -214,5 +220,5 @@ scenes:
 cues:
   pressure/anya-ya-emu-dvazhdy-skazala: Даня не слышал разговора у стены. Сейчас Аня сама говорит, чего хочет.
   ignore/anya-dan-tam-stul-eschyo: Теперь к тебе обратились напрямую.
-  observe/anya-spasibo-posizhu-s-vami: Аня может отойти к друзьям. Лёша остался у колонок.
-  focus/anya-spasibo-posizhu-s-vami: Аня может отойти к друзьям. Лёша остался у колонок.
+  observe/anya-spasibo-posizhu-s-vami: Аня уже подошла и сама сказала, что хочет посидеть с вами.
+  focus/anya-spasibo-posizhu-s-vami: Аня уже подошла и сама сказала, что хочет посидеть с вами.

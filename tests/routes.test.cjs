@@ -11,13 +11,18 @@ for (const id of ids) for (const role of ['witness','self']) {
     // The same external event can follow different conscious readings of it.
     assert.notEqual(story.observe.mode,story.focus.mode);
     const dialogue = lines => lines.map(({parts,speaker,media})=>[speaker,parts?.text,media?.src]);
-    assert.deepEqual(dialogue(story.observe.lines),dialogue(story.focus.lines));
+    if (id === 'dance') {
+      // A gesture and a spoken request are observable even with the same later scene.
+      assert.notDeepEqual(dialogue(story.observe.lines),dialogue(story.focus.lines));
+    } else {
+      assert.deepEqual(dialogue(story.observe.lines),dialogue(story.focus.lines));
+    }
     for (const key of ['observe','focus']) {
       assert.equal(story[key+'-ease'].mode,'yellow');
       assert.equal(story[key+'-watch'].mode,'orange');
       const ease = dialogue(story[key+'-ease'].lines);
       const watch = dialogue(story[key+'-watch'].lines);
-      if (id === 'money') {
+      if (id === 'money' || id === 'dance') {
         // After the shared signal, the player's next choice changes what happens.
         assert.notDeepEqual(ease,watch);
         assert.notEqual(story[key+'-ease'].outcome[1],story[key+'-watch'].outcome[1]);

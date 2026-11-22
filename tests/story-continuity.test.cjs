@@ -46,3 +46,30 @@ test('the approved rehearsal clip is published in a different group from the reh
     }
   }
 });
+
+test('at the dance a private answer, making room, and a visible invitation reach Anya differently', () => {
+  const {story} = build('dance','witness');
+  const reply = story['pressure-act-0'].lines[0];
+  assert.equal(reply.speaker,'Ты');
+  assert.equal(reply.channel.kind,'private');
+  for (const id of ['observe','focus']) {
+    assert.equal(story[id].lines[0].channel.kind,'scene');
+    assert.equal(story[id].lines[0].speaker,'Ремарка');
+    assert.equal(story[id].lines.at(-1).speaker,'Аня');
+    const directQuestion = story[id+'-watch'].lines;
+    assert.deepEqual(Array.from(directQuestion, line => line.speaker),['Ты','Аня']);
+    assert.ok(story[id+'-ease'].lines.every(line => line.speaker === 'Ремарка'));
+  }
+  assert.notEqual(story.focus.lines[0].id,story.observe.lines[0].id);
+});
+
+test('Anya can summon Vera with a gesture and ask her to stay after the hand is released', () => {
+  const {story} = build('dance','self');
+  assert.equal(story.observe.lines[0].speaker,'Ты');
+  assert.equal(story.focus.lines[0].speaker,'Ремарка');
+  for (const id of ['observe','focus']) {
+    assert.ok(story[id].lines.some(line => line.parts?.quote?.includes('отпускает')));
+    assert.deepEqual(Array.from(story[id+'-watch'].lines, line => line.speaker),['Ты','Вера']);
+    assert.equal(story[id+'-watch'].outcome[0],story[id+'-ease'].outcome[0]);
+  }
+});
